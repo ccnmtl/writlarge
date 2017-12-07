@@ -1,8 +1,21 @@
 {% extends 'base.html' %}
 
+{% block title %}Home{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            if (window.location.href.indexOf('next=') > 0) {
+                jQuery("#login-link").trigger('click');
+            };
+        });
+    </script>
+{% endblock %}
+
+
 {% block content %}
 <div class="jumbotron">
-<h1>It works</h1>
-<p>Congratulations! Now start coding.</p>
+<h1>Writ Large</h1>
+<p>Discover the Hidden Histories of New York City’s Teaching and Learning Communities</p>
 </div>
 {% endblock %}
