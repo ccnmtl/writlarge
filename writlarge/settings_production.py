@@ -14,6 +14,17 @@ locals().update(
 #       s3static=False,
     ))
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'writlarge',
+        'HOST': '',
+        'PORT': 6432,
+        'USER': '',
+        'PASSWORD': '',
+    }
+}
+
 try:
     from local_settings import *
 except ImportError:

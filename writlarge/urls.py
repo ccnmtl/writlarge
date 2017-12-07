@@ -1,11 +1,9 @@
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import logout
 from django.conf import settings
 from django.views.generic import TemplateView
 from django.views.static import serve
-from pagetree.generic.views import PageView, EditView, InstructorView
 from writlarge.main import views
 import os.path
 
@@ -28,7 +26,6 @@ if hasattr(settings, 'CAS_BASE'):
 urlpatterns = [
     auth_urls,
     logout_page,
-    url(r'^registration/', include('registration.backends.default.urls')),
     url(r'^$', views.IndexView.as_view()),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
@@ -37,19 +34,6 @@ urlpatterns = [
     url(r'infranil/', include('infranil.urls')),
     url(r'^uploads/(?P<path>.*)$',
         serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^pagetree/', include('pagetree.urls')),
-    url(r'^quizblock/', include('quizblock.urls')),
-    url(r'^pages/edit/(?P<path>.*)$', login_required(EditView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
-        {}, 'edit-page'),
-    url(r'^pages/instructor/(?P<path>.*)$',
-        login_required(InstructorView.as_view(
-            hierarchy_name="main",
-            hierarchy_base="/pages/"))),
-    url(r'^pages/(?P<path>.*)$', PageView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
 ]
 
 if settings.DEBUG:
