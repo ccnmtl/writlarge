@@ -59,6 +59,7 @@ INSTALLED_APPS += [  # noqa
     'bootstrap4',
     'infranil',
     'writlarge.main',
+    'taggit'
 ]
 
 LOGIN_REDIRECT_URL = "/"
