@@ -60,27 +60,33 @@
     <header>
         <!-- Fixed navbar -->
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" href="#">Writ Large</a>
+            <a class="navbar-brand" href="/">Writ Large</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    {% if request.user.is_anonymous %}
-                        <a id="login-link" href="#" data-toggle="modal" data-target="#login-modal">Log In</a>
-                    {% else %}
-                        <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
-                    {% endif %}
-                </li>
-            </ul>
-        </div>
-      </nav>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="map">Map</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="search">Search</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        {% if request.user.is_anonymous %}
+                            <a class="nav-link" href="/accounts/login/?next=/">Log In</a>
+                        {% else %}
+                            <a class="nav-link" href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
     <!-- Begin page content -->
@@ -88,93 +94,6 @@
         {% block content %}
         {% endblock %}
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row text-muted">
-                <div class="col"><a href="/about/">About</a></div>
-                <div class="col"><a href="/credits/">Credits</a></div>
-                <div class="col"><a href="/contact/">Contact</a></div>
-                <div class="col"><a href="/glossary/">Glossary</a></div>
-                <div class="col">
-                    {% if user.has_usable_password %}
-                        <li><a href="/accounts/password_change/">Change Password</a></li>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    {% if request.user.is_anonymous %}
-        <!-- Login Modal -->
-        <div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="loginLabel">Login</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div><!-- /.modal-header -->
-                    <div class="modal-body">
-                        <form id="login-local" name="login_local" method="post" action="/accounts/login/" class="form-horizontal" role="form">
-                            {% csrf_token %}
-                            <div class="login-local-form">
-                                <div class="local-login-errors alert alert-danger" style="display: none;">
-                                    <span><b>Invalid username or password.</b></span>
-                                    Please try again. Note that both username and password are case-sensitive.
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="id_username" class="col-sm-4 col-form-label">User Name</label>
-                                    <div class="col-sm-8">
-                                        {{ login_form.username }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="id_password" class="col-sm-4 col-form-label">Password</label>
-                                    <div class="col-sm-8">
-                                        {{ login_form.password }}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-4 col-sm-8">
-                                        <input class="btn btn-primary login-local-form" type="submit" value="Log In"  />
-                                        <input type="hidden" name="next" value="/" />
-                                    </div>
-                                </div>
-                            </div><!--/ .login-local-form -->
-                        </form>
-
-                     {% if request.user.is_anonymous %}
-                        <div class="pull-right">
-                            <a href="/accounts/password_reset/">Forgot Password?</a>
-                        </div>
-                        <div style="clear: both"></div>
-                     {% endif %}
-                     {% if CAS_BASE %}
-                        <form method="get" action="{{ CAS_BASE }}cas/login" style="float: right">
-                            <input type="hidden" name="destination"
-                            value="https://{{ request.get_host }}/accounts/caslogin/?next=/" />
-                            <input class="btn btn-default btn-small login-uni-button" type="submit"
-                                value="Columbia University Network ID (UNI)" />
-                            <div style="clear: both;"></div>
-                        </form>
-                        <div style="clear: both"></div>
-                     {% endif %}<!-- CAS -->
-                </div><!-- /.modal-body -->
-               </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-        <script src="{{STATIC_URL}}js/app/login.js"></script>
-
-        <script type="text/javascript"> 
-           jQuery(document).ready(function() {
-              var loginView = new LocalLoginView({
-                 el: jQuery("div#login-modal") 
-              });
-           });
-        </script>
-    {% endif %}<!-- request.user.is_anonymous -->
 
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <script src="{{STATIC_URL}}js/lib/popper/popper.min.js"></script>

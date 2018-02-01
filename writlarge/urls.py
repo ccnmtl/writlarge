@@ -24,9 +24,6 @@ if hasattr(settings, 'CAS_BASE'):
 urlpatterns = [
     url(r'^$', views.IndexView.as_view()),
 
-    url(r'^accounts/login/$', views.LoginView.as_view()),
-    url(r'^accounts/logout/$', views.LogoutView.as_view()),
-
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
         login_required(password_change),
