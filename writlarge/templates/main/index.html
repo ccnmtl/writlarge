@@ -2,17 +2,6 @@
 
 {% block title %}Home{% endblock %}
 
-{% block js %}
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            if (window.location.href.indexOf('next=') > 0) {
-                jQuery("#login-link").trigger('click');
-            };
-        });
-    </script>
-{% endblock %}
-
-
 {% block content %}
 <div class="jumbotron">
 <h1>Writ Large</h1>
