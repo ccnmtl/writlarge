@@ -3,10 +3,54 @@ html {
     height: 100%;
 }
 
-body {
-    margin-bottom: 60px;
+body > .container, body > .container-fluid {
+    /* required for the navbar */
+    padding-top: 75px;
 }
 
-body > .container {
-    padding-top: 75px;
+.cover-page {
+    color: white;
+}
+
+main {
+    min-height: 800px
+}
+
+.btn-cover,
+.btn-cover:hover,
+.btn-cover:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+  background-color: #fff;
+  border: .05rem solid #fff;
+}
+
+footer {
+    font-size: 85%;
+}
+
+footer p {
+    margin-bottom: 0;
+}
+
+footer a, footer a:visited {
+    color: white;
+}
+
+footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+footer ul {
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+footer li {
+    display: inline-block;
+}
+
+footer li+li {
+    margin-left: 1rem;
 }

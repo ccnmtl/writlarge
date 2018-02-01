@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block bodyclass %}bg-dark cover-page{% endblock %}
+{% block mainclass %}container-fluid{% endblock %}
+
+{% block content %}
+<div class="row justify-content-md-center pt-5">
+    <div class="col-md-auto text-center">
+        <h1>Writ Large</h1>
+        <p>Discover the Hidden Histories of New York City’s Teaching and Learning Communities</p>
+        <a class="btn btn-cover btn-lg" href="{% url 'map-view' %}">Get Started</a>
+    </div>
+</div>
+
+{% endblock %}
