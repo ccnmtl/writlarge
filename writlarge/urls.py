@@ -22,7 +22,7 @@ if hasattr(settings, 'CAS_BASE'):
 
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view()),
+    url(r'^$', views.CoverView.as_view()),
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
@@ -43,6 +43,9 @@ urlpatterns = [
         password_reset_complete, name='password_reset_complete'),
 
     auth_urls,
+
+    url(r'^map/$', views.MapView.as_view(), name='map-view'),
+    url(r'^search/$', views.SearchView.as_view(), name='search-view'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

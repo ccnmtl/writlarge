@@ -11,5 +11,13 @@ def django_settings(request):
                               for k in whitelist])}
 
 
-class IndexView(TemplateView):
-    template_name = "main/index.html"
+class CoverView(TemplateView):
+    template_name = "main/cover.html"
+
+
+class MapView(TemplateView):
+    template_name = "main/map.html"
+
+
+class SearchView(TemplateView):
+    template_name = "main/search.html"

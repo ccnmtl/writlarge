@@ -50,8 +50,9 @@
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
     {% endcompress %}
 
-    <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
     {% block css %}{% endblock %}
+
+    <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
 
     <script src="{{STATIC_URL}}js/lib/jquery-3.2.1.min.js"></script>
 </head>
@@ -70,10 +71,13 @@
                         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="map">Map</a>
+                        <a class="nav-link" href="{% url 'map-view' %}">Map</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="search">Search</a>
+                        <a class="nav-link" href="{% url 'search-view' %}">Search</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/glossary">Glossary</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -81,6 +85,9 @@
                         {% if request.user.is_anonymous %}
                             <a class="nav-link" href="/accounts/login/?next=/">Log In</a>
                         {% else %}
+                            {% if user.has_usable_password %}
+                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                            {% endif %}
                             <a class="nav-link" href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
                         {% endif %}
                     </li>
@@ -90,10 +97,20 @@
     </header>
 
     <!-- Begin page content -->
-    <main role="main" class="container">
+    <main role="main" class="{% block mainclass %}container{% endblock %}">
         {% block content %}
         {% endblock %}
     </main>
+
+    <footer class="bd-footer text-muted bg-dark">
+      <div class="container-fluid p-3 p-md-5">
+        <ul class="text-left">
+          <li><a href="https://github.com/ccnmtl/writlarge">GitHub</a></li>
+        </ul>
+        <p>Designed and built by <a href="https://ctl.columbia.edu" target="_blank" rel="noopener">The Center For Teaching & Learning</a> </p>
+        <p>Code licensed <a href="https://github.com/writlarge//LICENSE" target="_blank" rel="license noopener">GPL 3.0</a></p>
+      </div>
+    </footer>
 
     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
     <script src="{{STATIC_URL}}js/lib/popper/popper.min.js"></script>
