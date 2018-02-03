@@ -44,7 +44,7 @@
     <link rel="stylesheet" href="{{STATIC_URL}}js/lib/bootstrap/css/bootstrap.min.css">
 
     <!-- FontAwesome CSS -->
-    <link rel="stylesheet" href="{{STATIC_URL}}css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/fontawesome/font-awesome.min.css">
 
     {% compress css %}
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
@@ -135,10 +135,14 @@
         </script>
     {% endif %}
 
-    <script data-main="{{STATIC_URL}}js/src/main.js"
-        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+    {% if DEBUG %}
+        <script src="{{STATIC_URL}}js/lib/vue/vue.js"></script>
+    {% else %}
+        <script src="{{STATIC_URL}}js/lib/vue/vue.min.js"></script>
+    {% endif %}
 
-    {% block js %}{% endblock %}
+    {% block js %}
+    {% endblock %}
 
     {% if STAGING_ENV %}
         <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">
