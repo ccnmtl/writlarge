@@ -2,5 +2,13 @@
 
 {% block title %}Map{% endblock %}
 
+{% block js %}
+    <script src="{{STATIC_URL}}js/app/map.js"></script>
+{% endblock %}
+
 {% block content %}
+<div id="map-view">
+    <div id="map-container">
+    </div>
+</div>
 {% endblock %}
