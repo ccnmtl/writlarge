@@ -12,7 +12,11 @@ module.exports = {
     "extends": [
         "eslint:recommended",
         "plugin:security/recommended"
-    ],  
+    ],
+    "globals": {
+        "requirejs": true,
+        "WritLarge": true,
+    },
     "rules": {
         "indent": [
             "error",
