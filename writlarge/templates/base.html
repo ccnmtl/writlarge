@@ -44,17 +44,16 @@
     <link rel="stylesheet" href="{{STATIC_URL}}js/lib/bootstrap/css/bootstrap.min.css">
 
     <!-- FontAwesome CSS -->
-    <link rel="stylesheet" href="{{STATIC_URL}}css/lib/font-awesome.min.css">
+    <link rel="stylesheet" href="{{STATIC_URL}}css/fontawesome/font-awesome.min.css">
 
     {% compress css %}
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
     {% endcompress %}
 
-    {% block css %}{% endblock %}
+    {% block css %}
+    {% endblock %}
 
     <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
-
-    <script src="{{STATIC_URL}}js/lib/jquery-3.2.1.min.js"></script>
 </head>
 
 <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
@@ -112,33 +111,18 @@
       </div>
     </footer>
 
-    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-    <script src="{{STATIC_URL}}js/lib/popper/popper.min.js"></script>
-    <script src="{{STATIC_URL}}js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        const WritLarge = {
+            static_url: '{{STATIC_URL}}',
+            debug: {% if debug %}'true'{% else %}'false'{% endif %}
+        }
+    </script>
 
-    {% if SENTRY_PUBLIC_DSN %}
-        <script src="https://cdn.ravenjs.com/3.21.0/raven.min.js"></script>
-        <script>
-         Raven.config('{{ SENTRY_PUBLIC_DSN }}').install();
-
-         {% if user.is_anonymous %}
-         Raven.setUserContext({
-             email: 'none',
-             id: 'anonymous'
-         });
-         {% else %}
-         Raven.setUserContext({
-             email: '{{ user.email }}',
-             id: '{{ user.username }}'
-         });
-         {% endif %}
-        </script>
-    {% endif %}
-
-    <script data-main="{{STATIC_URL}}js/src/main.js"
-        src="{{STATIC_URL}}js/lib/require/require.js"></script>
-
-    {% block js %}{% endblock %}
+    {% block js %}
+        <script 
+            data-main="{{STATIC_URL}}js/src/main.js"
+            src="{{STATIC_URL}}js/lib/require/require.js"></script>
+    {% endblock %}
 
     {% if STAGING_ENV %}
         <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

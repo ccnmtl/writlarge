@@ -2,5 +2,18 @@
 
 {% block title %}Map{% endblock %}
 
+{% block data-module %}map{% endblock %}
+
+{% block js %}
+    <script 
+        data-main="{{STATIC_URL}}js/src/map.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
+
 {% block content %}
+<div id="map-view">
+    <div id="map-container">
+    </div>
+</div>
 {% endblock %}
