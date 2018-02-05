@@ -59,7 +59,8 @@ INSTALLED_APPS += [  # noqa
     'bootstrap4',
     'infranil',
     'writlarge.main',
-    'taggit'
+    'taggit',
+    'django.contrib.gis'
 ]
 
 LOGIN_REDIRECT_URL = "/"

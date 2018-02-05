@@ -46,6 +46,11 @@ urlpatterns = [
 
     url(r'^map/$', views.MapView.as_view(), name='map-view'),
     url(r'^search/$', views.SearchView.as_view(), name='search-view'),
+    url(r'^site/(?P<pk>\d+)/$', views.LearningSiteDetailView.as_view(),
+        name='learning-site-view'),
+    url(r'^archive/(?P<pk>\d+)/$',
+        views.ArchivalRepositoryDetailView.as_view(),
+        name='archival-repository-view'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),

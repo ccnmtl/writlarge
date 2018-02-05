@@ -82,7 +82,7 @@ class LearningSite(models.Model):
         return reverse('learning-site-detail-view', kwargs={'pk': self.id})
 
 
-class ArchivalRespository(models.Model):
+class ArchivalRepository(models.Model):
     title = models.TextField(unique=True)
     latlng = PointField(null=True)
     notes = models.TextField(null=True, blank=True)
@@ -101,7 +101,7 @@ class ArchivalRespository(models.Model):
 
     class Meta:
         ordering = ['title']
-        verbose_name = "Site of Teaching & Learning"
+        verbose_name = "Archival Repository"
 
     def __unicode__(self):
         return self.title
@@ -115,7 +115,7 @@ class ArchivalCollection(models.Model):
     title = models.TextField()
     description = models.TextField()
     learning_sites = models.ManyToManyField(LearningSite)
-    repository = models.ForeignKey(ArchivalRespository)
+    repository = models.ForeignKey(ArchivalRepository)
 
     finding_aid_url = models.URLField()
     linear_feet = models.FloatField()
@@ -134,7 +134,7 @@ class ArchivalCollection(models.Model):
 
     class Meta:
         ordering = ['title']
-        verbose_name = "Site of Teaching & Learning"
+        verbose_name = "Archival Collection"
 
     def __unicode__(self):
         return self.title
