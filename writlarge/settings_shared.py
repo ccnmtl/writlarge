@@ -72,6 +72,5 @@ TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
 
 MIDDLEWARE_CLASSES += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
-    'audit_log.middleware.UserLoggingMiddleware',
     'reversion.middleware.RevisionMiddleware'
 ]
