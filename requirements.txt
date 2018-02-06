@@ -37,7 +37,7 @@ pygments==2.2.0  # ipython
 ipython==5.5.0  # pyup: <6.0.0
 ipdb==0.10.3
 rdflib==4.2.2
-selenium==3.8.1
+selenium==3.9.0
 coverage==4.5
 pyasn1==0.4.2
 pyOpenSSL==17.5.0
