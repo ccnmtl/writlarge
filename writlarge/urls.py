@@ -52,7 +52,7 @@ urlpatterns = [
         views.ArchivalRepositoryDetailView.as_view(),
         name='archival-repository-view'),
 
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),
     url(r'smoketest/', include('smoketest.urls')),

@@ -79,7 +79,16 @@ TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'writlarge.main.views.django_settings')
 
-MIDDLEWARE_CLASSES += [  # noqa
+MIDDLEWARE = [
+    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
+    'django_statsd.middleware.GraphiteMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'waffle.middleware.WaffleMiddleware',
     'reversion.middleware.RevisionMiddleware'
 ]
