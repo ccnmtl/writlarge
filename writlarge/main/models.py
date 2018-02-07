@@ -100,7 +100,8 @@ class ArchivalCollection(models.Model):
     title = models.TextField()
     description = models.TextField()
     learning_sites = models.ManyToManyField(LearningSite)
-    repository = models.ForeignKey(ArchivalRepository)
+    repository = models.ForeignKey(ArchivalRepository,
+                                   on_delete=models.CASCADE)
 
     finding_aid_url = models.URLField()
     linear_feet = models.FloatField()
