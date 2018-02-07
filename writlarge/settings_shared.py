@@ -69,7 +69,8 @@ INSTALLED_APPS += [  # noqa
     'infranil',
     'writlarge.main',
     'taggit',
-    'django.contrib.gis'
+    'django.contrib.gis',
+    'rest_framework',
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -92,3 +93,12 @@ MIDDLEWARE = [
     'waffle.middleware.WaffleMiddleware',
     'reversion.middleware.RevisionMiddleware'
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ],
+    'PAGINATE_BY': 15,
+    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
+}

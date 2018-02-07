@@ -9,6 +9,7 @@ from django.contrib.auth.views import (
     password_reset_complete)
 from django.views.generic import TemplateView
 from django.views.static import serve
+from rest_framework import routers
 
 from writlarge.main import views
 
@@ -21,8 +22,14 @@ if hasattr(settings, 'CAS_BASE'):
     auth_urls = url(r'^accounts/', include('djangowind.urls'))
 
 
+router = routers.DefaultRouter()
+router.register(r'site', views.LearningSiteViewSet)
+router.register(r'repository', views.ArchivalRepositoryViewSet)
+
+
 urlpatterns = [
     url(r'^$', views.CoverView.as_view()),
+    url(r'^api/', include(router.urls)),
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
