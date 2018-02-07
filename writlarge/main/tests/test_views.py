@@ -56,13 +56,14 @@ class ApiViewTest(TestCase):
         response = self.client.get('/api/site/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(the_json[0]['id'], self.site.id)
 
         response = self.client.get('/api/repository/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(the_json[0]['id'], self.repository.id)
 
         # update fails
