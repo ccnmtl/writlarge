@@ -90,3 +90,4 @@ text_unidecode==1.1
 
 django-taggit==0.22.2
 
+django-cacheds3storage==0.1.2
