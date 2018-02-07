@@ -1,5 +1,5 @@
 # flake8: noqa
-from writlarge.main.settings_shared import *
+from writlarge.settings_shared import *
 from ccnmtlsettings.staging import common
 
 locals().update(
