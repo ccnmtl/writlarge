@@ -1,4 +1,3 @@
-from audit_log.models.fields import LastUserField, CreatingUserField
 from django.contrib.gis.db.models.fields import PointField
 from django.db import models
 from django.urls.base import reverse
@@ -14,10 +13,6 @@ class DigitalObject(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-    created_by = CreatingUserField(related_name="digitalobject_created_by")
-    last_modified_by = LastUserField(
-        related_name="digitalobject_last_modified_by")
 
     class Meta:
         verbose_name = "Digital Object"
@@ -66,11 +61,6 @@ class LearningSite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    created_by = CreatingUserField(
-        related_name='learningsite_created_by')
-    last_modified_by = LastUserField(
-        related_name='learningsite_last_modified_by')
-
     class Meta:
         ordering = ['title']
         verbose_name = "Site of Teaching & Learning"
@@ -93,11 +83,6 @@ class ArchivalRepository(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-    created_by = CreatingUserField(
-        related_name='archivalrepository_created_by')
-    last_modified_by = LastUserField(
-        related_name='archivalrepository_last_modified_by')
 
     class Meta:
         ordering = ['title']
@@ -126,11 +111,6 @@ class ArchivalCollection(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-
-    created_by = CreatingUserField(
-        related_name='archivalcollection_created_by')
-    last_modified_by = LastUserField(
-        related_name='archivalcollection_last_modified_by')
 
     class Meta:
         ordering = ['title']
