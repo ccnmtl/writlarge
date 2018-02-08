@@ -33,14 +33,18 @@ backports.shutil_get_terminal_size==1.0.0  # ipython
 wcwidth==0.1.7  # ipython
 prompt_toolkit==1.0.15  # ipython
 pygments==2.2.0  # ipython
-ipython==5.5.0  # pyup: <6.0.0
+scandir==1.6  # ipython
+ipython==6.2.1
 ipdb==0.10.3
 rdflib==4.2.2
-selenium==3.9.0
 coverage==4.5
 pyasn1==0.4.2
 pyOpenSSL==17.5.0
 ndg-httpsclient==0.4.4
+urllib3==1.22  # requests
+chardet==3.0.4  # requests
+idna==2.6  # requests
+certifi==2018.1.18  # requests
 requests==2.18.4
 logilab-common==1.4.1
 logilab-astng==0.24.3
@@ -71,6 +75,7 @@ django-debug-toolbar==1.9.1
 django-waffle==0.13.0
 django-jenkins==0.110.0
 django-smoketest==1.1.0
+typing==3.6.4  # For django-extensions
 django-extensions==1.9.9
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
