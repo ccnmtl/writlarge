@@ -15,7 +15,7 @@ REQUIREMENTS ?= requirements.txt
 SYS_PYTHON ?= python
 PIP ?= $(VE)/bin/pip
 PY_SENTINAL ?= $(VE)/sentinal
-WHEEL_VERSION ?= 0.29.0
+WHEEL_VERSION ?= 0.30.0
 VIRTUALENV ?= virtualenv.py
 SUPPORT_DIR ?= requirements/virtualenv_support/
 MAX_COMPLEXITY ?= 10
@@ -29,7 +29,7 @@ $(PY_SENTINAL): $(REQUIREMENTS) $(VIRTUALENV) $(SUPPORT_DIR)*
 	rm -rf $(VE)
 	$(SYS_PYTHON) $(VIRTUALENV) --extra-search-dir=$(SUPPORT_DIR) --never-download $(VE)
 	$(PIP) install wheel==$(WHEEL_VERSION)
-	$(PIP) install --use-wheel --no-deps --requirement $(REQUIREMENTS)
+	$(PIP) install --use-wheel --no-deps --requirement $(REQUIREMENTS) --no-binary cryptography
 	$(SYS_PYTHON) $(VIRTUALENV) --relocatable $(VE)
 	touch $@
 
