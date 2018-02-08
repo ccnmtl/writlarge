@@ -84,14 +84,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/about/">About</a>
                     </li>
-                    <li class="nav-item">
                         {% if request.user.is_anonymous %}
-                            <a class="nav-link" href="/accounts/login/?next=/">Log In</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/accounts/login/?next=/">Log In</a>
+                            </li>
                         {% else %}
                             {% if user.has_usable_password %}
-                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
-                            <a class="nav-link" href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
+                                <li class="nav-item"><a class="nav-link" href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a></li>
                         {% endif %}
                     </li>
                 </ul>
