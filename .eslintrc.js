@@ -4,6 +4,9 @@ module.exports = {
         "amd": true,
         "jquery": true
     },
+    "parserOptions": {
+        "ecmaVersion": 6
+    },
     "plugins": [
         "security",
         "scanjs-rules",

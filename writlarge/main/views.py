@@ -11,7 +11,7 @@ from writlarge.main.serializers import (
 # returns important setting information for all web pages.
 # returns important setting information for all web pages.
 def django_settings(request):
-    whitelist = ['GOOGLE_ANALYTICS_ID', 'CAS_BASE']
+    whitelist = ['GOOGLE_MAP_API']
 
     return {'settings': dict([(k, getattr(settings, k, None))
                               for k in whitelist])}
