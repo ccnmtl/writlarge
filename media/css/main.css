@@ -3,17 +3,17 @@ html {
     height: 100%;
 }
 
-body > .container, body > .container-fluid {
-    /* required for the navbar */
-    padding-top: 75px;
+main {
+    min-height: 800px;
 }
 
+/* Cover Page */
 .cover-page {
     color: white;
 }
 
-main {
-    min-height: 800px
+.cover-page main {
+    padding-top: 75px;
 }
 
 .btn-cover,
@@ -25,6 +25,7 @@ main {
   border: .05rem solid #fff;
 }
 
+/* Footer */
 footer {
     font-size: 85%;
 }
@@ -53,4 +54,12 @@ footer li {
 
 footer li+li {
     margin-left: 1rem;
+}
+
+/* Map */
+.google-map {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height: 800px;
 }

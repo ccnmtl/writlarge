@@ -1,7 +1,13 @@
+/* global GoogleMapVue */
+
 requirejs(['./common'], function() {
-    requirejs(['jquery', 'bootstrap', 'Vue'], function($, bootstrap, Vue) {
+    const a = ['jquery', 'bootstrap', 'Vue', 'mapVue'];
+    requirejs(a, function($, bootstrap, Vue, mapVue) {
         new Vue({
-            el: '#map-view'
+            el: '#map-view',
+            components: {
+                'google-map': GoogleMapVue
+            }
         });
     });
 });

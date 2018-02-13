@@ -119,7 +119,8 @@
     <script>
         const WritLarge = {
             static_url: '{{STATIC_URL}}',
-            debug: {% if debug %}'true'{% else %}'false'{% endif %}
+            debug: {% if debug %}'true'{% else %}'false'{% endif %},
+            mapKey: '{{settings.GOOGLE_MAP_API}}'
         }
     </script>
 
