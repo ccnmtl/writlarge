@@ -18,7 +18,7 @@ class DigitalObject(models.Model):
         verbose_name = "Digital Object"
         ordering = ['-created_at']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -28,7 +28,7 @@ class LearningSiteCategory(models.Model):
     class Meta:
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -38,25 +38,26 @@ class ArchivalRecordFormat(models.Model):
     class Meta:
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
 class LearningSite(models.Model):
     title = models.TextField(unique=True)
-    category = models.ManyToManyField(LearningSiteCategory)
     latlng = PointField()
+
+    category = models.ManyToManyField(LearningSiteCategory, blank=True)
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
 
-    established = models.DateField()
-    defunct = models.DateField(blank=True)
+    established = models.DateField(null=True, blank=True)
+    defunct = models.DateField(null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     verified = models.BooleanField(default=False)
-    verified_modified_at = models.DateTimeField(null=True)
+    verified_modified_at = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -65,7 +66,7 @@ class LearningSite(models.Model):
         ordering = ['title']
         verbose_name = "Site of Teaching & Learning"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def get_absolute_url(self):
@@ -88,7 +89,7 @@ class ArchivalRepository(models.Model):
         ordering = ['title']
         verbose_name = "Archival Repository"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def get_absolute_url(self):
@@ -117,5 +118,5 @@ class ArchivalCollection(models.Model):
         ordering = ['title']
         verbose_name = "Archival Collection"
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
