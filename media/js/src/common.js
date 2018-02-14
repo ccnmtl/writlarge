@@ -1,6 +1,8 @@
-var vuePath = 'lib/vue/vue.min';
+let vuePath = 'lib/vue/vue.min';
+let urlArgs = 'bust=' + (new Date()).getTime();
 if (WritLarge.debug == 'true') {
     vuePath = 'lib/vue/vue';
+    urlArgs = '';
 }
 
 var mapsPath = 'https://maps.google.com/maps/api/js?key=' +
@@ -21,5 +23,5 @@ requirejs.config({
             'deps': ['jquery']
         }
     },
-    urlArgs: 'bust=' + (new Date()).getTime()
+    urlArgs: urlArgs
 });
