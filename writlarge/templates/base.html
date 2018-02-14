@@ -55,6 +55,9 @@
     {% endblock %}
 
     <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
+    
+    {% block client_templates %}
+    {% endblock %}
 </head>
 
 <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
@@ -120,7 +123,8 @@
         const WritLarge = {
             static_url: '{{STATIC_URL}}',
             debug: {% if debug %}'true'{% else %}'false'{% endif %},
-            mapKey: '{{settings.GOOGLE_MAP_API}}'
+            mapKey: '{{settings.GOOGLE_MAP_API}}',
+            baseUrl: 'https://{{ request.get_host }}/'
         }
     </script>
 

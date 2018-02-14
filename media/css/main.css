@@ -63,3 +63,7 @@ footer li+li {
     left: 0;
     height: 800px;
 }
+
+#map-view ul {
+    display: none;
+}

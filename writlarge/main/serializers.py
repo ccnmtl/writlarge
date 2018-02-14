@@ -20,12 +20,21 @@ class LearningSiteCategorySerializer(serializers.HyperlinkedModelSerializer):
 
 class ArchivalRepositorySerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    latitude = serializers.SerializerMethodField(read_only=True)
+    longitude = serializers.SerializerMethodField(read_only=True)
+
+    def get_latitude(self, obj):
+        return obj.latlng.y
+
+    def get_longitude(self, obj):
+        return obj.latlng.x
 
     class Meta:
         model = ArchivalRepository
         fields = ('id', 'title', 'latlng', 'notes',
                   'verified', 'verified_modified_at',
-                  'created_at', 'modified_at')
+                  'created_at', 'modified_at',
+                  'latitude', 'longitude')
 
 
 class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,9 +42,18 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     category = LearningSiteCategorySerializer(read_only=True, many=True)
     digital_object = DigitalObjectSerializer(read_only=True, many=True)
 
+    latitude = serializers.SerializerMethodField(read_only=True)
+    longitude = serializers.SerializerMethodField(read_only=True)
+
+    def get_latitude(self, obj):
+        return obj.latlng.y
+
+    def get_longitude(self, obj):
+        return obj.latlng.x
+
     class Meta:
         model = LearningSite
         fields = ('id', 'title', 'latlng', 'established', 'defunct', 'notes',
                   'category', 'digital_object',
                   'verified', 'verified_modified_at', 'created_at',
-                  'modified_at')
+                  'modified_at', 'latitude', 'longitude')
