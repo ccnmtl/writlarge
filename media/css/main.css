@@ -67,3 +67,12 @@ footer li+li {
 #map-view ul {
     display: none;
 }
+
+#map-view .new-pin {
+    width: 400px;
+    padding: 10px;
+    margin: 10px;
+    background-color: #c6ccd2;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+}
