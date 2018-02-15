@@ -6,7 +6,7 @@
 <div class="row justify-content-md-center">
     <div class="col-md-auto">
         <h2>Choose a login option...</h2>
-        {% if settings.CAS_BASE %}
+        {% if CAS_BASE %}
             <p>If you have a Columbia University Network ID (UNI)</p>
             <form class="text-center" method="get" action="{{settings.CAS_BASE}}cas/login">
                 <input type="hidden" name="destination" value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/caslogin/?next={{ next }}" />
