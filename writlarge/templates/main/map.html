@@ -4,6 +4,22 @@
 
 {% block data-module %}map{% endblock %}
 
+{% block client_templates %}
+{% verbatim %}
+<script type="text/x-template" id="google-map-template">
+    <div>
+        <h3>{{message}}</h3>
+        <div class="google-map" :id="mapName"></div>
+        <ul>
+            <li v-for="site in sites">
+                {{site.title}} ({{site.latitude}}, {{site.longitude}})
+            </li>
+        </ul>
+    </div>
+</script>
+{% endverbatim %}
+{% endblock %}
+
 {% block js %}
     <script type="text/javascript"
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>

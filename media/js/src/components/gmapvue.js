@@ -2,27 +2,31 @@
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
-    props: ['name'],
-    template: '<div class="google-map" :id="mapName"></div>',
+    template: '#google-map-template',
     data: function() {
         return {
             mapName: 'the-map',
-            markerCoordinates: [{
-                latitude: 40.7128,
-                longitude: -74.0060
-            }],
+            sites: [],
             map: null,
             markers: [],
             bounds: null
         };
     },
+    created: function() {
+        const url = WritLarge.baseUrl + 'api/site/';
+        jQuery.getJSON(url, (data) => {
+            this.sites = data;
+        });
+    },
     mounted: function() {
         this.bounds = new google.maps.LatLngBounds();
         const elt = document.getElementById(this.mapName);
         this.map = new google.maps.Map(elt);
-        this.markerCoordinates.forEach((coord) => {
+    },
+    updated: function() {
+        this.sites.forEach((site) => {
             const position = new google.maps.LatLng(
-                coord.latitude, coord.longitude);
+                site.latitude, site.longitude);
             const marker = new google.maps.Marker({
                 position,
                 map: this.map
