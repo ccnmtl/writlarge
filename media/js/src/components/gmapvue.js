@@ -10,7 +10,8 @@ var GoogleMapVue = {
             map: null,
             markers: [],
             bounds: null,
-            newPin: null
+            newPin: null,
+            address: ''
         };
     },
     methods: {
@@ -24,11 +25,43 @@ var GoogleMapVue = {
                 map: this.map
             });
 
-            // reverse geocode?
+            this.reverseGeocode(this.newPin);
+        },
+        removeNewPin: function(event) {
+            this.newPin.setMap(null);
+            this.newPin = null;
         },
         savePin: function(event) {
         },
         editPin: function(event) {
+        },
+        geocode: function(event) {
+            this.geocoder.geocode({
+                address: this.address,
+            }, (responses) => {
+                if (responses && responses.length > 0) {
+                    if (this.newPin) {
+                        this.newPin.setMap(null);
+                    }
+
+                    this.newPin = new google.maps.Marker({
+                        position: responses[0].geometry.location,
+                        map: this.map
+                    });
+                }
+            });
+
+        },
+        reverseGeocode: function(marker) {
+            this.geocoder.geocode({
+                latLng: marker.getPosition(),
+            }, (responses) => {
+                if (responses && responses.length > 0) {
+                    this.address = responses[0].formatted_address;
+                } else {
+                    this.address = '';
+                }
+            });
         }
     },
     created: function() {
@@ -40,8 +73,12 @@ var GoogleMapVue = {
     mounted: function() {
         this.bounds = new google.maps.LatLngBounds();
         const elt = document.getElementById(this.mapName);
-        this.map = new google.maps.Map(elt);
 
+        this.geocoder = new google.maps.Geocoder();
+
+        this.map = new google.maps.Map(elt, {
+            mapTypeControl: false
+        });
         this.map.addListener('click', (ev) => {
             this.dropPin(ev);
         });
