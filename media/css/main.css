@@ -4,7 +4,6 @@ html {
 }
 
 main {
-    min-height: 800px;
 }
 
 /* Cover Page */
@@ -14,6 +13,8 @@ main {
 
 .cover-page main {
     padding-top: 125px;
+    width: 100vw;
+    height: 90vh;
 }
 
 .btn-cover,
@@ -57,11 +58,12 @@ footer li+li {
 }
 
 /* Map */
+
 .map-view .google-map {
     position: absolute;
     width: 100%;
     left: 0;
-    height: 800px;
+    height: 95vh;
 }
 
 .map-view #map-container ul {
@@ -72,15 +74,15 @@ footer li+li {
     padding: 15px;
     background-color: white;
     border: 1px solid #ced4da;
-    border-radius: 4px;
-    border-top: 0;
-    width: 91.5%;
+    border-top-width: 4px;
+    width: 350px;
 }
 
 .map-view .address-bar {
     position: absolute;
     z-index: 2000;
-    margin-left: 16px;
+    margin-left: 10px;
     margin-top: 10px;
     width: 50%;
+    width: 350px;
 }

@@ -16,7 +16,8 @@ requirejs.config({
         'bootstrap': 'lib/bootstrap/js/bootstrap.bundle.min',
         'googleMaps': mapsPath,
         'Vue': vuePath,
-        'mapVue': 'src/components/gmapvue'
+        'mapVue': 'src/components/gmapvue',
+        'utils': 'src/utils'
     },
     shim: {
         'bootstrap': {
