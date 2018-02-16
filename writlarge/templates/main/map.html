@@ -1,17 +1,30 @@
 {% extends 'base.html' %}
 
 {% block title %}Map{% endblock %}
-
-{% block data-module %}map{% endblock %}
+{% block bodyclass %}map-view{% endblock %}
+{% block mainclass %}container-fluid pl-0 pr-0 pb-0{% endblock %}
 
 {% block client_templates %}
 {% verbatim %}
 <script type="text/x-template" id="google-map-template">
     <div>
-        <div class="google-map" :id="mapName"></div>
-        <div v-if="newPin" class="fixed-bottom new-pin">
+        <div class="address-bar">
+            <div class="input-group">
+                <input type="text" v-model="address" class="form-control form-control-lg w-25"
+                    placeholder="Enter an address or click the map" aria-label="Enter an address"
+                    aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary btn-lg" type="button" v-on:click="geocode">
+                        Find
+                    </button>
+                </div>
+            </div>
+            <div v-if="newPin" class="new-pin">
+            <button type="button" class="close" aria-label="Close" v-on:click="removeNewPin">
+                <span aria-hidden="true">&times;</span>
+            </button>
             <form>
-            <h4>Add a Pin</h4>
+            <h4>Save Location</h4>
             <div class="form-group row">
                 <label for="title" class="col-sm-2 col-form-label">Title</label>
                 <div class="col-sm-10">
@@ -27,10 +40,13 @@
                     </select>
                 </div>
             </div>
-            <button class="btn btn-sm btn-secondary right" v-on:click="editPin">Add More Detail</button>
-            <button class="btn btn-sm btn-secondary right" v-on:click="savePin">Save</button>
+            <button class="btn btn-sm btn-secondary float-right" v-on:click="editPin">Add More Detail</button>
+            <button class="btn btn-sm btn-secondary float-right mr-2" v-on:click="savePin">Save</button>
             </form>
+            <div class="clearfix" />
+            </div>
         </div>
+        <div class="google-map" :id="mapName"></div>
         <ul>
             <li v-for="site in sites">
                 {{site.title}} ({{site.latitude}}, {{site.longitude}})
@@ -52,7 +68,7 @@
 
 
 {% block content %}
-    <div id="map-view">
+    <div id="map-container">
         <google-map />
     </div>
 {% endblock %}

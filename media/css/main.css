@@ -13,7 +13,7 @@ main {
 }
 
 .cover-page main {
-    padding-top: 75px;
+    padding-top: 125px;
 }
 
 .btn-cover,
@@ -57,22 +57,30 @@ footer li+li {
 }
 
 /* Map */
-.google-map {
+.map-view .google-map {
     position: absolute;
     width: 100%;
     left: 0;
     height: 800px;
 }
 
-#map-view ul {
+.map-view #map-container ul {
     display: none;
 }
 
-#map-view .new-pin {
-    width: 400px;
-    padding: 10px;
-    margin: 10px;
-    background-color: #c6ccd2;
-    border: 1px solid #6c757d;
+.map-view .new-pin {
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ced4da;
     border-radius: 4px;
+    border-top: 0;
+    width: 91.5%;
+}
+
+.map-view .address-bar {
+    position: absolute;
+    z-index: 2000;
+    margin-left: 16px;
+    margin-top: 10px;
+    width: 50%;
 }
