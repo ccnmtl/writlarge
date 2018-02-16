@@ -9,7 +9,7 @@ var mapsPath = 'https://maps.google.com/maps/api/js?key=' +
     WritLarge.mapKey + '&libraries=places';
 
 requirejs.config({
-    baseUrl: '../../media/js/',
+    baseUrl: WritLarge.staticUrl + 'js/',
     paths: {
         'jquery': 'lib/jquery-3.2.1.min',
         'domReady': 'lib/require/domReady',
