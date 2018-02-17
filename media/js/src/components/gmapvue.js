@@ -42,7 +42,7 @@ var GoogleMapVue = {
             };
 
             const params = {
-                url: WritLarge.baseUrl + 'api/' + this.newType + '/',
+                url: WritLarge.baseUrl + 'api/site/',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
@@ -55,7 +55,9 @@ var GoogleMapVue = {
                 this.newPin = null;
             });
         },
-        editPin: function(event) {
+        viewPin: function(event) {
+            // eslint-disable-next-line scanjs-rules/assign_to_href
+            window.location.href = '/site/view/' + this.selectedSite.id;
         },
         deselectSite: function(event) {
             this.selectedSite = null;

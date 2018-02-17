@@ -34,7 +34,6 @@
                             <label for="type">Select a type for this location:</label>
                             <select v-model="newType" name="type" class="form-control form-control-sm">
                                 <option value="site">Site of Teaching & Learning</option>
-                                <option value="repository">Archival Repository</option>
                             </select>
                         </div>
                         <div class="row">
@@ -63,7 +62,7 @@
                             </div>
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
-                                    v-on:click.stop.prevent="editPin">Edit</button>
+                                    v-on:click.stop.prevent="viewPin">Details</button>
                             </div>
                         </div>
                     <div class="clearfix" />
