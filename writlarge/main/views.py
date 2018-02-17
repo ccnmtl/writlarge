@@ -1,8 +1,12 @@
 from django.conf import settings
+from django.forms.widgets import TextInput, DateInput, \
+    CheckboxSelectMultiple, SelectDateWidget
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 
+from writlarge.main.mixins import ModelFormWidgetMixin
 from writlarge.main.models import LearningSite, ArchivalRepository
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer)
@@ -33,8 +37,29 @@ class LearningSiteDetailView(DetailView):
     model = LearningSite
 
 
+class LearningSiteUpdateView(ModelFormWidgetMixin, UpdateView):
+    model = LearningSite
+    fields = ['title', 'category', 'established',
+              'defunct', 'notes', 'tags', 'verified']
+    widgets = {
+        'title': TextInput,
+        'category': CheckboxSelectMultiple,
+        'established': SelectDateWidget,
+        'defunct': DateInput,
+    }
+
+
 class ArchivalRepositoryDetailView(DetailView):
     model = ArchivalRepository
+
+
+class ArchivalRepositoryUpdateView(ModelFormWidgetMixin, UpdateView):
+    model = ArchivalRepository
+
+    fields = ['title', 'notes', 'tags', 'verified']
+    widgets = {
+        'title': TextInput
+    }
 
 
 """

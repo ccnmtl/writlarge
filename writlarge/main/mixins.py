@@ -1,5 +1,6 @@
 import json
 
+from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.utils.decorators import method_decorator
 
@@ -37,3 +38,10 @@ class JSONResponseMixin(object):
         return HttpResponse(json.dumps(context),
                             content_type='application/json',
                             **response_kwargs)
+
+
+# https://stackoverflow.com/a/27971221/9322601
+class ModelFormWidgetMixin(object):
+    def get_form_class(self):
+        return modelform_factory(self.model, fields=self.fields,
+                                 widgets=self.widgets)
