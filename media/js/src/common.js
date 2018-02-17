@@ -17,6 +17,7 @@ requirejs.config({
         'googleMaps': mapsPath,
         'Vue': vuePath,
         'mapVue': 'src/components/gmapvue',
+        'miniMapVue': 'src/components/gmapminivue',
         'utils': 'src/utils'
     },
     shim: {
