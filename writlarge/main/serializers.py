@@ -1,3 +1,4 @@
+from django.contrib.gis.geos import Point
 from rest_framework import serializers
 
 from writlarge.main.models import ArchivalRepository, LearningSite, \
@@ -51,9 +52,13 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     def get_longitude(self, obj):
         return obj.latlng.x
 
+    def validate_latlng(self, data):
+        if 'lat' in data and 'lng' in data:
+            return Point(data['lng'], data['lat'])
+
     class Meta:
         model = LearningSite
         fields = ('id', 'title', 'latlng', 'established', 'defunct', 'notes',
-                  'category', 'digital_object',
-                  'verified', 'verified_modified_at', 'created_at',
-                  'modified_at', 'latitude', 'longitude')
+                  'category', 'digital_object', 'latitude', 'longitude',
+                  'verified', 'verified_modified_at',
+                  'created_at', 'modified_at')

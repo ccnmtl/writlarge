@@ -5,52 +5,56 @@
 {% block mainclass %}container-fluid pl-0 pr-0 pb-0{% endblock %}
 
 {% block client_templates %}
+<meta name="csrf-token" content="{{csrf_token}}">
 {% verbatim %}
 <script type="text/x-template" id="google-map-template">
     <div>
         <div class="address-bar">
             <div class="input-group">
-                <input type="text" v-model="address" class="form-control form-control-lg w-25"
-                    placeholder="Enter an address or click the map" aria-label="Enter an address"
-                    aria-describedby="basic-addon2">
+                <input type="text" v-model="address"
+                    class="form-control form-control w-25"
+                    placeholder="Address"
+                    aria-label="Enter an address" aria-describedby="basic-addon2">
                 <div class="input-group-append">
-                    <button class="btn btn-secondary btn-lg" type="button" v-on:click="geocode">
-                        Find
-                    </button>
+                    <button class="btn btn-light" type="button"
+                        v-on:click="geocode"><i class="fa fa-search"></i></button>
                 </div>
-            </div>
-            <div v-if="newPin" class="new-pin">
-            <button type="button" class="close" aria-label="Close" v-on:click="removeNewPin">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <form>
-            <h4>Save Location</h4>
-            <div class="form-group row">
-                <label for="title" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input class="form-control form-control-sm" type="text">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="type" class="col-sm-2 col-form-label">Type</label>
-                <div class="col-sm-10">
-                    <select name="type" class="form-control form-control-sm">
-                        <option value="learningsite">Site of Teaching &amp; Learning</option>
-                        <option value="archivalrepository">Archival Repository</option>
-                    </select>
-                </div>
-            </div>
-            <button class="btn btn-sm btn-secondary float-right" v-on:click="editPin">Add More Detail</button>
-            <button class="btn btn-sm btn-secondary float-right mr-2" v-on:click="savePin">Save</button>
-            </form>
-            <div class="clearfix" />
             </div>
         </div>
         <div class="google-map" :id="mapName"></div>
+        <div v-if="newPin" class="row">
+            <div class="col-12">
+                <div class="new-pin fixed-bottom mx-auto d-block">
+                    <form>
+                        <div class="form-group">
+                            <label for="title">Give this location a name:</label>
+                            <input v-model="newTitle" class="form-control form-control-sm" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Select a type for this location:</label>
+                            <select v-model="newType" name="type" class="form-control form-control-sm">
+                                <option value="site">Site of Teaching & Learning</option>
+                                <option value="repository">Archival Repository</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button class="w-100 btn btn-sm btn-secondary"
+                                    v-on:click.stop.prevent="removeNewPin">Cancel</button>
+                            </div>
+                            <div class="col">
+                                <button class="w-100 btn btn-sm btn-secondary"
+                                    v-on:click.stop.prevent="savePin">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix" />
+                </div>
+            </div>
+        </div>
         <ul>
-            <li v-for="site in sites">
-                {{site.title}} ({{site.latitude}}, {{site.longitude}})
-            </li>
+            <li v-for="site in sites">{{site.title}} ({{site.latitude}},
+                {{site.longitude}})</li>
         </ul>
     </div>
 </script>

@@ -11,7 +11,9 @@ var GoogleMapVue = {
             markers: [],
             bounds: null,
             newPin: null,
-            address: ''
+            address: '',
+            newTitle: '',
+            newType: ''
         };
     },
     methods: {
@@ -30,8 +32,27 @@ var GoogleMapVue = {
         removeNewPin: function(event) {
             this.newPin.setMap(null);
             this.newPin = null;
+            this.address = '';
         },
         savePin: function(event) {
+            const data = {
+                'title': this.newTitle,
+                'latlng': this.newPin.position.toJSON()
+            };
+
+            const params = {
+                url: WritLarge.baseUrl + 'api/' + this.newType + '/',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            };
+
+            $.post(params, (response) => {
+                this.markers.push(this.newPin);
+                this.newPin = null;
+                this.newTitle = '';
+                this.newType = '';
+            });
         },
         editPin: function(event) {
         },
@@ -77,7 +98,8 @@ var GoogleMapVue = {
         this.geocoder = new google.maps.Geocoder();
 
         this.map = new google.maps.Map(elt, {
-            mapTypeControl: false
+            mapTypeControl: false,
+            clickableIcons: false
         });
         this.map.addListener('click', (ev) => {
             this.dropPin(ev);

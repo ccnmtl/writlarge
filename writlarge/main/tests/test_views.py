@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, dumps
 
 from django.test import TestCase
 from django.test.client import Client
@@ -74,9 +74,14 @@ class ApiViewTest(TestCase):
 
     def test_update(self):
         self.client.login(username=self.user.username, password='test')
+        data = {
+            'id': self.site.id, 'title': 'Foo',
+            'latlng': {'lat': 5, 'lng': 6},
+            'established': '2008-01-01', 'defunct': '2009-01-01'
+        }
         response = self.client.post(
             '/api/site/',
-            {'id': self.site.id, 'title': 'Foo', 'latlng': 'POINT(5 23)',
-             'established': '2008-01-01', 'defunct': '2009-01-01'},
+            dumps(data),
+            content_type="application/json",
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 201)
