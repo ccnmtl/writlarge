@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-
-{% block title %}Archival Repository{% endblock %}
+{% load bootstrap4 %}
+{% block title %}Edit Learning Site{% endblock %}
 
 {% block content %}
+
 <div class="py-5 text-center">
     <h2>{{object.title}}</h2>
     {% if object.description %}
@@ -25,7 +26,11 @@
     </div>
     <div class="col-md-8 order-md-1">
         <h4 class="mb-3">Details</h4>
-        <h4 class="mb-3">Collections</h4>
+        <form action="." method="post">{% csrf_token %}
+            {% bootstrap_form form %}
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+        </form>
     </div>
 </div>
 {% endblock %}
