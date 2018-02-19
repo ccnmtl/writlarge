@@ -62,6 +62,22 @@ var GoogleMapVue = {
         deselectSite: function(event) {
             this.selectedSite = null;
         },
+        enlargeBounds: function(bounds) {
+            // Don't zoom in too far on only one marker
+            // http://stackoverflow.com/questions/3334729/
+            // google-maps-v3-fitbounds-zoom-too-close-for-single-marker
+            if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+                var extendPoint1 = new google.maps.LatLng(
+                    bounds.getNorthEast().lat() + 0.001,
+                    bounds.getNorthEast().lng() + 0.001);
+                var extendPoint2 = new google.maps.LatLng(
+                    bounds.getNorthEast().lat() - 0.001,
+                    bounds.getNorthEast().lng() - 0.001);
+                bounds.extend(extendPoint1);
+                bounds.extend(extendPoint2);
+            }
+            return bounds;
+        },
         geocode: function(event) {
             this.geocoder.geocode({
                 address: this.address,
@@ -75,6 +91,12 @@ var GoogleMapVue = {
                         position: responses[0].geometry.location,
                         map: this.map
                     });
+
+                    // zoom in on the pin, but not too far
+                    this.bounds = new google.maps.LatLngBounds();
+                    this.bounds.extend(this.newPin.position);
+                    this.bounds = this.enlargeBounds(this.bounds);
+                    this.map.fitBounds(this.bounds);
                 }
             });
         },
@@ -97,7 +119,6 @@ var GoogleMapVue = {
         });
     },
     mounted: function() {
-        this.bounds = new google.maps.LatLngBounds();
         const elt = document.getElementById(this.mapName);
 
         this.geocoder = new google.maps.Geocoder();
@@ -111,6 +132,7 @@ var GoogleMapVue = {
         });
     },
     updated: function() {
+        this.bounds = new google.maps.LatLngBounds();
         this.sites.forEach((site) => {
             const position = new google.maps.LatLng(
                 site.latitude, site.longitude);
@@ -124,7 +146,6 @@ var GoogleMapVue = {
                 this.selectedSite = site;
             });
             if (!this.newPin) {
-                // don't change the viewport
                 this.map.fitBounds(this.bounds.extend(position));
             }
         });
