@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="py-5 text-center">
-    <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{object.title}}</h2>
+    <h2>{{object.title}}</h2>
     {% if object.established %} 
         <h4 class="text-muted">
             {{object.established|date:"Y"}} {% if object.defunct %}- {{object.defunct|date:"Y"}}{% endif %}
