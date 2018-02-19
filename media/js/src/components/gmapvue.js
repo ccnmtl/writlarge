@@ -8,19 +8,25 @@ var GoogleMapVue = {
             mapName: 'the-map',
             sites: [],
             map: null,
-            markers: [],
             bounds: null,
-            newPin: null,
             address: '',
+            newPin: null,
             newTitle: '',
-            newType: ''
+            newType: '',
+            selectedSite: null
         };
     },
     methods: {
-        dropPin: function(event) {
+        clearNewPin: function(event) {
             if (this.newPin) {
                 this.newPin.setMap(null);
+                this.newPin = null;
+                this.address = '';
             }
+        },
+        dropPin: function(event) {
+            this.clearNewPin();
+            this.selectedSite = null;
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -29,11 +35,6 @@ var GoogleMapVue = {
 
             this.reverseGeocode(this.newPin);
         },
-        removeNewPin: function(event) {
-            this.newPin.setMap(null);
-            this.newPin = null;
-            this.address = '';
-        },
         savePin: function(event) {
             const data = {
                 'title': this.newTitle,
@@ -41,20 +42,25 @@ var GoogleMapVue = {
             };
 
             const params = {
-                url: WritLarge.baseUrl + 'api/' + this.newType + '/',
+                url: WritLarge.baseUrl + 'api/site/',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
             };
 
             $.post(params, (response) => {
-                this.markers.push(this.newPin);
+                response.marker = this.newPin;
+                this.sites.push(response);
+                this.selectedSite = response;
                 this.newPin = null;
-                this.newTitle = '';
-                this.newType = '';
             });
         },
-        editPin: function(event) {
+        viewPin: function(event) {
+            // eslint-disable-next-line scanjs-rules/assign_to_href
+            window.location.href = '/site/view/' + this.selectedSite.id;
+        },
+        deselectSite: function(event) {
+            this.selectedSite = null;
         },
         geocode: function(event) {
             this.geocoder.geocode({
@@ -71,7 +77,6 @@ var GoogleMapVue = {
                     });
                 }
             });
-
         },
         reverseGeocode: function(marker) {
             this.geocoder.geocode({
@@ -113,7 +118,11 @@ var GoogleMapVue = {
                 position: position,
                 map: this.map
             });
-            this.markers.push(marker);
+            site.marker = marker;
+            google.maps.event.addListener(marker, 'click', (ev) => {
+                this.clearNewPin();
+                this.selectedSite = site;
+            });
             if (!this.newPin) {
                 // don't change the viewport
                 this.map.fitBounds(this.bounds.extend(position));

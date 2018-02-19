@@ -34,13 +34,12 @@
                             <label for="type">Select a type for this location:</label>
                             <select v-model="newType" name="type" class="form-control form-control-sm">
                                 <option value="site">Site of Teaching & Learning</option>
-                                <option value="repository">Archival Repository</option>
                             </select>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
-                                    v-on:click.stop.prevent="removeNewPin">Cancel</button>
+                                    v-on:click.stop.prevent="clearNewPin">Cancel</button>
                             </div>
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
@@ -48,6 +47,24 @@
                             </div>
                         </div>
                     </form>
+                    <div class="clearfix" />
+                </div>
+            </div>
+        </div>
+        <div v-if="selectedSite" class="row">
+            <div class="col-12">
+                <div class="new-pin fixed-bottom mx-auto d-block">
+                    <h5>{{selectedSite.title}}</h5>
+                        <div class="row">
+                            <div class="col">
+                                <button class="w-100 btn btn-sm btn-secondary"
+                                    v-on:click.stop.prevent="deselectSite">Cancel</button>
+                            </div>
+                            <div class="col">
+                                <button class="w-100 btn btn-sm btn-secondary"
+                                    v-on:click.stop.prevent="viewPin">Details</button>
+                            </div>
+                        </div>
                     <div class="clearfix" />
                 </div>
             </div>
