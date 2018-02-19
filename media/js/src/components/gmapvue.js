@@ -1,4 +1,4 @@
-/* global google: true */
+/* global google: true, enlargeBounds: true */
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
@@ -62,22 +62,6 @@ var GoogleMapVue = {
         deselectSite: function(event) {
             this.selectedSite = null;
         },
-        enlargeBounds: function(bounds) {
-            // Don't zoom in too far on only one marker
-            // http://stackoverflow.com/questions/3334729/
-            // google-maps-v3-fitbounds-zoom-too-close-for-single-marker
-            if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
-                var extendPoint1 = new google.maps.LatLng(
-                    bounds.getNorthEast().lat() + 0.001,
-                    bounds.getNorthEast().lng() + 0.001);
-                var extendPoint2 = new google.maps.LatLng(
-                    bounds.getNorthEast().lat() - 0.001,
-                    bounds.getNorthEast().lng() - 0.001);
-                bounds.extend(extendPoint1);
-                bounds.extend(extendPoint2);
-            }
-            return bounds;
-        },
         geocode: function(event) {
             this.geocoder.geocode({
                 address: this.address,
@@ -95,7 +79,7 @@ var GoogleMapVue = {
                     // zoom in on the pin, but not too far
                     this.bounds = new google.maps.LatLngBounds();
                     this.bounds.extend(this.newPin.position);
-                    this.bounds = this.enlargeBounds(this.bounds);
+                    this.bounds = enlargeBounds(this.bounds);
                     this.map.fitBounds(this.bounds);
                 }
             });

@@ -2,38 +2,64 @@
 
 {% block title %}Learning Site{% endblock %}
 
-{% block content %}
-<div class="py-5 text-center">
-    <h2>{{object.title}}</h2>
-    {% if object.established %} 
-        <h4 class="text-muted">
-            {{object.established|date:"Y"}} {% if object.defunct %}- {{object.defunct|date:"Y"}}{% endif %}
-        </h3>
-    {% endif %}
-    {% if object.description %}
-    <p class="lead">
-        {{object.description}}
-    </p>
-    {% endif %}
-</div>
-
-<div class="row">
-    <div class="col-md-4 order-md-2 mb-4">
-        <div class="w-100 text-center">
-            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Map</span>
-            </h4>
-            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Photos</span>
-            </h4>
+{% block client_templates %}
+<meta name="csrf-token" content="{{csrf_token}}">
+    {% verbatim %}
+    <script type="text/x-template" id="google-mini-map-template">
+        <div class="card mb-5">
+            <div class="google-map" :id="mapName"></div>
+            <div class="card-body">
+            <p class="card-text text-left">{{address}}</p>
+            </div>
         </div>
+    </script>
+    {% endverbatim %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script 
+        data-main="{{STATIC_URL}}js/src/detail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="detail-container" data-id="{{object.id}}">
+    <div class="py-5 text-center">
+        <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{object.title}}</h2>
+        {% if object.established %} 
+            <h4 class="text-muted">
+                {{object.established|date:"Y"}} {% if object.defunct %}- {{object.defunct|date:"Y"}}{% endif %}
+            </h3>
+        {% endif %}
+        {% if object.description %}
+        <p class="lead">
+            {{object.description}}
+        </p>
+        {% endif %}
     </div>
-    <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Details</h4>
-        <h4 class="mb-3">
-            
-        </h4>
-        
+
+    <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+            <div class="w-100 text-center">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Map</span>
+                </h4>
+                <div id="map-container">
+                    <google-mini-map siteid="{{object.id}}" />
+                </div>
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Photos</span>
+                </h4>
+            </div>
+        </div>
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Details</h4>
+        </div>
     </div>
 </div>
 {% endblock %}
+
