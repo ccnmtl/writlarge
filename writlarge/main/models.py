@@ -182,3 +182,6 @@ class Place(models.Model):
     def get_absolute_url(self):
         return reverse(
             'place-detail-view', kwargs={'pk': self.id})
+
+    def empty(self):
+        return True

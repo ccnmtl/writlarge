@@ -26,9 +26,10 @@
         <div v-if="newPin" class="row">
             <div class="col-12">
                 <div class="new-pin fixed-bottom mx-auto d-block">
+                    <h5>Location Selected</h5>
                     <form>
                         <div class="form-group">
-                            <label for="title">Give this location a name:</label>
+                            <label for="title">Now, give this location a name:</label>
                             <input v-model="newTitle" class="form-control form-control-sm" type="text">
                         </div>
                         <div class="row">
@@ -50,24 +51,40 @@
             <div class="col-12">
                 <div class="new-pin fixed-bottom mx-auto d-block">
                     <h5>{{selectedPlace.title}}</h5>
+                    <div v-if="selectedPlace.empty && readonly === 'false'">
+                        <p>Can you add more detail to this location?</p>
+                        <div class="row">
+                            <div class="col">
+                                <button class="w-100 btn btn-sm btn-secondary" v-on:click.stop.prevent="deselectPlace">
+                                    Later
+                                </button>
+                            </div>
+                            <div class="col">
+                                <a :href="'/edit/' + selectedPlace.id + '/'"
+                                    class="w-100 btn btn-sm btn-secondary">
+                                    Add Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
                         <div class="row">
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
                                     v-on:click.stop.prevent="deselectPlace">Close</button>
                             </div>
                             <div class="col">
-                                <button class="w-100 btn btn-sm btn-secondary"
-                                    v-on:click.stop.prevent="viewPin">Details</button>
+                                <a :href="'/view/' + selectedPlace.id + '/'"
+                                    class="w-100 btn btn-sm btn-secondary">
+                                    Details
+                                </a>
                             </div>
                         </div>
-                    <div class="clearfix" />
+                    </div>
                 </div>
             </div>
         </div>
-        <ul>
-            <li v-for="place in places">{{place.title}} ({{place.latitude}},
-                {{place.longitude}})</li>
-        </ul>
+        <ul><li v-for="place in places">{{place.title}}</li></ul>
     </div>
 </script>
 {% endverbatim %}
@@ -85,6 +102,6 @@
 
 {% block content %}
     <div id="map-container">
-        <google-map />
+        <google-map readonly="{% if request.user.is_anonymous %}true{% else %}false{% endif %}"/>
     </div>
 {% endblock %}
