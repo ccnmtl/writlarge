@@ -1,6 +1,5 @@
 from django.conf import settings
-from django.forms.widgets import TextInput, DateInput, \
-    CheckboxSelectMultiple, SelectDateWidget
+from django.forms.widgets import TextInput
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
@@ -33,30 +32,13 @@ class SearchView(TemplateView):
     template_name = "main/search.html"
 
 
-class LearningSiteDetailView(DetailView):
-    model = LearningSite
+class PlaceDetailView(DetailView):
+    model = Place
 
 
-class LearningSiteUpdateView(ModelFormWidgetMixin, UpdateView):
-    model = LearningSite
-    fields = ['title', 'category', 'established',
-              'defunct', 'notes', 'tags', 'verified']
-    widgets = {
-        'title': TextInput,
-        'category': CheckboxSelectMultiple,
-        'established': SelectDateWidget,
-        'defunct': DateInput,
-    }
-
-
-class ArchivalRepositoryDetailView(DetailView):
-    model = ArchivalRepository
-
-
-class ArchivalRepositoryUpdateView(ModelFormWidgetMixin, UpdateView):
-    model = ArchivalRepository
-
-    fields = ['title', 'notes', 'tags', 'verified']
+class PlaceUpdateView(ModelFormWidgetMixin, UpdateView):
+    model = Place
+    fields = ['title', 'notes']
     widgets = {
         'title': TextInput
     }

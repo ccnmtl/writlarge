@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Learning Site{% endblock %}
+{% block title %}Place{% endblock %}
 
 {% block client_templates %}
 <meta name="csrf-token" content="{{csrf_token}}">
@@ -29,17 +29,7 @@
 
 <div id="detail-container" data-id="{{object.id}}">
     <div class="py-5 text-center">
-        <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i> {{object.title}}</h2>
-        {% if object.established %} 
-            <h4 class="text-muted">
-                {{object.established|date:"Y"}} {% if object.defunct %}- {{object.defunct|date:"Y"}}{% endif %}
-            </h3>
-        {% endif %}
-        {% if object.description %}
-        <p class="lead">
-            {{object.description}}
-        </p>
-        {% endif %}
+        <h2><i class="fa fa-graduation-cap" aria-hidden="true"></i>{{object.title}}</h2>
     </div>
 
     <div class="row">
@@ -49,7 +39,7 @@
                     <span class="text-muted">Map</span>
                 </h4>
                 <div id="map-container">
-                    <google-mini-map siteid="{{object.id}}" />
+                    <google-mini-map placeid="{{object.id}}" />
                 </div>
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">Photos</span>

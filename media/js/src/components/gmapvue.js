@@ -57,7 +57,7 @@ var GoogleMapVue = {
         },
         viewPin: function(event) {
             // eslint-disable-next-line scanjs-rules/assign_to_href
-            window.location.href = '/place/view/' + this.selectedPlace.id;
+            window.location.href = '/view/' + this.selectedPlace.id;
         },
         deselectPlace: function(event) {
             this.selectedPlace = null;

@@ -2,12 +2,12 @@
 /* exported GoogleMiniMapVue */
 
 var GoogleMiniMapVue = {
-    props: ['siteid'],
+    props: ['placeid'],
     template: '#google-mini-map-template',
     data: function() {
         return {
             mapName: 'the-map',
-            site: null,
+            place: null,
             address: null
         };
     },
@@ -33,17 +33,17 @@ var GoogleMiniMapVue = {
             clickableIcons: false
         });
 
-        const url = WritLarge.baseUrl + 'api/site/' + this.siteid + '/';
+        const url = WritLarge.baseUrl + 'api/place/' + this.placeid + '/';
         jQuery.getJSON(url, (data) => {
-            this.site = data;
+            this.place = data;
 
             const position = new google.maps.LatLng(
-                this.site.latitude, this.site.longitude);
+                this.place.latitude, this.place.longitude);
             const marker = new google.maps.Marker({
                 position: position,
                 map: this.map
             });
-            this.site.marker = marker;
+            this.place.marker = marker;
             this.reverseGeocode(marker);
         });
     },
@@ -52,7 +52,7 @@ var GoogleMiniMapVue = {
 
         // zoom in on the pin, but not too far
         this.bounds = new google.maps.LatLngBounds();
-        this.bounds.extend(this.site.marker.position);
+        this.bounds.extend(this.place.marker.position);
         this.bounds = enlargeBounds(this.bounds);
         this.map.fitBounds(this.bounds);
     }
