@@ -25,7 +25,7 @@ if hasattr(settings, 'CAS_BASE'):
 router = routers.DefaultRouter()
 router.register(r'site', views.LearningSiteViewSet)
 router.register(r'repository', views.ArchivalRepositoryViewSet)
-
+router.register(r'place', views.PlaceViewSet)
 
 urlpatterns = [
     url(r'^$', views.CoverView.as_view()),

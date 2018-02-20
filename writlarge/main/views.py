@@ -7,9 +7,9 @@ from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 
 from writlarge.main.mixins import ModelFormWidgetMixin
-from writlarge.main.models import LearningSite, ArchivalRepository
+from writlarge.main.models import LearningSite, ArchivalRepository, Place
 from writlarge.main.serializers import (
-    ArchivalRepositorySerializer, LearningSiteSerializer)
+    ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
 
 # returns important setting information for all web pages.
@@ -75,3 +75,8 @@ class ArchivalRepositoryViewSet(viewsets.ModelViewSet):
 class LearningSiteViewSet(viewsets.ModelViewSet):
     queryset = LearningSite.objects.all().order_by('-modified_at')
     serializer_class = LearningSiteSerializer
+
+
+class PlaceViewSet(viewsets.ModelViewSet):
+    queryset = Place.objects.all().order_by('-modified_at')
+    serializer_class = PlaceSerializer
