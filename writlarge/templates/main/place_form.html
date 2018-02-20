@@ -1,16 +1,10 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Learning Site{% endblock %}
+{% block title %}Edit Place{% endblock %}
 
 {% block content %}
-
 <div class="py-5 text-center">
     <h2>{{object.title}}</h2>
-    {% if object.description %}
-    <p class="lead">
-        {{object.description}}
-    </p>
-    {% endif %}
 </div>
 
 <div class="row">
