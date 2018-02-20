@@ -1,12 +1,12 @@
 # pylint: disable-msg=R0904
 from django.contrib import admin
-from django.contrib.gis.db.models.fields import PointField
-from django.contrib.gis.geos.point import Point
 from django.forms.widgets import MultiWidget, TextInput
 
+from django.contrib.gis.db.models.fields import PointField
+from django.contrib.gis.geos.point import Point
 from writlarge.main.models import LearningSite, ArchivalRepository, \
     ArchivalCollection, DigitalObject, LearningSiteCategory, \
-    ArchivalRecordFormat
+    ArchivalRecordFormat, Place
 
 
 class LatLongWidget(MultiWidget):
@@ -34,6 +34,16 @@ class LatLongWidget(MultiWidget):
             return ''
 
         return point
+
+
+@admin.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    list_display = ("title", "latitude", "longitude",
+                    "created_at", "modified_at")
+
+    formfield_overrides = {
+        PointField: {'widget': LatLongWidget},
+    }
 
 
 @admin.register(LearningSite)
