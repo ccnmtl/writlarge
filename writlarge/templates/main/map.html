@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}Map{% endblock %}
@@ -30,12 +31,6 @@
                             <label for="title">Give this location a name:</label>
                             <input v-model="newTitle" class="form-control form-control-sm" type="text">
                         </div>
-                        <div class="form-group">
-                            <label for="type">Select a type for this location:</label>
-                            <select v-model="newType" name="type" class="form-control form-control-sm">
-                                <option value="site">Site of Teaching & Learning</option>
-                            </select>
-                        </div>
                         <div class="row">
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
@@ -51,14 +46,14 @@
                 </div>
             </div>
         </div>
-        <div v-if="selectedSite" class="row">
+        <div v-if="selectedPlace" class="row">
             <div class="col-12">
                 <div class="new-pin fixed-bottom mx-auto d-block">
-                    <h5>{{selectedSite.title}}</h5>
+                    <h5>{{selectedPlace.title}}</h5>
                         <div class="row">
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
-                                    v-on:click.stop.prevent="deselectSite">Close</button>
+                                    v-on:click.stop.prevent="deselectPlace">Close</button>
                             </div>
                             <div class="col">
                                 <button class="w-100 btn btn-sm btn-secondary"
@@ -70,8 +65,8 @@
             </div>
         </div>
         <ul>
-            <li v-for="site in sites">{{site.title}} ({{site.latitude}},
-                {{site.longitude}})</li>
+            <li v-for="place in places">{{place.title}} ({{place.latitude}},
+                {{place.longitude}})</li>
         </ul>
     </div>
 </script>
