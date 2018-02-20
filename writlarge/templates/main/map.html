@@ -85,6 +85,6 @@
 
 {% block content %}
     <div id="map-container">
-        <google-map />
+        <google-map readonly="{% if request.user.is_anonymous %}true{% else %}false{% endif %}"/>
     </div>
 {% endblock %}

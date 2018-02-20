@@ -2,6 +2,7 @@
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
+    props: ['readonly'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -17,6 +18,9 @@ var GoogleMapVue = {
         };
     },
     methods: {
+        isReadOnly: function() {
+            return this.readonly === 'true';
+        },
         clearNewPin: function(event) {
             if (this.newPin) {
                 this.newPin.setMap(null);
@@ -67,18 +71,21 @@ var GoogleMapVue = {
                 address: this.address,
             }, (responses) => {
                 if (responses && responses.length > 0) {
-                    if (this.newPin) {
-                        this.newPin.setMap(null);
-                    }
+                    const position = responses[0].geometry.location;
+                    if (!this.isReadOnly()) {
+                        if (this.newPin) {
+                            this.newPin.setMap(null);
+                        }
 
-                    this.newPin = new google.maps.Marker({
-                        position: responses[0].geometry.location,
-                        map: this.map
-                    });
+                        this.newPin = new google.maps.Marker({
+                            position: position,
+                            map: this.map
+                        });
+                    }
 
                     // zoom in on the pin, but not too far
                     this.bounds = new google.maps.LatLngBounds();
-                    this.bounds.extend(this.newPin.position);
+                    this.bounds.extend(position);
                     this.bounds = enlargeBounds(this.bounds);
                     this.map.fitBounds(this.bounds);
                 }
@@ -111,9 +118,11 @@ var GoogleMapVue = {
             mapTypeControl: false,
             clickableIcons: false
         });
-        this.map.addListener('click', (ev) => {
-            this.dropPin(ev);
-        });
+        if (!this.isReadOnly()) {
+            this.map.addListener('click', (ev) => {
+                this.dropPin(ev);
+            });
+        }
     },
     updated: function() {
         this.bounds = new google.maps.LatLngBounds();
