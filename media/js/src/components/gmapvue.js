@@ -6,14 +6,14 @@ var GoogleMapVue = {
     data: function() {
         return {
             mapName: 'the-map',
-            sites: [],
+            places: [],
             map: null,
             bounds: null,
             address: '',
             newPin: null,
             newTitle: '',
             newType: '',
-            selectedSite: null
+            selectedPlace: null
         };
     },
     methods: {
@@ -26,7 +26,7 @@ var GoogleMapVue = {
         },
         dropPin: function(event) {
             this.clearNewPin();
-            this.selectedSite = null;
+            this.selectedPlace = null;
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -42,7 +42,7 @@ var GoogleMapVue = {
             };
 
             const params = {
-                url: WritLarge.baseUrl + 'api/site/',
+                url: WritLarge.baseUrl + 'api/place/',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
@@ -50,17 +50,17 @@ var GoogleMapVue = {
 
             $.post(params, (response) => {
                 response.marker = this.newPin;
-                this.sites.push(response);
-                this.selectedSite = response;
+                this.places.push(response);
+                this.selectedPlace = response;
                 this.newPin = null;
             });
         },
         viewPin: function(event) {
             // eslint-disable-next-line scanjs-rules/assign_to_href
-            window.location.href = '/site/view/' + this.selectedSite.id;
+            window.location.href = '/place/view/' + this.selectedPlace.id;
         },
-        deselectSite: function(event) {
-            this.selectedSite = null;
+        deselectPlace: function(event) {
+            this.selectedPlace = null;
         },
         geocode: function(event) {
             this.geocoder.geocode({
@@ -97,9 +97,9 @@ var GoogleMapVue = {
         }
     },
     created: function() {
-        const url = WritLarge.baseUrl + 'api/site/';
+        const url = WritLarge.baseUrl + 'api/place/';
         jQuery.getJSON(url, (data) => {
-            this.sites = data;
+            this.places = data;
         });
     },
     mounted: function() {
@@ -117,17 +117,17 @@ var GoogleMapVue = {
     },
     updated: function() {
         this.bounds = new google.maps.LatLngBounds();
-        this.sites.forEach((site) => {
+        this.places.forEach((place) => {
             const position = new google.maps.LatLng(
-                site.latitude, site.longitude);
+                place.latitude, place.longitude);
             const marker = new google.maps.Marker({
                 position: position,
                 map: this.map
             });
-            site.marker = marker;
+            place.marker = marker;
             google.maps.event.addListener(marker, 'click', (ev) => {
                 this.clearNewPin();
-                this.selectedSite = site;
+                this.selectedPlace = place;
             });
             if (!this.newPin) {
                 this.map.fitBounds(this.bounds.extend(position));
