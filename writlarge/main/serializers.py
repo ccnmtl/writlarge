@@ -74,6 +74,6 @@ class PlaceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Place
-        fields = ('id', 'title', 'latlng', 'notes',
+        fields = ('id', 'title', 'latlng', 'notes', 'empty',
                   'digital_object', 'latitude', 'longitude',
                   'created_at', 'modified_at')

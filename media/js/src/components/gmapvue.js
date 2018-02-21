@@ -59,10 +59,6 @@ var GoogleMapVue = {
                 this.newPin = null;
             });
         },
-        viewPin: function(event) {
-            // eslint-disable-next-line scanjs-rules/assign_to_href
-            window.location.href = '/view/' + this.selectedPlace.id;
-        },
         deselectPlace: function(event) {
             this.selectedPlace = null;
         },
@@ -83,7 +79,7 @@ var GoogleMapVue = {
                         });
                     }
 
-                    // zoom in on the pin, but not too far
+                    // zoom in on the location, but not too far
                     this.bounds = new google.maps.LatLngBounds();
                     this.bounds.extend(position);
                     this.bounds = enlargeBounds(this.bounds);
