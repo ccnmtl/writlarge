@@ -104,6 +104,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
 }
 
+
 AUTHENTICATION_BACKENDS = [
     'djangowind.auth.SAMLAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
@@ -126,3 +127,10 @@ LTI_TOOL_CONFIGURATION = {
     'frame_width': 1024,
     'frame_height': 1024
 }
+
+
+WIND_AFFIL_HANDLERS = [
+    'writlarge.main.auth.EditorMapper',
+    'djangowind.auth.StaffMapper',
+    'djangowind.auth.SuperuserMapper'
+]
