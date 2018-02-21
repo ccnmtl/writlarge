@@ -63,6 +63,9 @@ var GoogleMapVue = {
             this.selectedPlace = null;
         },
         geocode: function(event) {
+            this.clearNewPin();
+            this.selectedPlace = null;
+
             this.geocoder.geocode({
                 address: this.address,
             }, (responses) => {
