@@ -116,7 +116,9 @@ var GoogleMapVue = {
 
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
-            clickableIcons: false
+            clickableIcons: false,
+            zoom: 10,
+            center: new google.maps.LatLng(40.778572, -73.970616)
         });
         if (!this.isReadOnly()) {
             this.map.addListener('click', (ev) => {
