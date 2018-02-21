@@ -48,6 +48,7 @@ class LearningSite(models.Model):
     title = models.TextField(unique=True)
     latlng = PointField()
 
+    description = models.TextField(null=True, blank=True)
     category = models.ManyToManyField(LearningSiteCategory, blank=True)
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
@@ -57,6 +58,9 @@ class LearningSite(models.Model):
 
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
+
+    instructional_level = models.TextField(null=True, blank=True)
+    founder = models.TextField(null=True, blank=True)
 
     verified = models.BooleanField(default=False)
     verified_modified_at = models.DateTimeField(null=True, blank=True)
@@ -72,7 +76,10 @@ class LearningSite(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('learning-site-detail-view', kwargs={'pk': self.id})
+        return reverse('site-detail-view', kwargs={'pk': self.id})
+
+    def empty(self):
+        return self.category.count() < 1
 
 
 class ArchivalRepository(models.Model):

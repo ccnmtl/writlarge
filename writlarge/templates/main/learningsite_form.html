@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Edit Place{% endblock %}
+
+{% block content %}
+{% if not request.user.is_anonymous %}
+<div class="float-right">
+    <a href="{% url 'site-detail-view' object.id %}" class="btn btn-secondary btn-sm mt-2">View Record</a>
+    <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
+        Add Photo
+    </a>
+    <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
+        Add Primary Source
+    </a>
+</div>
+{% endif %}
+
+<div class="py-5 text-center">
+    <h2>
+        {{object.title}}
+    </h2>
+</div>
+
+<div class="row">
+    <div class="col-md-12 order-md-1">
+        <h4 class="mb-3">Edit Details</h4>
+        <form action="." method="post">{% csrf_token %}
+            {% bootstrap_form form %}
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

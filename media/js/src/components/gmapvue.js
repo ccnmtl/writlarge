@@ -46,7 +46,7 @@ var GoogleMapVue = {
             };
 
             const params = {
-                url: WritLarge.baseUrl + 'api/place/',
+                url: WritLarge.baseUrl + 'api/site/',
                 dataType: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
@@ -67,6 +67,7 @@ var GoogleMapVue = {
                 address: this.address,
             }, (responses) => {
                 if (responses && responses.length > 0) {
+                    this.address = responses[0].formatted_address;
                     const position = responses[0].geometry.location;
                     if (!this.isReadOnly()) {
                         if (this.newPin) {
@@ -100,7 +101,7 @@ var GoogleMapVue = {
         }
     },
     created: function() {
-        const url = WritLarge.baseUrl + 'api/place/';
+        const url = WritLarge.baseUrl + 'api/site/';
         jQuery.getJSON(url, (data) => {
             this.places = data;
         });
