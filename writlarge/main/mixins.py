@@ -1,7 +1,9 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
-from django.http.response import HttpResponseNotAllowed, HttpResponse
+from django.http.response import HttpResponseNotAllowed, HttpResponse, \
+    HttpResponseRedirect
 from django.utils.decorators import method_decorator
 
 
@@ -45,3 +47,15 @@ class ModelFormWidgetMixin(object):
     def get_form_class(self):
         return modelform_factory(self.model, fields=self.fields,
                                  widgets=self.widgets)
+
+
+class LoggedInEditorMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+
+        if (not self.request.user.groups or
+                not self.request.user.groups.filter(name='Editor').exists()):
+            return HttpResponseRedirect('/accounts/login/')
+
+        return super(LoggedInEditorMixin, self).dispatch(*args, **kwargs)

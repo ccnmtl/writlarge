@@ -28,7 +28,7 @@
 {% block content %}
 
 <div id="detail-container" data-id="{{object.id}}">
-    {% if not request.user.is_anonymous %}
+    {% if is_editor %}
         <div class="float-right">
             <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
                 Edit Details

@@ -1,26 +1,25 @@
 from django.conf import settings
+from django.forms import widgets
 from django.forms.widgets import TextInput
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms import widgets
-
-from writlarge.main.mixins import ModelFormWidgetMixin
+from writlarge.main.mixins import ModelFormWidgetMixin, LoggedInEditorMixin
 from writlarge.main.models import LearningSite, ArchivalRepository, Place
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
 
 # returns important setting information for all web pages.
-# returns important setting information for all web pages.
 def django_settings(request):
     whitelist = ['GOOGLE_MAP_API']
-
-    return {'settings': dict([(k, getattr(settings, k, None))
-                              for k in whitelist])}
+    return {
+        'is_editor': (request.user.groups and
+                      request.user.groups.filter(name='Editor').exists()),
+        'settings': dict([(k, getattr(settings, k, None))
+                          for k in whitelist])}
 
 
 class CoverView(TemplateView):
@@ -39,7 +38,7 @@ class PlaceDetailView(DetailView):
     model = Place
 
 
-class PlaceUpdateView(LoginRequiredMixin, ModelFormWidgetMixin, UpdateView):
+class PlaceUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin, UpdateView):
     model = Place
     fields = ['title', 'notes']
     widgets = {
@@ -51,7 +50,7 @@ class LearningSiteDetailView(DetailView):
     model = LearningSite
 
 
-class LearningSiteUpdateView(LoginRequiredMixin, ModelFormWidgetMixin,
+class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
                              UpdateView):
     model = LearningSite
     fields = ['title', 'description', 'category', 'established', 'defunct',

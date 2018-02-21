@@ -1,10 +1,13 @@
 from json import loads, dumps
 
 from django.test import TestCase
-from django.test.client import Client
+from django.test.client import Client, RequestFactory
+from django.test.utils import override_settings
+from django.urls.base import reverse
 
 from writlarge.main.tests.factories import (
-    UserFactory, LearningSiteFactory, ArchivalRepositoryFactory)
+    UserFactory, LearningSiteFactory, ArchivalRepositoryFactory, GroupFactory)
+from writlarge.main.views import django_settings
 
 
 class BasicTest(TestCase):
@@ -19,6 +22,19 @@ class BasicTest(TestCase):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, 'PASS')
+
+    @override_settings(GOOGLE_MAP_API=['123456'])
+    def test_django_settings(self):
+        request = RequestFactory()
+        request.user = UserFactory()
+
+        ctx = django_settings(request)
+        self.assertEquals(ctx['settings']['GOOGLE_MAP_API'], ['123456'])
+        self.assertFalse(ctx['is_editor'])
+
+        request.user.groups.add(GroupFactory(name='Editor'))
+        ctx = django_settings(request)
+        self.assertTrue(ctx['is_editor'])
 
 
 class PasswordTest(TestCase):
@@ -85,3 +101,29 @@ class ApiViewTest(TestCase):
             content_type="application/json",
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 201)
+
+
+class TestUpdateView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+
+        site = LearningSiteFactory()
+        self.url = reverse('site-update-view', kwargs={'pk': site.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_non_editor(self):
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_editor(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
