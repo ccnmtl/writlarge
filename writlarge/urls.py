@@ -25,7 +25,6 @@ if hasattr(settings, 'CAS_BASE'):
 router = routers.DefaultRouter()
 router.register(r'site', views.LearningSiteViewSet)
 router.register(r'repository', views.ArchivalRepositoryViewSet)
-router.register(r'place', views.PlaceViewSet)
 
 urlpatterns = [
     url(r'^$', views.CoverView.as_view()),
@@ -53,10 +52,10 @@ urlpatterns = [
 
     url(r'^map/$', views.MapView.as_view(), name='map-view'),
     url(r'^search/$', views.SearchView.as_view(), name='search-view'),
-    url(r'^view/(?P<pk>\d+)/$', views.PlaceDetailView.as_view(),
-        name='place-detail-view'),
-    url(r'^edit/(?P<pk>\d+)/$', views.PlaceUpdateView.as_view(),
-        name='place-update-view'),
+    url(r'^view/(?P<pk>\d+)/$', views.LearningSiteDetailView.as_view(),
+        name='site-detail-view'),
+    url(r'^edit/(?P<pk>\d+)/$', views.LearningSiteUpdateView.as_view(),
+        name='site-update-view'),
 
     url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),

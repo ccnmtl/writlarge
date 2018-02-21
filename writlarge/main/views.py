@@ -5,6 +5,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from rest_framework import viewsets
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import widgets
+
 from writlarge.main.mixins import ModelFormWidgetMixin
 from writlarge.main.models import LearningSite, ArchivalRepository, Place
 from writlarge.main.serializers import (
@@ -36,11 +39,30 @@ class PlaceDetailView(DetailView):
     model = Place
 
 
-class PlaceUpdateView(ModelFormWidgetMixin, UpdateView):
+class PlaceUpdateView(LoginRequiredMixin, ModelFormWidgetMixin, UpdateView):
     model = Place
     fields = ['title', 'notes']
     widgets = {
         'title': TextInput
+    }
+
+
+class LearningSiteDetailView(DetailView):
+    model = LearningSite
+
+
+class LearningSiteUpdateView(LoginRequiredMixin, ModelFormWidgetMixin,
+                             UpdateView):
+    model = LearningSite
+    fields = ['title', 'description', 'category', 'established', 'defunct',
+              'instructional_level', 'founder',
+              'tags', 'notes']
+    widgets = {
+        'title': widgets.TextInput,
+        'category': widgets.CheckboxSelectMultiple,
+        'established': widgets.SelectDateWidget(years=range(1500, 2018)),
+        'defunct': widgets.SelectDateWidget(years=range(1500, 2018)),
+        'instructional_level': widgets.TextInput
     }
 
 

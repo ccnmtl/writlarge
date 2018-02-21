@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Learning Site{% endblock %}
+
+{% block client_templates %}
+<meta name="csrf-token" content="{{csrf_token}}">
+    {% verbatim %}
+    <script type="text/x-template" id="google-mini-map-template">
+        <div class="card mb-5">
+            <div class="google-map" :id="mapName"></div>
+            <div class="card-body">
+            <p class="card-text text-left">{{address}}</p>
+            </div>
+        </div>
+    </script>
+    {% endverbatim %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script 
+        data-main="{{STATIC_URL}}js/src/detail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="detail-container" data-id="{{object.id}}">
+    {% if not request.user.is_anonymous %}
+        <div class="float-right">
+            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
+                Edit Details
+            </a>
+            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
+                Add Photo
+            </a>
+            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
+                Add Primary Source
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="py-5 text-center">
+        <h2>
+            {{object.title}}
+        </h2>
+        {% if object.established %}
+            <h5 class="text-muted">
+                {{object.established|date:"Y"}} - {% if object.defunct %}{{object.defunct|date:"Y"}}{% else %}present{% endif %}
+            </h5>
+        {% endif %}
+        {% if object.description %}
+            <p class="lead">{{object.description}}</p>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+            <div class="w-100 text-center">
+                <div id="map-container">
+                    <google-mini-map placeid="{{object.id}}" />
+                </div>
+                {% comment %}
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Photos</span>
+                </h4>
+                {% endcomment %}
+            </div>
+        </div>
+        <div class="col-md-8 order-md-1">
+            <dl class="row">
+                <dt class="col-sm-3 text-right">
+                {% if object.category.count > 1 %}
+                    Categories
+                {% else %}
+                    Category
+                {% endif %}
+                </dt>
+                <dd class="col-sm-8">
+                    {% for category in object.category.all %}
+                        <a href='#'>{{category}}</a>
+                    {% endfor %}
+                </dd>
+
+                {% if objects.tags.count > 0 %}
+                <dt class="col-sm-3 text-right">
+                    Tags
+                </dt>
+                <dd class="col-sm-8">
+                    {% for tag in object.tags.all %}
+                        <a href='#'>{{tag}}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </dd>
+                {% endif %}
+
+                <dt class="col-sm-3 text-right">
+                    Instructional Level
+                </dt>
+                <dd class="col-sm-8">
+                    {{object.instructional_level}}
+                </dd>
+
+                <dt class="col-sm-3 text-right">
+                    Founders
+                </dt>
+                <dd class="col-sm-8">
+                    {{object.founder}}
+                </dd>
+
+                {% if object.notes %}
+                    <dt class="col-sm-3 text-right">
+                        Notes
+                    </dt>
+                    <dd class="col-sm-8">
+                        {{object.notes}}
+                    </dd>
+                {% endif %}
+
+            </dl>
+
+            {% comment %}
+            <h4 class="mb-3">Archival Records</h4>
+            <dl class="row">
+                <dt class="col-sm-3 text-right"></dt>
+                <dd class="col-sm-11">
+                </dd>
+            </dl>
+            {% endcomment %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+

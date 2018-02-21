@@ -33,7 +33,7 @@ var GoogleMiniMapVue = {
             clickableIcons: false
         });
 
-        const url = WritLarge.baseUrl + 'api/place/' + this.placeid + '/';
+        const url = WritLarge.baseUrl + 'api/site/' + this.placeid + '/';
         jQuery.getJSON(url, (data) => {
             this.place = data;
 

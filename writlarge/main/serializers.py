@@ -5,6 +5,14 @@ from writlarge.main.models import ArchivalRepository, LearningSite, \
     LearningSiteCategory, DigitalObject, Place
 
 
+class StringListField(serializers.ListField):
+    # from http://www.django-rest-framework.org/api-guide/fields/#listfield
+    child = serializers.CharField()
+
+    def to_representation(self, data):
+        return ', '.join(data.values_list('name', flat=True))
+
+
 class DigitalObjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
@@ -45,6 +53,7 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
 
     latitude = serializers.SerializerMethodField(read_only=True)
     longitude = serializers.SerializerMethodField(read_only=True)
+    tags = StringListField(read_only=True)
 
     def get_latitude(self, obj):
         return obj.latlng.y
@@ -60,7 +69,7 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
         model = LearningSite
         fields = ('id', 'title', 'latlng', 'established', 'defunct', 'notes',
                   'category', 'digital_object', 'latitude', 'longitude',
-                  'verified', 'verified_modified_at',
+                  'verified', 'verified_modified_at', 'empty', 'tags',
                   'created_at', 'modified_at')
 
 
