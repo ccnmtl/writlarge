@@ -71,6 +71,7 @@ INSTALLED_APPS += [  # noqa
     'taggit',
     'django.contrib.gis',
     'rest_framework',
+    'lti_provider'
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -101,4 +102,27 @@ REST_FRAMEWORK = {
     ],
     'PAGINATE_BY': 15,
     'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
+}
+
+AUTHENTICATION_BACKENDS = [
+    'djangowind.auth.SAMLAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    'lti_provider.auth.LTIBackend'
+]
+
+
+LTI_TOOL_CONFIGURATION = {
+    'title': 'Writ Large',
+    'description': 'Discover the Hidden Histories of New York City\'s '
+    ' Teaching and Learning Communities',
+    'launch_url': 'lti/',
+    'embed_url': '',
+    'embed_icon_url': '',
+    'embed_tool_id': '',
+    'landing_url': '{}://{}/map/',
+    'course_aware': False,
+    'navigation': True,
+    'new_tab': True,
+    'frame_width': 1024,
+    'frame_height': 1024
 }
