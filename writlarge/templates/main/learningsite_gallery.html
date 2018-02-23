@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Edit Place{% endblock %}
+
+{% block content %}
+    <div class="pt-5 pb-2 text-center">
+        <h2>
+            {{parent.title}}
+        </h2>
+        {% if parent.established %}
+            <h5 class="text-muted">
+                {{parent.established|date:"Y"}} - {% if parent.defunct %}{{parent.defunct|date:"Y"}}{% else %}present{% endif %}
+            </h5>
+        {% endif %}
+        {% if parent.description %}
+            <p class="lead">{{parent.description}}</p>
+        {% endif %}
+    </div>
+
+     {% for d in object_list %}
+        <div class="row mb-2">
+            <div class="col-md-4 py-5 bg-dark text-light">
+                <div class="mb-2">
+                    {% if d.datestamp %}
+                        <label class="d-block">
+                            Taken
+                        </label>
+                        {{d.datestamp}}
+                     {% endif %}
+                </div>
+
+                <div class="mb-2">
+                    <label class="d-block">
+                        Description
+                    </label>
+                    {{d.description}}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <img src="{{d.file.url}}" class="img-fluid" alt="{{d.description}}">
+            </div>
+        </div>
+     {% empty %}
+         <div class="card mb-5">
+            <div class="card-body text-center">
+                No images available for this site yet.
+            </div>
+         </div>
+     {% endfor %}
+{% endblock %}

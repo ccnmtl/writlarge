@@ -6,9 +6,11 @@ from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.list import ListView
 from rest_framework import viewsets
 
-from writlarge.main.mixins import ModelFormWidgetMixin, LoggedInEditorMixin
+from writlarge.main.mixins import (
+    LearningSiteParentMixin, ModelFormWidgetMixin, LoggedInEditorMixin)
 from writlarge.main.models import LearningSite, ArchivalRepository, Place, \
     DigitalObject
 from writlarge.main.serializers import (
@@ -90,6 +92,19 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
         site = LearningSite.objects.get(id=parent_id)
         site.digital_object.add(self.object)
         return reverse('site-detail-view', args=[parent_id])
+
+
+class LearningSiteGalleryView(LearningSiteParentMixin, ListView):
+    model = DigitalObject
+    template_name = 'main/learningsite_gallery.html'
+
+    def get_queryset(self):
+        return self.parent.digital_object.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = ListView.get_context_data(self, **kwargs)
+        ctx['parent'] = self.parent
+        return ctx
 
 
 """

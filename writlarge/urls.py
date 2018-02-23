@@ -61,6 +61,10 @@ urlpatterns = [
         views.DigitalObjectCreateView.as_view(),
         name='digital-object-create-view'),
 
+    url(r'^gallery/(?P<parent>\d+)/$',
+        views.LearningSiteGalleryView.as_view(),
+        name='learning-site-gallery-view'),
+
     url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),

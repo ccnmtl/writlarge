@@ -64,8 +64,8 @@
                 <a class="text-muted" href="{% url 'digital-object-create-view' object.id %}">Add Photo</a>
             </div>
         {% endif %}
-        {% if object.digital_object.count > 5 %}
-            <!--  Add a More Link to a Gallery page -->
+        {% if object.digital_object.count >= 5 %}
+            <a class="text-muted d-block" href="{% url 'learning-site-gallery-view' object.id %}">View Gallery</a>
         {% endif %}
         <hr />
     </div>

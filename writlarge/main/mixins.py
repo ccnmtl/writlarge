@@ -4,7 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
+
+from writlarge.main.models import LearningSite
 
 
 def ajax_required(func):
@@ -40,6 +43,14 @@ class JSONResponseMixin(object):
         return HttpResponse(json.dumps(context),
                             content_type='application/json',
                             **response_kwargs)
+
+
+class LearningSiteParentMixin(object):
+    def dispatch(self, *args, **kwargs):
+        parent_id = self.kwargs.get('parent', None)
+        self.parent = get_object_or_404(LearningSite, pk=parent_id)
+
+        return super(LearningSiteParentMixin, self).dispatch(*args, **kwargs)
 
 
 # https://stackoverflow.com/a/27971221/9322601
