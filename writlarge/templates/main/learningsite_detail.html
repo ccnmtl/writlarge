@@ -128,10 +128,15 @@
                 <li class="list-group-item pl-5 mb-2">
                     {% if is_editor %}
                     <a class="float-right text-secondary"
+                        href="{% url 'collection-delete-view' object.id collection.id %}">
+                        <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
+                    </a>
+
+                    <a class="float-right text-secondary mr-4"
                         href="{% url 'collection-unlink-view' object.id collection.id %}">
                         <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
                     </a>
-                    <a class="float-right text-secondary mr-4" href="#">
+                    <a class="float-right text-secondary mr-4" href="{% url 'collection-edit-view' object.id collection.id %}">
                         <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
                     </a>
                     {% endif %}
@@ -144,7 +149,6 @@
                             <div>{{collection.repository.title}}</div>
                         </div>
                     </div>
-                    
                 </li>
             {% endfor %}
             {% if is_editor %}

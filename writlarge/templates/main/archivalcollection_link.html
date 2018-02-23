@@ -33,13 +33,11 @@
                     </div>
                 </li>
             {% endfor %}
-                {% comment %}
                 <li class="list-group-item pl-5">
                     <a href="{% url 'collection-create-view' parent.id %}">
                         <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Create New Collection
                     </a>
                 </li>
-                {% endcomment %}
             </ul>
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
