@@ -1,6 +1,9 @@
 from django.conf import settings
-from django.forms import widgets
-from django.forms.widgets import TextInput
+from django.contrib import messages
+from django.forms.widgets import (TextInput, SelectDateWidget,
+                                  CheckboxSelectMultiple)
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -12,7 +15,7 @@ from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     ModelFormWidgetMixin, LoggedInEditorMixin)
 from writlarge.main.models import LearningSite, ArchivalRepository, Place, \
-    DigitalObject
+    DigitalObject, ArchivalCollection
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
@@ -62,11 +65,11 @@ class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
               'instructional_level', 'founder',
               'tags', 'notes']
     widgets = {
-        'title': widgets.TextInput,
-        'category': widgets.CheckboxSelectMultiple,
-        'established': widgets.SelectDateWidget(years=range(1500, 2018)),
-        'defunct': widgets.SelectDateWidget(years=range(1500, 2018)),
-        'instructional_level': widgets.TextInput
+        'title': TextInput,
+        'category': CheckboxSelectMultiple,
+        'established': SelectDateWidget(years=range(1500, 2018)),
+        'defunct': SelectDateWidget(years=range(1500, 2018)),
+        'instructional_level': TextInput
     }
 
 
@@ -77,8 +80,8 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
     model = DigitalObject
     fields = ['file', 'description', 'datestamp', 'source_url']
     widgets = {
-        'description': widgets.TextInput,
-        'datestamp': widgets.SelectDateWidget()
+        'description': TextInput,
+        'datestamp': SelectDateWidget()
     }
 
     def get_success_url(self):
@@ -94,8 +97,8 @@ class DigitalObjectUpdateView(LoggedInEditorMixin,
     success_view = 'site-gallery-view'
     fields = ['file', 'description', 'datestamp', 'source_url']
     widgets = {
-        'description': widgets.TextInput,
-        'datestamp': widgets.SelectDateWidget()
+        'description': TextInput,
+        'datestamp': SelectDateWidget()
     }
 
 
@@ -112,6 +115,62 @@ class LearningSiteGalleryView(LearningSiteParamMixin, ListView):
 
     def get_queryset(self):
         return self.parent.digital_object.all()
+
+
+class ArchivalCollectionLinkView(LoggedInEditorMixin,
+                                 LearningSiteParamMixin,
+                                 TemplateView):
+    template_name = 'main/archivalcollection_link.html'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = LearningSiteParamMixin.get_context_data(self, *args, **kwargs)
+        ctx['collections'] = ArchivalCollection.objects.all()
+        return ctx
+
+    def post(self, *args, **kwargs):
+        collection_id = self.request.POST.get('collection', None)
+        collection = get_object_or_404(ArchivalCollection, pk=collection_id)
+        collection.learning_sites.add(self.parent)
+
+        messages.add_message(
+            self.request, messages.INFO,
+            '{} added as an archival resource.'.format(collection)
+        )
+
+        url = reverse('site-detail-view', args=[self.parent.id])
+        return HttpResponseRedirect(url)
+
+
+class ArchivalCollectionUnlinkView(LoggedInEditorMixin,
+                                   TemplateView):
+    template_name = 'main/archivalcollection_unlink.html'
+
+    def get_parent(self):
+        parent_id = self.kwargs.get('parent', None)
+        return get_object_or_404(LearningSite, pk=parent_id)
+
+    def get_collection(self):
+        pk = self.kwargs.get('pk', None)
+        return get_object_or_404(ArchivalCollection, pk=pk)
+
+    def get_context_data(self, **kwargs):
+        ctx = TemplateView.get_context_data(self, **kwargs)
+        ctx['parent'] = self.get_parent()
+        ctx['collection'] = self.get_collection()
+        return ctx
+
+    def post(self, *args, **kwargs):
+        parent = self.get_parent()
+        collection = self.get_collection()
+        collection.learning_sites.remove(parent)
+
+        messages.add_message(
+            self.request, messages.INFO,
+            '{} removed as an archival resource.'.format(collection)
+        )
+
+        url = reverse('site-detail-view', args=[parent.id])
+        return HttpResponseRedirect(url)
 
 
 """

@@ -67,6 +67,13 @@ urlpatterns = [
         views.DigitalObjectDeleteView.as_view(),
         name='digital-object-delete-view'),
 
+    url(r'^link/collection/(?P<parent>\d+)/$',
+        views.ArchivalCollectionLinkView.as_view(),
+        name='collection-link-view'),
+    url(r'^unlink/collection/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.ArchivalCollectionUnlinkView.as_view(),
+        name='collection-unlink-view'),
+
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
         name='site-gallery-view'),

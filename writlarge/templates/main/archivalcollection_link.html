@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Edit Place{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">Add Archival Collection</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="pb-2 text-center">
+    <h2>
+        {{parent.title}}
+    </h2>
+    <h4 class="text-muted">Add Archival Collection</h4>
+</div>
+
+<div class="row">
+    <div class="col-md-12 order-md-1">
+        <p class="lead mt-3">Select an archival collection from the list or create a new collection.</p>
+        <form action="." method="post">{% csrf_token %}
+            <ul class="list-group">
+            {% for collection in collections %}
+                <li class="list-group-item pl-5 mb-2">
+                    <div class="form-check">
+                        <input name="collection" value="{{collection.id}}" type="radio" class="form-check-input" />
+                        <div class="">{{collection.title}}</div>
+                        <div class="">{{collection.repository.title}}</div>
+                    </div>
+                </li>
+            {% endfor %}
+                {% comment %}
+                <li class="list-group-item pl-5">
+                    <a href="{% url 'collection-create-view' parent.id %}">
+                        <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Create New Collection
+                    </a>
+                </li>
+                {% endcomment %}
+            </ul>
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
