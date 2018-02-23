@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.forms import widgets
 from django.forms.widgets import TextInput
-from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
@@ -10,7 +9,8 @@ from django.views.generic.list import ListView
 from rest_framework import viewsets
 
 from writlarge.main.mixins import (
-    LearningSiteParentMixin, ModelFormWidgetMixin, LoggedInEditorMixin)
+    LearningSiteParamMixin, LearningSiteRelatedMixin,
+    ModelFormWidgetMixin, LoggedInEditorMixin)
 from writlarge.main.models import LearningSite, ArchivalRepository, Place, \
     DigitalObject
 from writlarge.main.serializers import (
@@ -72,6 +72,7 @@ class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
 
 class DigitalObjectCreateView(LoggedInEditorMixin,
                               ModelFormWidgetMixin,
+                              LearningSiteParamMixin,
                               CreateView):
     model = DigitalObject
     fields = ['file', 'description', 'datestamp', 'source_url']
@@ -80,64 +81,37 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
         'datestamp': widgets.SelectDateWidget()
     }
 
-    def get_context_data(self, **kwargs):
-        ctx = CreateView.get_context_data(self, **kwargs)
-
-        parent_id = self.kwargs.get('parent', None)
-        ctx['parent'] = get_object_or_404(LearningSite, pk=parent_id)
-        return ctx
-
     def get_success_url(self):
-        parent_id = self.kwargs.get('parent', None)
-        site = LearningSite.objects.get(id=parent_id)
-        site.digital_object.add(self.object)
-        return reverse('site-gallery-view', args=[parent_id])
+        self.parent.digital_object.add(self.object)
+        return reverse('site-gallery-view', args=[self.parent.id])
 
 
 class DigitalObjectUpdateView(LoggedInEditorMixin,
                               ModelFormWidgetMixin,
+                              LearningSiteRelatedMixin,
                               UpdateView):
     model = DigitalObject
+    success_view = 'site-gallery-view'
     fields = ['file', 'description', 'datestamp', 'source_url']
     widgets = {
         'description': widgets.TextInput,
         'datestamp': widgets.SelectDateWidget()
     }
 
-    def get_context_data(self, **kwargs):
-        ctx = UpdateView.get_context_data(self, **kwargs)
-        ctx['parent'] = self.object.learningsite_set.first()
-        return ctx
 
-    def get_success_url(self):
-        parent_id = self.object.learningsite_set.first().id
-        return reverse('site-gallery-view', args=[parent_id])
-
-
-class DigitalObjectDeleteView(LoggedInEditorMixin, DeleteView):
+class DigitalObjectDeleteView(LoggedInEditorMixin,
+                              LearningSiteRelatedMixin,
+                              DeleteView):
     model = DigitalObject
-
-    def get_context_data(self, **kwargs):
-        ctx = DeleteView.get_context_data(self, **kwargs)
-        ctx['parent'] = self.object.learningsite_set.first()
-        return ctx
-
-    def get_success_url(self):
-        parent_id = self.object.learningsite_set.first().id
-        return reverse('site-gallery-view', args=[parent_id])
+    success_view = 'site-gallery-view'
 
 
-class LearningSiteGalleryView(LearningSiteParentMixin, ListView):
+class LearningSiteGalleryView(LearningSiteParamMixin, ListView):
     model = DigitalObject
     template_name = 'main/learningsite_gallery.html'
 
     def get_queryset(self):
         return self.parent.digital_object.all()
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = ListView.get_context_data(self, **kwargs)
-        ctx['parent'] = self.parent
-        return ctx
 
 
 """

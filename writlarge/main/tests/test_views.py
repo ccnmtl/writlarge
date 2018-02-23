@@ -157,6 +157,7 @@ class TestDigitalObjectCreateView(TestCase):
         view.request = RequestFactory()
         view.request.method = 'GET'
         view.kwargs = {'parent': self.site.id}
+        view.parent = self.site
         view.object = None
 
         ctx = view.get_context_data()
