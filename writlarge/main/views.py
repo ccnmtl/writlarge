@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 
@@ -91,7 +91,40 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
         parent_id = self.kwargs.get('parent', None)
         site = LearningSite.objects.get(id=parent_id)
         site.digital_object.add(self.object)
-        return reverse('site-detail-view', args=[parent_id])
+        return reverse('site-gallery-view', args=[parent_id])
+
+
+class DigitalObjectUpdateView(LoggedInEditorMixin,
+                              ModelFormWidgetMixin,
+                              UpdateView):
+    model = DigitalObject
+    fields = ['file', 'description', 'datestamp', 'source_url']
+    widgets = {
+        'description': widgets.TextInput,
+        'datestamp': widgets.SelectDateWidget()
+    }
+
+    def get_context_data(self, **kwargs):
+        ctx = UpdateView.get_context_data(self, **kwargs)
+        ctx['parent'] = self.object.learningsite_set.first()
+        return ctx
+
+    def get_success_url(self):
+        parent_id = self.object.learningsite_set.first().id
+        return reverse('site-gallery-view', args=[parent_id])
+
+
+class DigitalObjectDeleteView(LoggedInEditorMixin, DeleteView):
+    model = DigitalObject
+
+    def get_context_data(self, **kwargs):
+        ctx = DeleteView.get_context_data(self, **kwargs)
+        ctx['parent'] = self.object.learningsite_set.first()
+        return ctx
+
+    def get_success_url(self):
+        parent_id = self.object.learningsite_set.first().id
+        return reverse('site-gallery-view', args=[parent_id])
 
 
 class LearningSiteGalleryView(LearningSiteParentMixin, ListView):

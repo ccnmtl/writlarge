@@ -167,7 +167,7 @@ class TestLearningSiteGalleryView(TestCase):
 
     def setUp(self):
         self.site = LearningSiteFactory()
-        self.url = reverse('learning-site-gallery-view',
+        self.url = reverse('site-gallery-view',
                            kwargs={'parent': self.site.id})
 
     def test_anonymous(self):

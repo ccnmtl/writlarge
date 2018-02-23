@@ -2,49 +2,63 @@
 {% load bootstrap4 %}
 {% block title %}Edit Place{% endblock %}
 
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">Gallery</li>
+        </ol>
+    </nav>
+{% endblock %}
+
 {% block content %}
-    <div class="pt-5 pb-2 text-center">
+<div id="gallery-container">
+    <div class="pb-2 text-center">
         <h2>
             {{parent.title}}
         </h2>
-        {% if parent.established %}
-            <h5 class="text-muted">
-                {{parent.established|date:"Y"}} - {% if parent.defunct %}{{parent.defunct|date:"Y"}}{% else %}present{% endif %}
-            </h5>
-        {% endif %}
-        {% if parent.description %}
-            <p class="lead">{{parent.description}}</p>
+        <h4 class="text-muted">
+            Gallery
+        </h4>
+        {% if is_editor %}
+            <a class="btn btn-light btn-block btn-sm mb-2 mt-3" href="{% url 'digital-object-create-view' parent.id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add Photo</a>
         {% endif %}
     </div>
 
      {% for d in object_list %}
         <div class="row mb-2">
-            <div class="col-md-4 py-5 bg-dark text-light">
-                <div class="mb-2">
-                    {% if d.datestamp %}
-                        <label class="d-block">
-                            Taken
-                        </label>
-                        {{d.datestamp}}
-                     {% endif %}
-                </div>
+            <div class="col-md-4 py-3 bg-dark text-light">
+                {% if is_editor %}
+                <a class="float-right text-light"
+                    href="{% url 'digital-object-delete-view' d.id %}">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                </a>
+                <a class="float-right text-light mr-4" href="{% url 'digital-object-edit-view' d.id %}">
+                    <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                </a>
+                {% endif %}
+                <div class="mt-5">
+                    <div class="mb-3">
+                        {% if d.datestamp %}
+                            <label class="d-block">
+                                Taken
+                            </label>
+                            {{d.datestamp}}
+                         {% endif %}
+                    </div>
 
-                <div class="mb-2">
-                    <label class="d-block">
-                        Description
-                    </label>
-                    {{d.description}}
+                    <div class="mb-3">
+                        <label class="d-block">
+                            Description
+                        </label>
+                        {{d.description}}
+                    </div>
                 </div>
             </div>
             <div class="col-md-8">
                 <img src="{{d.file.url}}" class="img-fluid" alt="{{d.description}}">
             </div>
         </div>
-     {% empty %}
-         <div class="card mb-5">
-            <div class="card-body text-center">
-                No images available for this site yet.
-            </div>
-         </div>
      {% endfor %}
+</div>
 {% endblock %}

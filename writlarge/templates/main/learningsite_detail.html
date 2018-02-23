@@ -26,27 +26,15 @@
 {% endblock %}
 
 {% block content %}
-
 <div id="detail-container" data-id="{{object.id}}">
-    {% if is_editor %}
-        <div class="float-right">
-            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
-                Edit Details
-            </a>
-            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
-                Add Primary Source
-            </a>
-        </div>
-    {% endif %}
-
     <div class="pt-5 pb-2 text-center">
         <h2>
             {{object.title}}
         </h2>
         {% if object.established %}
-            <h5 class="text-muted">
+            <h4 class="text-muted">
                 {{object.established|date:"Y"}} - {% if object.defunct %}{{object.defunct|date:"Y"}}{% else %}present{% endif %}
-            </h5>
+            </h4>
         {% endif %}
         {% if object.description %}
             <p class="lead">{{object.description}}</p>
@@ -59,19 +47,17 @@
             <img src="{{d.file.url}}" alt="{{d.description}}" />
         </div>
         {% endfor %}
-        {% if object.digital_object.count < 5 and is_editor %}
-            <div class="site-thumbnails site-thumbnails-add">
-                <a class="text-muted" href="{% url 'digital-object-create-view' object.id %}">Add Photo</a>
-            </div>
-        {% endif %}
-        {% if object.digital_object.count >= 5 %}
-            <a class="text-muted d-block" href="{% url 'learning-site-gallery-view' object.id %}">View Gallery</a>
+        {% if object.digital_object.count < 1 and is_editor %}
+                <a class="btn btn-sm btn-block btn-light" href="{% url 'digital-object-create-view' object.id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add Photo</a>
+        {% else %}
+            <a class="text-muted d-block" href="{% url 'site-gallery-view' object.id %}">View Gallery</a>
         {% endif %}
         <hr />
     </div>
 
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
+            <h4 class="mb-3 text-muted">Places</h4>
             <div class="w-100 text-center">
                 <div id="map-container">
                     <google-mini-map placeid="{{object.id}}" />
@@ -79,6 +65,7 @@
             </div>
         </div>
         <div class="col-md-8 order-md-1">
+            <h4 class="mb-3 text-muted">Details</h4>
             <dl class="row">
                 <dt class="col-sm-3">
                 {% if object.category.count > 1 %}
@@ -92,7 +79,6 @@
                         <a href='#'>{{category}}</a>
                     {% endfor %}
                 </dd>
-
                 {% if objects.tags.count > 0 %}
                 <dt class="col-sm-3">
                     Tags
@@ -126,18 +112,24 @@
                         {{object.notes}}
                     </dd>
                 {% endif %}
-
             </dl>
+            {% if is_editor %}
+                <a href="{% url 'site-update-view' object.id %}" class="btn btn-sm btn-light btn-block mt-2">
+                    Edit Details
+                </a>
+            {% endif %}
 
-            {% comment %}
-            <h4 class="mb-3">Archival Records</h4>
+            <h4 class="mb-3 mt-5 text-muted">Archival Collections</h4>
             <dl class="row">
                 <dt class="col-sm-3"></dt>
                 <dd class="col-sm-11">
                 </dd>
             </dl>
-            {% endcomment %}
-
+            {% if is_editor %}
+                <a href="#" class="btn btn-sm btn-light btn-block mt-2">
+                    Add Collection
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>

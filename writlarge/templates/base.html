@@ -103,6 +103,8 @@
     </header>
 
     <!-- Begin page content -->
+    {% block breadcrumb %}
+    {% endblock %}
     <main role="main" class="{% block mainclass %}container{% endblock %}">
         {% block content %}
         {% endblock %}
