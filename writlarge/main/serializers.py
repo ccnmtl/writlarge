@@ -16,7 +16,7 @@ class StringListField(serializers.ListField):
 class DigitalObjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
-        fields = ('id', 'name', 'description', 'source_url')
+        fields = ('id', 'file', 'description', 'source_url')
 
 
 class LearningSiteCategorySerializer(serializers.HyperlinkedModelSerializer):

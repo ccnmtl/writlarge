@@ -7,10 +7,10 @@ from taggit.managers import TaggableManager
 
 
 class DigitalObject(models.Model):
-    name = models.TextField()
     file = models.FileField(upload_to="%Y/%m/%d/")
     description = models.TextField()
 
+    datestamp = models.DateField(null=True, blank=True, verbose_name='Date')
     source_url = models.URLField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -21,7 +21,7 @@ class DigitalObject(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return self.name
+        return self.description
 
 
 class LearningSiteCategory(models.Model):
