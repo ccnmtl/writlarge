@@ -34,15 +34,12 @@
                 Edit Details
             </a>
             <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
-                Add Photo
-            </a>
-            <a href="{% url 'site-update-view' object.id %}" class="btn btn-secondary btn-sm mt-2">
                 Add Primary Source
             </a>
         </div>
     {% endif %}
 
-    <div class="py-5 text-center">
+    <div class="pt-5 pb-2 text-center">
         <h2>
             {{object.title}}
         </h2>
@@ -56,22 +53,34 @@
         {% endif %}
     </div>
 
+    <div class="mb-5 text-center">
+        {% for d in object.digital_object.all|slice:":5" %}
+        <div class="site-thumbnails">
+            <img src="{{d.file.url}}" alt="{{d.description}}" />
+        </div>
+        {% endfor %}
+        {% if object.digital_object.count < 5 and is_editor %}
+            <div class="site-thumbnails site-thumbnails-add">
+                <a class="text-muted" href="{% url 'digital-object-create-view' object.id %}">Add Photo</a>
+            </div>
+        {% endif %}
+        {% if object.digital_object.count > 5 %}
+            <!--  Add a More Link to a Gallery page -->
+        {% endif %}
+        <hr />
+    </div>
+
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
             <div class="w-100 text-center">
                 <div id="map-container">
                     <google-mini-map placeid="{{object.id}}" />
                 </div>
-                {% comment %}
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">Photos</span>
-                </h4>
-                {% endcomment %}
             </div>
         </div>
         <div class="col-md-8 order-md-1">
             <dl class="row">
-                <dt class="col-sm-3 text-right">
+                <dt class="col-sm-3">
                 {% if object.category.count > 1 %}
                     Categories
                 {% else %}
@@ -85,7 +94,7 @@
                 </dd>
 
                 {% if objects.tags.count > 0 %}
-                <dt class="col-sm-3 text-right">
+                <dt class="col-sm-3">
                     Tags
                 </dt>
                 <dd class="col-sm-8">
@@ -95,14 +104,14 @@
                 </dd>
                 {% endif %}
 
-                <dt class="col-sm-3 text-right">
+                <dt class="col-sm-3">
                     Instructional Level
                 </dt>
                 <dd class="col-sm-8">
                     {{object.instructional_level}}
                 </dd>
 
-                <dt class="col-sm-3 text-right">
+                <dt class="col-sm-3">
                     Founders
                 </dt>
                 <dd class="col-sm-8">
@@ -110,7 +119,7 @@
                 </dd>
 
                 {% if object.notes %}
-                    <dt class="col-sm-3 text-right">
+                    <dt class="col-sm-3">
                         Notes
                     </dt>
                     <dd class="col-sm-8">
@@ -123,7 +132,7 @@
             {% comment %}
             <h4 class="mb-3">Archival Records</h4>
             <dl class="row">
-                <dt class="col-sm-3 text-right"></dt>
+                <dt class="col-sm-3"></dt>
                 <dd class="col-sm-11">
                 </dd>
             </dl>

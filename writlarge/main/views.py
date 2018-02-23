@@ -1,13 +1,16 @@
 from django.conf import settings
 from django.forms import widgets
 from django.forms.widgets import TextInput
+from django.shortcuts import get_object_or_404
+from django.urls.base import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from rest_framework import viewsets
 
 from writlarge.main.mixins import ModelFormWidgetMixin, LoggedInEditorMixin
-from writlarge.main.models import LearningSite, ArchivalRepository, Place
+from writlarge.main.models import LearningSite, ArchivalRepository, Place, \
+    DigitalObject
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
@@ -63,6 +66,30 @@ class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
         'defunct': widgets.SelectDateWidget(years=range(1500, 2018)),
         'instructional_level': widgets.TextInput
     }
+
+
+class DigitalObjectCreateView(LoggedInEditorMixin,
+                              ModelFormWidgetMixin,
+                              CreateView):
+    model = DigitalObject
+    fields = ['file', 'description', 'datestamp', 'source_url']
+    widgets = {
+        'description': widgets.TextInput,
+        'datestamp': widgets.SelectDateWidget()
+    }
+
+    def get_context_data(self, **kwargs):
+        ctx = CreateView.get_context_data(self, **kwargs)
+
+        parent_id = self.kwargs.get('parent', None)
+        ctx['parent'] = get_object_or_404(LearningSite, pk=parent_id)
+        return ctx
+
+    def get_success_url(self):
+        parent_id = self.kwargs.get('parent', None)
+        site = LearningSite.objects.get(id=parent_id)
+        site.digital_object.add(self.object)
+        return reverse('site-detail-view', args=[parent_id])
 
 
 """

@@ -7,7 +7,7 @@ from django.urls.base import reverse
 
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory, GroupFactory)
-from writlarge.main.views import django_settings
+from writlarge.main.views import django_settings, DigitalObjectCreateView
 
 
 class BasicTest(TestCase):
@@ -127,3 +127,37 @@ class TestUpdateView(TestCase):
         self.client.login(username=editor.username, password='test')
         response = self.client.get(self.url)
         self.assertEquals(response.status_code, 200)
+
+
+class TestDigitalObjectCreateView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.url = reverse('digital-object-create-view',
+                           kwargs={'parent': self.site.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_non_editor(self):
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_editor(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+
+        view = DigitalObjectCreateView()
+        view.request = RequestFactory()
+        view.request.method = 'GET'
+        view.kwargs = {'parent': self.site.id}
+        view.object = None
+
+        ctx = view.get_context_data()
+        self.assertEquals(ctx['parent'], self.site)

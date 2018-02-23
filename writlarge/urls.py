@@ -57,6 +57,10 @@ urlpatterns = [
     url(r'^edit/(?P<pk>\d+)/$', views.LearningSiteUpdateView.as_view(),
         name='site-update-view'),
 
+    url(r'^add/photo/(?P<parent>\d+)/$',
+        views.DigitalObjectCreateView.as_view(),
+        name='digital-object-create-view'),
+
     url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),
