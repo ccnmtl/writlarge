@@ -40,8 +40,7 @@ class ArchivalRepositorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ArchivalRepository
-        fields = ('id', 'title', 'latlng', 'notes',
-                  'verified', 'verified_modified_at',
+        fields = ('id', 'title', 'description', 'latlng', 'notes',
                   'created_at', 'modified_at',
                   'latitude', 'longitude')
 
