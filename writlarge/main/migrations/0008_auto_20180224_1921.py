@@ -60,11 +60,5 @@ class Migration(migrations.Migration):
             model_name='archivalcollection',
             name='record_format',
             field=models.ManyToManyField(blank=True, to='main.ArchivalRecordFormat'),
-        ),
-        migrations.AlterField(
-            model_name='archivalrepository',
-            name='latlng',
-            field=django.contrib.gis.db.models.fields.PointField(default=POINT, srid=4326),
-            preserve_default=False,
-        ),
+        )
     ]
