@@ -161,3 +161,15 @@ class TestDigitalObjectCreateView(TestCase):
 
         ctx = view.get_context_data()
         self.assertEquals(ctx['parent'], self.site)
+
+
+class TestLearningSiteGalleryView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.url = reverse('learning-site-gallery-view',
+                           kwargs={'parent': self.site.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
