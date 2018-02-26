@@ -5,6 +5,7 @@ from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 
 from writlarge.main.models import LearningSite
@@ -45,12 +46,31 @@ class JSONResponseMixin(object):
                             **response_kwargs)
 
 
-class LearningSiteParentMixin(object):
+class LearningSiteParamMixin(object):
+
     def dispatch(self, *args, **kwargs):
         parent_id = self.kwargs.get('parent', None)
         self.parent = get_object_or_404(LearningSite, pk=parent_id)
 
-        return super(LearningSiteParentMixin, self).dispatch(*args, **kwargs)
+        return super(LearningSiteParamMixin, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(LearningSiteParamMixin, self).get_context_data(**kwargs)
+        ctx['parent'] = self.parent
+        return ctx
+
+
+class LearningSiteRelatedMixin(object):
+
+    def get_context_data(self, **kwargs):
+        ctx = super(LearningSiteRelatedMixin, self).get_context_data(
+            **kwargs)
+        ctx['parent'] = self.object.learningsite_set.first()
+        return ctx
+
+    def get_success_url(self):
+        parent_id = self.object.learningsite_set.first().id
+        return reverse(self.success_view, args=[parent_id])
 
 
 # https://stackoverflow.com/a/27971221/9322601
