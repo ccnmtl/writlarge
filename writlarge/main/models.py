@@ -84,12 +84,10 @@ class LearningSite(models.Model):
 
 class ArchivalRepository(models.Model):
     title = models.TextField(unique=True)
-    latlng = PointField(null=True)
-    notes = models.TextField(null=True, blank=True)
-    tags = TaggableManager()
+    latlng = PointField()
+    description = models.TextField(null=True, blank=True)
 
-    verified = models.BooleanField(default=False)
-    verified_modified_at = models.DateTimeField(null=True)
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -108,17 +106,19 @@ class ArchivalRepository(models.Model):
 
 class ArchivalCollection(models.Model):
     title = models.TextField()
-    description = models.TextField()
-    learning_sites = models.ManyToManyField(LearningSite)
     repository = models.ForeignKey(ArchivalRepository,
                                    on_delete=models.CASCADE)
 
-    finding_aid_url = models.URLField()
-    linear_feet = models.FloatField()
-    record_format = models.ManyToManyField(ArchivalRecordFormat)
+    description = models.TextField(null=True, blank=True)
+    learning_sites = models.ManyToManyField(LearningSite, blank=True)
+    finding_aid_url = models.URLField(null=True, blank=True)
+    linear_feet = models.FloatField(null=True, blank=True)
+    record_format = models.ManyToManyField(ArchivalRecordFormat, blank=True)
 
     inclusive_start_date = models.DateField(null=True)
     inclusive_end_date = models.DateField(null=True)
+
+    notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
