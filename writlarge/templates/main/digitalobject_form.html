@@ -2,12 +2,22 @@
 {% load bootstrap4 %}
 {% block title %}Edit Place{% endblock %}
 
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-gallery-view' parent.id %}">Gallery</a></li>
+            <li class="breadcrumb-item">{% if object %}Edit{% else %}Add{% endif %} Photo</li>
+        </ol>
+    </nav>
+{% endblock %}
+
 {% block content %}
-<div class="py-5 text-center">
+<div class="pb-2 text-center">
     <h2>
         {{parent.title}}
     </h2>
-    <h3 class="text-muted">Add Photo</h3>
+    <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Photo</h4>
 </div>
 
 <div class="row">

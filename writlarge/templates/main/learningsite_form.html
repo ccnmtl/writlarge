@@ -2,18 +2,22 @@
 {% load bootstrap4 %}
 {% block title %}Edit Place{% endblock %}
 
-{% block content %}
-{% if not request.user.is_anonymous %}
-<div class="float-right">
-    <a href="{% url 'site-detail-view' object.id %}" class="btn btn-secondary btn-sm mt-2">View Record</a>
-</div>
-{% endif %}
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' object.id %}">{{object.title}}</a></li>
+            <li class="breadcrumb-item">Edit Details</li>
+        </ol>
+    </nav>
+{% endblock %}
 
-<div class="py-5 text-center">
+{% block content %}
+
+<div class="pb-2 text-center">
     <h2>
         {{object.title}}
     </h2>
-    <h3 class="text-muted">Edit Details</h3>
+    <h4 class="text-muted">Edit Details</h4>
 </div>
 
 <div class="row">

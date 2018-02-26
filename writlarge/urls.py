@@ -60,10 +60,16 @@ urlpatterns = [
     url(r'^add/photo/(?P<parent>\d+)/$',
         views.DigitalObjectCreateView.as_view(),
         name='digital-object-create-view'),
+    url(r'^edit/photo/(?P<pk>\d+)/$',
+        views.DigitalObjectUpdateView.as_view(),
+        name='digital-object-edit-view'),
+    url(r'^delete/photo/(?P<pk>\d+)/$',
+        views.DigitalObjectDeleteView.as_view(),
+        name='digital-object-delete-view'),
 
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
-        name='learning-site-gallery-view'),
+        name='site-gallery-view'),
 
     url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
