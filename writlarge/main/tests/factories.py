@@ -6,8 +6,9 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.gis.geos.point import Point
 import factory
 from factory.fuzzy import BaseFuzzyAttribute, FuzzyDateTime
+
 from writlarge.main.models import LearningSiteCategory, LearningSite, \
-    ArchivalRepository, Place
+    ArchivalRepository, Place, ArchivalCollection
 
 
 class FuzzyPoint(BaseFuzzyAttribute):
@@ -73,6 +74,14 @@ class ArchivalRepositoryFactory(factory.DjangoModelFactory):
 
     title = factory.Sequence(lambda n: "repository%03d" % n)
     latlng = FuzzyPoint()
+
+
+class ArchivalCollectionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = ArchivalCollection
+
+    title = factory.Sequence(lambda n: "collection%03d" % n)
+    repository = factory.SubFactory(ArchivalRepositoryFactory)
 
 
 class PlaceFactory(factory.DjangoModelFactory):

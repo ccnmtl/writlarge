@@ -48,9 +48,12 @@
         </div>
         {% endfor %}
         {% if object.digital_object.count < 1 and is_editor %}
-                <a class="btn btn-sm btn-block btn-light" href="{% url 'digital-object-create-view' object.id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add Photo</a>
+                <a class="btn btn-block btn-light" href="{% url 'digital-object-create-view' object.id %}"><i class="fa fa-plus" aria-hidden="true"></i> Add Photo</a>
         {% else %}
-            <a class="text-muted d-block" href="{% url 'site-gallery-view' object.id %}">View Gallery</a>
+            <a class="text-secondary d-block" href="{% url 'site-gallery-view' object.id %}">
+                <i class="fa fa-camera text-secondary form-check-input" aria-hidden="true"></i> 
+                View Gallery
+            </a>
         {% endif %}
         <hr />
     </div>
@@ -114,20 +117,39 @@
                 {% endif %}
             </dl>
             {% if is_editor %}
-                <a href="{% url 'site-update-view' object.id %}" class="btn btn-sm btn-light btn-block mt-2">
-                    Edit Details
+                <a href="{% url 'site-update-view' object.id %}" class="btn btn-light btn-block mt-2">
+                    <i class="fa fa-pencil text-secondary form-check-input" aria-hidden="true"></i> Edit Details
                 </a>
             {% endif %}
 
-            <h4 class="mb-3 mt-5 text-muted">Archival Collections</h4>
-            <dl class="row">
-                <dt class="col-sm-3"></dt>
-                <dd class="col-sm-11">
-                </dd>
-            </dl>
+            <h4 class="mb-3 mt-5 text-muted">Archival Resources</h4>
+            <ul class="list-group">
+            {% for collection in object.archivalcollection_set.all %}
+                <li class="list-group-item pl-5 mb-2">
+                    {% if is_editor %}
+                    <a class="float-right text-secondary"
+                        href="{% url 'collection-unlink-view' object.id collection.id %}">
+                        <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
+                    </a>
+                    <a class="float-right text-secondary mr-4" href="#">
+                        <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
+                    </a>
+                    {% endif %}
+                    <div class="row">
+                        <div class="col-md2 text-secondary">
+                            <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
+                        </div>
+                        <div class="col-md10 pl-3">
+                            <div>{{collection.title}}</div>
+                            <div>{{collection.repository.title}}</div>
+                        </div>
+                    </div>
+                    
+                </li>
+            {% endfor %}
             {% if is_editor %}
-                <a href="#" class="btn btn-sm btn-light btn-block mt-2">
-                    Add Collection
+                <a href="{% url 'collection-link-view' object.id %}" class="btn btn-light btn-block mt-2 mb-3">
+                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Collection
                 </a>
             {% endif %}
         </div>

@@ -6,7 +6,8 @@ from django.test.utils import override_settings
 from django.urls.base import reverse
 
 from writlarge.main.tests.factories import (
-    UserFactory, LearningSiteFactory, ArchivalRepositoryFactory, GroupFactory)
+    UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
+    GroupFactory, ArchivalCollectionFactory)
 from writlarge.main.views import django_settings, DigitalObjectCreateView
 
 
@@ -174,3 +175,43 @@ class TestLearningSiteGalleryView(TestCase):
     def test_anonymous(self):
         response = self.client.get(self.url)
         self.assertEquals(response.status_code, 200)
+
+
+class TestAddRemoveCollection(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.collection = ArchivalCollectionFactory()
+        self.link_url = reverse('collection-link-view',
+                                kwargs={'parent': self.site.id})
+        self.unlink_url = reverse('collection-unlink-view',
+                                  kwargs={'parent': self.site.id,
+                                          'pk': self.collection.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.link_url)
+        self.assertEquals(response.status_code, 302)
+
+        response = self.client.post(self.unlink_url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_link_and_unlink(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+
+        response = self.client.get(self.link_url)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.client.post(self.link_url,
+                                    {'collection': self.collection.id})
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(self.site.archivalcollection_set.count(), 1)
+        self.assertEquals(
+            self.site.archivalcollection_set.first(), self.collection)
+
+        response = self.client.get(self.unlink_url)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(self.unlink_url, {})
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(self.site.archivalcollection_set.count(), 0)
