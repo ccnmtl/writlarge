@@ -73,7 +73,6 @@ urlpatterns = [
     url(r'^unlink/collection/(?P<parent>\d+)/(?P<pk>\d+)/$',
         views.ArchivalCollectionUnlinkView.as_view(),
         name='collection-unlink-view'),
-
     url(r'^create/collection/(?P<parent>\d+)/$',
         views.ArchivalCollectionCreateView.as_view(),
         name='collection-create-view'),

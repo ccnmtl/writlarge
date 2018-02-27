@@ -38,6 +38,10 @@ class ArchivalRepositorySerializer(serializers.HyperlinkedModelSerializer):
     def get_longitude(self, obj):
         return obj.latlng.x
 
+    def validate_latlng(self, data):
+        if 'lat' in data and 'lng' in data:
+            return Point(data['lng'], data['lat'])
+
     class Meta:
         model = ArchivalRepository
         fields = ('id', 'title', 'description', 'latlng', 'notes',

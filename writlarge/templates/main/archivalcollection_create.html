@@ -1,12 +1,50 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% block title %}Edit Place{% endblock %}
+{% block bodyclass %}archivalcollection-create{% endblock %}
+
+{% block client_templates %}
+<meta name="csrf-token" content="{{csrf_token}}">
+{% verbatim %}
+<script type="text/x-template" id="google-map-template">
+    <div>
+        <div class="address-bar">
+            <div class="input-group">
+                <input type="text" v-model="address"
+                    class="form-control form-control w-25"
+                    placeholder="Address"
+                    name="address" autocomplete='street-address'
+                    aria-label="Enter an address" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button"
+                        v-on:click="geocode"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="google-map" :id="mapName"></div>
+    </div>
+</script>
+{% endverbatim %}
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script>
+        WritLarge.boundForm = {% if form.data %}true{% else %} false{% endif %};
+    </script>
+
+    <script data-main="{{STATIC_URL}}js/src/createRepository.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
             <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
-            <li class="breadcrumb-item">{% if object %}Edit{% else %}Create{% endif %} Archival Collection</li>
+            <li class="breadcrumb-item">Create Archival Collection</li>
         </ol>
     </nav>
 {% endblock %}
@@ -17,15 +55,67 @@
     <h2>
         {{parent.title}}
     </h2>
-    <h4 class="text-muted">{% if object %}Edit Archival Collection{% else %}Create Archival Collection{% endif %}</h4>
+    <h4 class="text-muted">Create Archival Collection</h4>
 </div>
 
-<div class="row">
+<div id="archival-collection-create" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post">{% csrf_token %}
-            {% bootstrap_form form %}
-            <hr class="mb-4">
-            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+        <form action="." method="post" novalidate>{% csrf_token %}
+            <p class="lead mt-3"><span class="step">1</span> Where is the archival collection held?</p>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="id_repository">Select or create an archival repository</label>
+                        <select name="repository" v-on:change="onSelectRepository"
+                            required="required" class="form-control">
+                            {% for id, name in form.repository.field.choices %}
+                                <option value="{{ id }}"
+                                {% if form.data.repository == id|stringformat:"i" %}
+                                    selected
+                                {% endif %}>{{ name }}</option>
+                            {% endfor %}
+                            <!--  dynamically created repositories go here -->
+                            <option v-for="repo in repositories">{{repo.title}}</option>
+                            <option value="create">Create New Repository</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div v-if="createForm" class="create-repository-form bg-light mb-3">
+                <div class="card">
+                    <div class="card-body bg-light" v-bind:class="{'invalid-feedback': addressError || titleError}">
+                        <div class="invalid-feedback mb-1"><strong>Oops!</strong> The title and address fields are required.</div>
+
+                        {% bootstrap_field repository_form.title %}
+
+                        <label for="id_latlng">Repository Location</label>
+                        <small class="text-muted">Search by address and select a location, or click the map to drop a marker.</small>
+                        <div>
+                            <google-map readonly="false" showplaces="false" />
+                        </div>
+                        <div class="clearfix"></div>
+                        <button class="btn btn-primary btn-block mt-3 mb-3" v-on:click.stop.prevent="onCreateRepository">
+                            Create
+                        </button>
+                        <a href="#" v-on:click.stop.prevent="hideForm"
+                            aria-expanded="true" class="btn btn-secondary btn-block">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div v-if="collectionForm" class="create-collection-form mt-4">
+                <p class="lead"><span class="step">2</span> Add details about the archival collection</p>
+                {% bootstrap_field form.title %}
+                {% bootstrap_field form.description %}
+                {% bootstrap_field form.finding_aid_url %}
+                {% bootstrap_field form.linear_feet %}
+                {% bootstrap_field form.inclusive_start_date %}
+                {% bootstrap_field form.inclusive_end_date %}
+
+                <hr class="mb-4">
+                <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+            </div>
         </form>
     </div>
 </div>

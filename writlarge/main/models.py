@@ -83,7 +83,7 @@ class LearningSite(models.Model):
 
 
 class ArchivalRepository(models.Model):
-    title = models.TextField(unique=True)
+    title = models.TextField(unique=True, verbose_name="Repository Title")
     latlng = PointField()
     description = models.TextField(null=True, blank=True)
 
@@ -105,7 +105,7 @@ class ArchivalRepository(models.Model):
 
 
 class ArchivalCollection(models.Model):
-    title = models.TextField()
+    title = models.TextField(verbose_name="Collection Title")
     repository = models.ForeignKey(ArchivalRepository,
                                    on_delete=models.CASCADE)
 
