@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Place{% endblock %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Photo{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
@@ -26,7 +26,8 @@
             {% csrf_token %}
             {% bootstrap_form form %}
             <hr class="mb-4">
-            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+            <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-gallery-view' parent.id %}">Cancel</a>
         </form>
     </div>
 </div>
