@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.forms.models import modelform_factory
 from django.forms.widgets import (TextInput, SelectDateWidget,
                                   CheckboxSelectMultiple)
 from django.http.response import HttpResponseRedirect
@@ -177,7 +178,6 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
                                    ModelFormWidgetMixin,
                                    LearningSiteParamMixin,
                                    CreateView):
-
     model = ArchivalCollection
     template_name = 'main/archivalcollection_create.html'
     fields = ['repository', 'title', 'description',
@@ -189,8 +189,17 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
         'inclusive_end_date': SelectDateWidget()
     }
 
-    def post(self, request, *args, **kwargs):
-        return CreateView.post(self, request, *args, **kwargs)
+    repository_fields = ['title', 'latlng']
+    repository_widgets = {
+        'title': TextInput,
+    }
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = LearningSiteParamMixin.get_context_data(self, *args, **kwargs)
+        ctx['repository_form'] = modelform_factory(
+            ArchivalRepository, fields=self.repository_fields,
+            widgets=self.repository_widgets)
+        return ctx
 
     def get_success_url(self):
         self.object.learning_sites.add(self.parent)

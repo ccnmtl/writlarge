@@ -2,7 +2,7 @@
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
-    props: ['readonly'],
+    props: ['readonly', 'showplaces'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -62,6 +62,9 @@ var GoogleMapVue = {
         deselectPlace: function(event) {
             this.selectedPlace = null;
         },
+        getPlace: function(event) {
+            return this.selectedPlace || this.newPin;
+        },
         geocode: function(event) {
             this.clearNewPin();
             this.selectedPlace = null;
@@ -104,10 +107,12 @@ var GoogleMapVue = {
         }
     },
     created: function() {
-        const url = WritLarge.baseUrl + 'api/site/';
-        jQuery.getJSON(url, (data) => {
-            this.places = data;
-        });
+        if (this.showplaces === 'true') {
+            const url = WritLarge.baseUrl + 'api/site/';
+            jQuery.getJSON(url, (data) => {
+                this.places = data;
+            });
+        }
     },
     mounted: function() {
         const elt = document.getElementById(this.mapName);

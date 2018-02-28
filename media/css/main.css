@@ -130,3 +130,28 @@ footer li+li {
     max-width: none;
 }
 
+.archivalcollection-create .create-repository {
+    margin-top: 1.9em;
+}
+
+.archivalcollection-create .google-map {
+    width: 100%;
+    height: 300px;
+}
+
+.archivalcollection-create .step {
+    display: inline-block;
+    padding: 6px 0px 0px 2px;
+    background-color: #868e96;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin-right: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.archivalcollection-create .card.is-invalid .invalid-feedback {
+    display: block;
+}
