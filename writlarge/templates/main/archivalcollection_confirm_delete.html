@@ -16,13 +16,13 @@
     <h2>
         {{parent.title}}
     </h2>
-    <h4 class="text-muted">Delete Archival Collection</h4>
+    <h4 class="text-muted">Delete {{object.title}}</h4>
 </div>
 
 <div class="row mb-5 text-center">
     <div class="col-md-12 order-md-1">
         <p class="lead mt-3">Are you sure you want to delete <strong>{{object.title}}</strong>?<br />
-        Deleting the collection will remove it as an archival resource for all Sites of Teaching &amp; Learning. This cannot be undone</p>
+        Deleting the collection will remove it as an archival resource for all Sites of Teaching &amp; Learning. This cannot be undone.</p>
         <form action="." method="post">{% csrf_token %}
             <input class="btn btn-primary btn-block mb-2" type="submit" value="Delete" />
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
