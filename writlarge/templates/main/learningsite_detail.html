@@ -158,6 +158,39 @@
             {% endif %}
         </div>
     </div>
-</div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="mb-3 mt-5 text-muted">Footnotes</h4>
+            <ol class="list-group list-group-flush footnotes">
+            {% for footnote in object.footnotes.all %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <small><sup class="mr-1">{{forloop.counter}}</sup>{{footnote}}</small>
+                        </div>
+                        <div class="col-md-2">
+                            {% if is_editor %}
+                            <a class="float-right text-secondary"
+                                href="{% url 'footnote-delete-view' object.id footnote.id %}">
+                                <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
+                            </a>
+                            <a class="float-right text-secondary mr-4" href="{% url 'footnote-edit-view' object.id footnote.id %}">
+                                <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+            {% if is_editor %}
+                <a href="{% url 'footnote-create-view' object.id %}" class="btn btn-light btn-block mt-2 mb-3">
+                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Footnote
+                </a>
+            {% endif %}
+            </ol>
+        </div>
+    </div>
+ </div>
 {% endblock %}
 

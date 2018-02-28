@@ -6,9 +6,9 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.gis.geos.point import Point
 import factory
 from factory.fuzzy import BaseFuzzyAttribute, FuzzyDateTime
-
-from writlarge.main.models import LearningSiteCategory, LearningSite, \
-    ArchivalRepository, Place, ArchivalCollection
+from writlarge.main.models import (
+    LearningSiteCategory, LearningSite,
+    ArchivalRepository, Place, ArchivalCollection, Footnote)
 
 
 class FuzzyPoint(BaseFuzzyAttribute):
@@ -99,3 +99,10 @@ class PlaceFactory(factory.DjangoModelFactory):
                 extracted = '50.064650,19.944979'
             self.latlng = Place.objects.string_to_point(extracted)
             self.save()
+
+
+class FootnoteFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Footnote
+
+    note = factory.Sequence(lambda n: "footnote%03d" % n)

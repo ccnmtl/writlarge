@@ -6,6 +6,13 @@ from django.urls.base import reverse
 from taggit.managers import TaggableManager
 
 
+class Footnote(models.Model):
+    note = models.TextField()
+
+    def __str__(self):
+        return self.note
+
+
 class DigitalObject(models.Model):
     file = models.FileField(upload_to="%Y/%m/%d/")
     description = models.TextField()
@@ -61,6 +68,8 @@ class LearningSite(models.Model):
 
     instructional_level = models.TextField(null=True, blank=True)
     founder = models.TextField(null=True, blank=True)
+
+    footnotes = models.ManyToManyField(Footnote, blank=True)
 
     verified = models.BooleanField(default=False)
     verified_modified_at = models.DateTimeField(null=True, blank=True)

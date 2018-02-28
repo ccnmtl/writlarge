@@ -8,7 +8,7 @@ from django.urls.base import reverse
 from writlarge.main.models import ArchivalCollection
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
-    GroupFactory, ArchivalCollectionFactory)
+    GroupFactory, ArchivalCollectionFactory, FootnoteFactory)
 from writlarge.main.views import django_settings, DigitalObjectCreateView
 
 
@@ -336,3 +336,62 @@ class TestArchivalCollectionDeleteView(TestCase):
         response = self.client.post(self.url, {})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(self.site.archivalcollection_set.count(), 0)
+
+
+class TestFootnoteViews(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.footnote = FootnoteFactory()
+        self.site.footnotes.add(self.footnote)
+        self.create_url = reverse('footnote-create-view',
+                                  kwargs={'parent': self.site.id})
+        self.edit_url = reverse('footnote-edit-view',
+                                kwargs={'parent': self.site.id,
+                                        'pk': self.footnote.id})
+        self.delete_url = reverse('footnote-delete-view',
+                                  kwargs={'parent': self.site.id,
+                                          'pk': self.footnote.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.create_url)
+        self.assertEquals(response.status_code, 302)
+        response = self.client.get(self.edit_url)
+        self.assertEquals(response.status_code, 302)
+        response = self.client.get(self.delete_url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_non_editor(self):
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.get(self.create_url)
+        self.assertEquals(response.status_code, 302)
+        response = self.client.get(self.edit_url)
+        self.assertEquals(response.status_code, 302)
+        response = self.client.get(self.delete_url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_editor(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+        response = self.client.get(self.create_url)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get(self.edit_url)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.get(self.delete_url)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.client.post(self.create_url, {'note': 'Something'})
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(self.site.footnotes.count(), 2)
+
+        response = self.client.post(self.edit_url, {'note': 'Changed'})
+        self.assertEquals(response.status_code, 302)
+        self.footnote.refresh_from_db()
+        self.assertEquals(self.footnote.note, 'Changed')
+
+        response = self.client.post(self.delete_url, {})
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(self.site.footnotes.count(), 1)
+        self.assertEquals(self.site.footnotes.first().note, 'Something')
