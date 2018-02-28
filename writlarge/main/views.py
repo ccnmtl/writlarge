@@ -82,7 +82,7 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
     fields = ['file', 'description', 'datestamp', 'source_url']
     widgets = {
         'description': TextInput,
-        'datestamp': SelectDateWidget()
+        'datestamp': SelectDateWidget(years=range(1500, 2018))
     }
 
     def get_success_url(self):
@@ -99,7 +99,7 @@ class DigitalObjectUpdateView(LoggedInEditorMixin,
     fields = ['file', 'description', 'datestamp', 'source_url']
     widgets = {
         'description': TextInput,
-        'datestamp': SelectDateWidget()
+        'datestamp': SelectDateWidget(years=range(1500, 2018))
     }
 
 
@@ -185,8 +185,8 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
               'inclusive_start_date', 'inclusive_end_date']
     widgets = {
         'title': TextInput,
-        'inclusive_start_date': SelectDateWidget(),
-        'inclusive_end_date': SelectDateWidget()
+        'inclusive_start_date': SelectDateWidget(years=range(1500, 2018)),
+        'inclusive_end_date': SelectDateWidget(years=range(1500, 2018))
     }
 
     repository_fields = ['title', 'latlng']
@@ -221,8 +221,8 @@ class ArchivalCollectionUpdateView(LoggedInEditorMixin,
               'inclusive_start_date', 'inclusive_end_date']
     widgets = {
         'title': TextInput,
-        'inclusive_start_date': SelectDateWidget(),
-        'inclusive_end_date': SelectDateWidget()
+        'inclusive_start_date': SelectDateWidget(years=range(1500, 2018)),
+        'inclusive_end_date': SelectDateWidget(years=range(1500, 2018))
     }
 
     def get_success_url(self):
