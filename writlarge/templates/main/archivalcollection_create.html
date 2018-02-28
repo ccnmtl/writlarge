@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Place{% endblock %}
+{% block title %}Create Archival Collection{% endblock %}
 {% block bodyclass %}archivalcollection-create{% endblock %}
 
 {% block client_templates %}
@@ -44,6 +44,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
             <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'collection-link-view' parent.id %}">Add Archival Collection</a></li>
             <li class="breadcrumb-item">Create Archival Collection</li>
         </ol>
     </nav>
@@ -94,7 +95,7 @@
                             <google-map readonly="false" showplaces="false" />
                         </div>
                         <div class="clearfix"></div>
-                        <button class="btn btn-primary btn-block mt-3 mb-3" v-on:click.stop.prevent="onCreateRepository">
+                        <button class="btn btn-primary btn-block mt-3 mb-2" v-on:click.stop.prevent="onCreateRepository">
                             Create
                         </button>
                         <a href="#" v-on:click.stop.prevent="hideForm"
@@ -111,11 +112,12 @@
                 {% bootstrap_field form.finding_aid_url %}
                 {% bootstrap_field form.linear_feet %}
                 {% bootstrap_field form.inclusive_start_date %}
-                {% bootstrap_field form.inclusive_end_date %}
+                {% bootstrap_field form.inclusive_end_date %}   
 
                 <hr class="mb-4">
-                <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+                <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             </div>
+            <a v-if="!createForm" class="btn btn-secondary btn-block mb-4" href="{% url 'collection-link-view' parent.id %}">Cancel</a>
         </form>
     </div>
 </div>

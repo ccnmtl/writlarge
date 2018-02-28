@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Place{% endblock %}
+{% block title %}Edit Details{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
@@ -25,7 +25,8 @@
         <form action="." method="post">{% csrf_token %}
             {% bootstrap_form form %}
             <hr class="mb-4">
-            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+            <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' object.id %}">Cancel</a>
         </form>
     </div>
 </div>
