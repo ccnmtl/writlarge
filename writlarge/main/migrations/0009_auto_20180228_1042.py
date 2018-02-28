@@ -27,12 +27,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='archivalrepository',
-            name='latlng',
-            field=django.contrib.gis.db.models.fields.PointField(default=Point(1, 1), srid=4326),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='archivalrepository',
             name='title',
             field=models.TextField(unique=True, verbose_name='Repository Title'),
         ),
