@@ -173,6 +173,70 @@ class ArchivalCollectionUnlinkView(LoggedInEditorMixin,
         return HttpResponseRedirect(url)
 
 
+class ArchivalCollectionCreateView(LoggedInEditorMixin,
+                                   ModelFormWidgetMixin,
+                                   LearningSiteParamMixin,
+                                   CreateView):
+
+    model = ArchivalCollection
+    template_name = 'main/archivalcollection_create.html'
+    fields = ['repository', 'title', 'description',
+              'finding_aid_url', 'linear_feet',
+              'inclusive_start_date', 'inclusive_end_date']
+    widgets = {
+        'title': TextInput,
+        'inclusive_start_date': SelectDateWidget(),
+        'inclusive_end_date': SelectDateWidget()
+    }
+
+    def post(self, request, *args, **kwargs):
+        return CreateView.post(self, request, *args, **kwargs)
+
+    def get_success_url(self):
+        self.object.learning_sites.add(self.parent)
+
+        messages.add_message(
+            self.request, messages.INFO,
+            '{} added as an archival resource.'.format(self.object.title)
+        )
+        return reverse('site-detail-view', args=[self.parent.id])
+
+
+class ArchivalCollectionUpdateView(LoggedInEditorMixin,
+                                   ModelFormWidgetMixin,
+                                   LearningSiteParamMixin,
+                                   UpdateView):
+    model = ArchivalCollection
+    fields = ['title', 'description',
+              'finding_aid_url', 'linear_feet',
+              'inclusive_start_date', 'inclusive_end_date']
+    widgets = {
+        'title': TextInput,
+        'inclusive_start_date': SelectDateWidget(),
+        'inclusive_end_date': SelectDateWidget()
+    }
+
+    def get_success_url(self):
+        messages.add_message(
+            self.request, messages.INFO,
+            '{} has been updated.'.format(self.object.title)
+        )
+        return reverse('site-detail-view', args=[self.parent.id])
+
+
+class ArchivalCollectionDeleteView(LoggedInEditorMixin,
+                                   LearningSiteParamMixin,
+                                   DeleteView):
+    model = ArchivalCollection
+
+    def get_success_url(self):
+        messages.add_message(
+            self.request, messages.INFO,
+            '{} has been deleted.'.format(self.object.title)
+        )
+        return reverse('site-detail-view', args=[self.parent.id])
+
+
 """
 Rest API endpoints
 """

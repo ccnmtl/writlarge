@@ -10,6 +10,10 @@ main {
     background-color: white;
 }
 
+h4 {
+    font-weight: 300;
+}
+
 /* Cover Page */
 .cover-page {
     color: white;

@@ -74,6 +74,16 @@ urlpatterns = [
         views.ArchivalCollectionUnlinkView.as_view(),
         name='collection-unlink-view'),
 
+    url(r'^create/collection/(?P<parent>\d+)/$',
+        views.ArchivalCollectionCreateView.as_view(),
+        name='collection-create-view'),
+    url(r'^edit/collection/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.ArchivalCollectionUpdateView.as_view(),
+        name='collection-edit-view'),
+    url(r'^delete/collection/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.ArchivalCollectionDeleteView.as_view(),
+        name='collection-delete-view'),
+
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
         name='site-gallery-view'),

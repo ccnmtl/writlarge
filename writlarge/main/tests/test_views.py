@@ -5,6 +5,7 @@ from django.test.client import Client, RequestFactory
 from django.test.utils import override_settings
 from django.urls.base import reverse
 
+from writlarge.main.models import ArchivalCollection
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory)
@@ -24,13 +25,13 @@ class BasicTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, 'PASS')
 
-    @override_settings(GOOGLE_MAP_API=['123456'])
+    @override_settings(GOOGLE_MAP_API='123456')
     def test_django_settings(self):
         request = RequestFactory()
         request.user = UserFactory()
 
         ctx = django_settings(request)
-        self.assertEquals(ctx['settings']['GOOGLE_MAP_API'], ['123456'])
+        self.assertEquals(ctx['settings']['GOOGLE_MAP_API'], '123456')
         self.assertFalse(ctx['is_editor'])
 
         request.user.groups.add(GroupFactory(name='Editor'))
@@ -213,5 +214,125 @@ class TestAddRemoveCollection(TestCase):
         response = self.client.get(self.unlink_url)
         self.assertEquals(response.status_code, 200)
         response = self.client.post(self.unlink_url, {})
+        self.assertEquals(response.status_code, 302)
+        self.assertEquals(self.site.archivalcollection_set.count(), 0)
+
+
+class TestArchivalCollectionCreateView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.repository = ArchivalRepositoryFactory()
+
+        self.url = reverse('collection-create-view',
+                           kwargs={'parent': self.site.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_create(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+
+        data = {
+            'title': 'New', 'description': '', 'finding_aid_url': '',
+            'repository': '{}'.format(self.repository.id),
+            'linear_feet': '', 'inclusive_start_date_month': '1',
+            'inclusive_start_date_day': '1',
+            'inclusive_start_date_year': '2018',
+            'inclusive_end_date_month': '1',
+            'inclusive_end_date_day': '1',
+            'inclusive_end_date_year': '2018'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        collection = ArchivalCollection.objects.get(title='New')
+        self.assertTrue(collection.learning_sites.filter(
+            title=self.site.title).exists())
+
+
+class TestArchivalCollectionUpdateView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.collection = ArchivalCollectionFactory()
+        self.collection.learning_sites.add(self.site)
+
+        self.url = reverse('collection-edit-view',
+                           kwargs={'parent': self.site.id,
+                                   'pk': self.collection.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_update(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+
+        data = {
+            'title': 'Updated', 'description': '', 'finding_aid_url': '',
+            'linear_feet': '', 'inclusive_start_date_month': '1',
+            'inclusive_start_date_day': '1',
+            'inclusive_start_date_year': '2018',
+            'inclusive_end_date_month': '1',
+            'inclusive_end_date_day': '1',
+            'inclusive_end_date_year': '2018'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        self.collection.refresh_from_db()
+        self.assertEquals(self.collection.title, 'Updated')
+
+
+class TestArchivalCollectionDeleteView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.collection = ArchivalCollectionFactory()
+        self.collection.learning_sites.add(self.site)
+
+        self.url = reverse('collection-delete-view',
+                           kwargs={'parent': self.site.id,
+                                   'pk': self.collection.id})
+
+    def test_anonymous(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        user = UserFactory()
+        self.client.login(username=user.username, password='test')
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_delete(self):
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+        response = self.client.post(self.url, {})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(self.site.archivalcollection_set.count(), 0)

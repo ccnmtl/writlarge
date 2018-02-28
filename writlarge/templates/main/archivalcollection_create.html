@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Edit Place{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">{% if object %}Edit{% else %}Create{% endif %} Archival Collection</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="pb-2 text-center">
+    <h2>
+        {{parent.title}}
+    </h2>
+    <h4 class="text-muted">{% if object %}Edit Archival Collection{% else %}Create Archival Collection{% endif %}</h4>
+</div>
+
+<div class="row">
+    <div class="col-md-12 order-md-1">
+        <form action="." method="post">{% csrf_token %}
+            {% bootstrap_form form %}
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
