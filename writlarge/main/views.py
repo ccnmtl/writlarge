@@ -11,12 +11,12 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
-
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     ModelFormWidgetMixin, LoggedInEditorMixin)
-from writlarge.main.models import LearningSite, ArchivalRepository, Place, \
-    DigitalObject, ArchivalCollection
+from writlarge.main.models import (
+    LearningSite, ArchivalRepository, Place,
+    DigitalObject, ArchivalCollection, Footnote)
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
@@ -244,6 +244,32 @@ class ArchivalCollectionDeleteView(LoggedInEditorMixin,
             '{} has been deleted.'.format(self.object.title)
         )
         return reverse('site-detail-view', args=[self.parent.id])
+
+
+class FootnoteCreateView(LoggedInEditorMixin,
+                         LearningSiteParamMixin,
+                         CreateView):
+    model = Footnote
+    fields = ['note']
+
+    def get_success_url(self):
+        self.parent.footnotes.add(self.object)
+        return reverse('site-detail-view', args=[self.parent.id])
+
+
+class FootnoteUpdateView(LoggedInEditorMixin,
+                         LearningSiteRelatedMixin,
+                         UpdateView):
+    model = Footnote
+    success_view = 'site-detail-view'
+    fields = ['note']
+
+
+class FootnoteDeleteView(LoggedInEditorMixin,
+                         LearningSiteRelatedMixin,
+                         DeleteView):
+    model = Footnote
+    success_view = 'site-detail-view'
 
 
 """

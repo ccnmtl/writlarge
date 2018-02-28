@@ -83,6 +83,16 @@ urlpatterns = [
         views.ArchivalCollectionDeleteView.as_view(),
         name='collection-delete-view'),
 
+    url(r'^add/footnote/(?P<parent>\d+)/$',
+        views.FootnoteCreateView.as_view(),
+        name='footnote-create-view'),
+    url(r'^edit/footnote/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.FootnoteUpdateView.as_view(),
+        name='footnote-edit-view'),
+    url(r'^delete/footnote/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.FootnoteDeleteView.as_view(),
+        name='footnote-delete-view'),
+
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
         name='site-gallery-view'),
