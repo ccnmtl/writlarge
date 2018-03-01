@@ -91,7 +91,7 @@ djangorestframework==3.7.7
 ccnmtlsettings==1.3.0
 
 django-reversion==2.0.13
-text_unidecode==1.1
+text_unidecode==1.2
 
 django-taggit==0.22.2
 
