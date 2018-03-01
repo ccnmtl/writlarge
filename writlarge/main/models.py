@@ -165,8 +165,8 @@ class LearningSite(models.Model):
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
 
-    established = models.DateField(null=True, blank=True)
-    defunct = models.DateField(null=True, blank=True)
+    established = models.OneToOneField(ExtendedDate, null=True, blank=True)
+    defunct = models.OneToOneField(ExtendedDate, null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
