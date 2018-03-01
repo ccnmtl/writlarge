@@ -1,7 +1,7 @@
-from django.db import models
-
-from django.contrib.gis.geos.point import Point
+from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
+from django.contrib.gis.geos.point import Point
+from django.db import models
 from django.urls.base import reverse
 from taggit.managers import TaggableManager
 
@@ -77,6 +77,13 @@ class LearningSite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
+    created_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='site_created_by')
+    modified_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='site_modified_by')
+
     class Meta:
         ordering = ['title']
         verbose_name = "Site of Teaching & Learning"
@@ -100,6 +107,13 @@ class ArchivalRepository(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='repository_created_by')
+    modified_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='repository_modified_by')
 
     class Meta:
         ordering = ['title']
@@ -131,6 +145,13 @@ class ArchivalCollection(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+
+    created_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='collection_created_by')
+    modified_by = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL,
+        related_name='collection_modified_by')
 
     class Meta:
         ordering = ['title']
