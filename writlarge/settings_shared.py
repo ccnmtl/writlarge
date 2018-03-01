@@ -71,7 +71,8 @@ INSTALLED_APPS += [  # noqa
     'taggit',
     'django.contrib.gis',
     'rest_framework',
-    'lti_provider'
+    'lti_provider',
+    'edtf'
 ]
 
 LOGIN_REDIRECT_URL = "/"

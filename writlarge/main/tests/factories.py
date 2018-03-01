@@ -6,8 +6,9 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.gis.geos.point import Point
 import factory
 from factory.fuzzy import BaseFuzzyAttribute, FuzzyDateTime
+
 from writlarge.main.models import (
-    LearningSiteCategory, LearningSite,
+    LearningSiteCategory, LearningSite, ExtendedDate,
     ArchivalRepository, Place, ArchivalCollection, Footnote)
 
 
@@ -106,3 +107,9 @@ class FootnoteFactory(factory.DjangoModelFactory):
         model = Footnote
 
     note = factory.Sequence(lambda n: "footnote%03d" % n)
+
+
+class ExtendedDateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = ExtendedDate
+    edtf_format = '1984~'
