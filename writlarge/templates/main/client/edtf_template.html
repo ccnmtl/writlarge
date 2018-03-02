@@ -1,0 +1,80 @@
+{% verbatim %}
+<script type="text/x-template" id="edtf-template">
+    <div class="editable-edtf" :id="id">
+        <h6 class="date-display text-muted">{{dateDisplay}}</h6>
+        <div class="row">
+        <div class="col-md-auto mb-2">
+            <label class="d-block">Year</label>
+            <input type="number" class="form-control numeric jump" name="millenium1" min="1" max="2"
+             maxlength="1" data-content="Millenium<br />Value between 1-2"
+             data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
+            <input type="number" class="form-control numeric jump" name="century1" min="0" max="9"
+             maxlength="1" data-content="Century<br />Value between 0-9"
+             data-required="[name='millenium1']"
+             data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
+            <input type="number" class="form-control numeric jump" name="decade1" min="0" max="9"
+             maxlength="1" data-content="Decade<br />Value between 0-9"
+             data-required="[name='century1'],[name='millenium1']"
+             data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
+            <input type="number" class="form-control numeric jump" name="year1" min="0" max="9"
+             data-required="[name='decade1'],[name='century1'],[name='millenium1']"
+             maxlength="1" data-content="Year<br />Value between 0-9"
+             data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
+         </div>
+         <div class="col-md-auto mb-2">
+            <label class="d-block">Month</label>
+            <select class="form-control" name="month1" v-on:change="display"
+             data-required="[name='year1'],[name='decade1'],[name='century1'],[name='millenium1']">
+                <option value="">-----</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </div>
+        <div class="col-md-auto mb-2">
+            <label class="d-block">Day</label>
+            <input type="number" class="form-control"
+             name="day1" maxlength="2" min="1" max="31" 
+             data-content="Day<br />Value between 1-31"
+             data-toggle="popover" placeholder='--' v-on:keypress="limit" v-on:change="display"
+             data-required="[name='month1'],[name='year1'],[name='decade1'],[name='century1'],[name='millenium1']" />
+        </div>
+        <div class="col-md-auto mb-2">
+            <label class="d-block">Traits</label>
+            <div class="traits">
+                <input type="checkbox" name="approximate1" v-on:change="display" /> 
+                    approximate
+
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                 title="Approximate dates are close to the actual, but not completely accurate or exact.">
+                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div>
+                <input type="checkbox" name="uncertain1" v-on:change="display" /> 
+                uncertain
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
+                 title="Uncertain dates indicate the information may possibly be accurate, but not definitely.">
+                    <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-md-auto">
+            <small v-if="errors" class="text-danger">Please fill out all required fields</small>
+            <small v-else class="text-muted">Enter the known date components</small>
+            </div>
+        </div>
+    </div>
+</script>
+{% endverbatim %}

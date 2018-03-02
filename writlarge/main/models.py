@@ -12,6 +12,7 @@ from taggit.managers import TaggableManager
 
 from writlarge.main.utils import (
     edtf_to_text, append_approximate, append_uncertain)
+from django.db.models.deletion import SET_NULL
 
 
 class ExtendedDateManager(models.Manager):
@@ -165,8 +166,12 @@ class LearningSite(models.Model):
     digital_object = models.ManyToManyField(
         DigitalObject, blank=True)
 
-    established = models.OneToOneField(ExtendedDate, null=True, blank=True)
-    defunct = models.OneToOneField(ExtendedDate, null=True, blank=True)
+    established = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        related_name='site_established')
+    defunct = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        related_name='site_defunct')
 
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)

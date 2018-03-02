@@ -70,7 +70,7 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = LearningSite
-        fields = ('id', 'title', 'latlng', 'established', 'defunct', 'notes',
+        fields = ('id', 'title', 'latlng', 'notes',
                   'category', 'digital_object', 'latitude', 'longitude',
                   'verified', 'verified_modified_at', 'empty', 'tags',
                   'created_at', 'modified_at')

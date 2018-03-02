@@ -1,11 +1,9 @@
-import datetime
 import random
 
-from IPython.utils.tz import UTC
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.gis.geos.point import Point
 import factory
-from factory.fuzzy import BaseFuzzyAttribute, FuzzyDateTime
+from factory.fuzzy import BaseFuzzyAttribute
 
 from writlarge.main.models import (
     LearningSiteCategory, LearningSite, ExtendedDate,
@@ -16,6 +14,12 @@ class FuzzyPoint(BaseFuzzyAttribute):
     def fuzz(self):
         return Point(random.uniform(-180.0, 180.0),
                      random.uniform(-90.0, 90.0))
+
+
+class ExtendedDateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = ExtendedDate
+    edtf_format = '1984~'
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -60,8 +64,8 @@ class LearningSiteFactory(factory.DjangoModelFactory):
 
     title = factory.Sequence(lambda n: "site%03d" % n)
     latlng = FuzzyPoint()
-    established = FuzzyDateTime(datetime.datetime(2008, 1, 1, tzinfo=UTC))
-    defunct = FuzzyDateTime(datetime.datetime(2009, 1, 1, tzinfo=UTC))
+    established = factory.SubFactory(ExtendedDateFactory)
+    defunct = factory.SubFactory(ExtendedDateFactory)
 
     @factory.post_generation
     def category(self, create, extracted, **kwargs):
@@ -107,9 +111,3 @@ class FootnoteFactory(factory.DjangoModelFactory):
         model = Footnote
 
     note = factory.Sequence(lambda n: "footnote%03d" % n)
-
-
-class ExtendedDateFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = ExtendedDate
-    edtf_format = '1984~'

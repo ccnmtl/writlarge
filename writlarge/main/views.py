@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.forms.models import modelform_factory
 from django.forms.widgets import (TextInput, SelectDateWidget,
-                                  CheckboxSelectMultiple)
+                                  CheckboxSelectMultiple, HiddenInput)
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
@@ -11,6 +11,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
+
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     ModelFormWidgetMixin, LoggedInEditorMixin)
@@ -68,8 +69,8 @@ class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
     widgets = {
         'title': TextInput,
         'category': CheckboxSelectMultiple,
-        'established': SelectDateWidget(years=range(1500, 2018)),
-        'defunct': SelectDateWidget(years=range(1500, 2018)),
+        'established': HiddenInput,
+        'defunct': HiddenInput,
         'instructional_level': TextInput
     }
 

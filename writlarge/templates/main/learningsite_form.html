@@ -2,10 +2,25 @@
 {% load bootstrap4 %}
 {% block title %}Edit Details{% endblock %}
 
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/edtf_template.html" %}
+{% endblock %}
+
+{% block js %}
+    <script
+        data-main="{{STATIC_URL}}js/src/editDetail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
-            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' object.id %}">{{object.title}}</a></li>
+            <li class="breadcrumb-item">
+                <a class="text-secondary" href="{% url 'site-detail-view' object.id %}">
+                    {{object.title}}
+                </a>
+            </li>
             <li class="breadcrumb-item">Edit Details</li>
         </ol>
     </nav>
@@ -20,10 +35,27 @@
     <h4 class="text-muted">Edit Details</h4>
 </div>
 
-<div class="row">
+<div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
         <form action="." method="post">{% csrf_token %}
-            {% bootstrap_form form %}
+            {% bootstrap_field form.title %}
+            {% bootstrap_field form.description %}
+
+            {% bootstrap_field form.established %}
+            <div class="form-group">
+                <label for="id_established">Established</label>
+                <edtf id="edtf-established"/>
+            </div>
+
+            {% bootstrap_field form.defunct %}
+            <div class="form-group">
+                <label for="id_defunct">Defunct</label>
+                <edtf id="edtf-defunct" />
+            </div>
+
+            {% bootstrap_field form.category %}
+            {% bootstrap_field form.notes %}
+            {% bootstrap_field form.tags %}
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' object.id %}">Cancel</a>
