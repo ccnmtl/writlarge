@@ -251,7 +251,7 @@ class FootnoteCreateView(LoggedInEditorMixin,
                          LearningSiteParamMixin,
                          CreateView):
     model = Footnote
-    fields = ['note']
+    fields = ['ordinal', 'note']
 
     def get_success_url(self):
         self.parent.footnotes.add(self.object)
@@ -263,7 +263,7 @@ class FootnoteUpdateView(LoggedInEditorMixin,
                          UpdateView):
     model = Footnote
     success_view = 'site-detail-view'
-    fields = ['note']
+    fields = ['ordinal', 'note']
 
 
 class FootnoteDeleteView(LoggedInEditorMixin,
