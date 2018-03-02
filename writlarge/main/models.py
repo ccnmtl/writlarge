@@ -1,9 +1,114 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
 from django.urls.base import reverse
+from edtf import parse_edtf
+from edtf import text_to_edtf
+from edtf.parser.edtf_exceptions import EDTFParseException
 from taggit.managers import TaggableManager
+
+from writlarge.main.utils import (
+    edtf_to_text, append_approximate, append_uncertain)
+
+
+class ExtendedDateManager(models.Manager):
+
+    def to_edtf(self, millenium, century, decade, year, month, day,
+                approximate, uncertain):
+
+        dt = ''
+
+        if day is not None:
+            dt = '{}{}{}{}-{:0>2d}-{:0>2d}'.format(
+                millenium, century, decade, year, month, day)
+        elif month is not None:
+            dt = '{}{}{}{}-{:0>2d}'.format(
+                millenium, century, decade, year, month)
+        elif year is not None:
+            dt = '{}{}{}{}'.format(millenium, century, decade, year)
+        elif decade is not None:
+            dt = '{}{}{}u'.format(millenium, century, decade)
+        elif century is not None:
+            dt = '{}{}uu'.format(millenium, century)
+        elif millenium is not None:
+            dt = '{}uuu'.format(millenium)
+        else:
+            return 'unknown'
+
+        dt = append_uncertain(dt, uncertain)
+        dt = append_approximate(dt, approximate)
+
+        return dt
+
+    def from_dict(self, values):
+        dt = self.to_edtf(
+            values.get('millenium1'), values.get('century1'),
+            values.get('decade1'),
+            values.get('year1'), values.get('month1'),
+            values.get('day1'),
+            values.get('approximate1'), values.get('uncertain1'))
+
+        if values.get('is_range'):
+            dt2 = self.to_edtf(
+                values.get('millenium2'), values.get('century2'),
+                values.get('decade2'),
+                values.get('year2'), values.get('month2'), values.get('day2'),
+                values.get('approximate2'), values.get('uncertain2'))
+
+            dt = '{}/{}'.format(dt, dt2)
+
+        return ExtendedDate(edtf_format=dt)
+
+    def create_from_string(self, date_str):
+        edtf = str(text_to_edtf(date_str))
+        return ExtendedDate.objects.create(edtf_format=edtf)
+
+
+class ExtendedDate(models.Model):
+    objects = ExtendedDateManager()
+    edtf_format = models.CharField(max_length=256)
+
+    class Meta:
+        verbose_name = 'Extended Date Format'
+
+    def __str__(self):
+        return edtf_to_text(self.as_edtf_object())
+
+    def as_edtf_object(self):
+        try:
+            return parse_edtf(self.edtf_format)
+        except EDTFParseException:
+            return None
+
+    def _validate_python_date(self, dt):
+        # the python-edtf library returns "date.max" on a ValueError
+        # and, if approximate or uncertain are set, the day/month are adjusted
+        # just compare the year 9999 to the returned year
+        return None if dt.year == date.max.year else dt
+
+    def start(self):
+        edtf = self.as_edtf()
+
+        if edtf.is_interval:
+            dt = edtf.start_date_earliest()
+        else:
+            dt = edtf.date_earliest()
+
+        return self._validate_python_date(dt)
+
+    def end(self):
+        edtf = self.as_edtf()
+
+        if not edtf.is_interval:
+            return None
+
+        return self._validate_python_date(edtf.end_date_earliest())
+
+    def match_string(self, date_str):
+        return self.edtf_format == str(text_to_edtf(date_str))
 
 
 class Footnote(models.Model):
