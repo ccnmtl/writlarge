@@ -11,9 +11,10 @@ var mapsPath = 'https://maps.google.com/maps/api/js?key=' +
 requirejs.config({
     baseUrl: WritLarge.staticUrl + 'js/',
     paths: {
-        'jquery': 'lib/jquery-3.2.1.min',
-        'domReady': 'lib/require/domReady',
         'bootstrap': 'lib/bootstrap/js/bootstrap.bundle.min',
+        'domReady': 'lib/require/domReady',
+        'jquery': 'lib/jquery-3.2.1.min',
+        'edtfVue': 'src/components/extendeddatevue',
         'googleMaps': mapsPath,
         'Vue': vuePath,
         'mapVue': 'src/components/gmapvue',

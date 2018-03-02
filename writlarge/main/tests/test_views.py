@@ -95,7 +95,7 @@ class ApiViewTest(TestCase):
         data = {
             'id': self.site.id, 'title': 'Foo',
             'latlng': {'lat': 5, 'lng': 6},
-            'established': '2008-01-01', 'defunct': '2009-01-01'
+            'established': '', 'defunct': ''
         }
         response = self.client.post(
             '/api/site/',

@@ -10,6 +10,14 @@ main {
     background-color: white;
 }
 
+label {
+    font-weight: bold;
+}
+
+.checkbox label {
+    font-weight: normal;
+}
+
 h4 {
     font-weight: 300;
 }
@@ -154,4 +162,82 @@ footer li+li {
 
 .archivalcollection-create .card.is-invalid .invalid-feedback {
     display: block;
+}
+
+/* EDTF component */
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.editable-edtf-container {
+    border: 1px solid  #ced4da;
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: .25rem;
+}
+
+.editable-edtf label {
+    font-weight: normal;
+}
+
+.editable-edtf col {
+    padding: -10px;
+}
+
+.editable-edtf input {
+    display: inline;
+}
+
+.editable-edtf .has-error {
+    border-color: #ccc;
+}
+
+.editable-edtf .required {
+    border: 1px solid #97421b !important;
+    background-color: #f9f2f4;
+}
+
+.editable-edtf input[name=millenium1],
+.editable-edtf input[name=century1],
+.editable-edtf input[name=decade1],
+.editable-edtf input[name=year1] {
+    width: 40px !important;
+}
+
+.editable-edtf input[name=day1] {
+    width: 40px;
+    padding: .375rem .5rem;
+}
+
+.editable-edtf .traits {
+    margin-top: -5px;
+}
+
+.editable-edtf .date-display {
+    margin-top: 0;
+    background-color: light-gray;
+}
+
+.editable-edtf .date-display .date-display-1 {
+    font-weight: normal;
+}
+
+.editable-edtf .date-display .date-display-separator {
+    font-weight: normal;
+}
+
+.editable-edtf ul li {
+    margin-bottom: -1px !important;
+}
+
+.editable-edtf .alert {
+    margin-top: 5px;
 }
