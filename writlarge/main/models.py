@@ -91,22 +91,21 @@ class ExtendedDate(models.Model):
         return None if dt.year == date.max.year else dt
 
     def start(self):
-        edtf = self.as_edtf()
+        edtf = self.as_edtf_object()
 
-        if edtf.is_interval:
-            dt = edtf.start_date_earliest()
-        else:
-            dt = edtf.date_earliest()
+        dt = edtf.lower_strict()
 
         return self._validate_python_date(dt)
 
     def end(self):
-        edtf = self.as_edtf()
+        edtf = self.as_edtf_object()
 
-        if not edtf.is_interval:
+        if not hasattr(edtf, 'upper'):
             return None
 
-        return self._validate_python_date(edtf.end_date_earliest())
+        dt = edtf.upper_strict()
+
+        return self._validate_python_date(dt)
 
     def match_string(self, date_str):
         return self.edtf_format == str(text_to_edtf(date_str))
