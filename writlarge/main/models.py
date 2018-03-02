@@ -113,10 +113,14 @@ class ExtendedDate(models.Model):
 
 
 class Footnote(models.Model):
+    ordinal = models.IntegerField(default=1)
     note = models.TextField()
 
     def __str__(self):
         return self.note
+
+    class Meta:
+        ordering = ['ordinal']
 
 
 class DigitalObject(models.Model):

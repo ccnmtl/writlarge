@@ -382,11 +382,13 @@ class TestFootnoteViews(TestCase):
         response = self.client.get(self.delete_url)
         self.assertEquals(response.status_code, 200)
 
-        response = self.client.post(self.create_url, {'note': 'Something'})
+        response = self.client.post(self.create_url,
+                                    {'ordinal': 2, 'note': 'Something'})
         self.assertEquals(response.status_code, 302)
         self.assertEquals(self.site.footnotes.count(), 2)
 
-        response = self.client.post(self.edit_url, {'note': 'Changed'})
+        response = self.client.post(self.edit_url,
+                                    {'ordinal': 2, 'note': 'Changed'})
         self.assertEquals(response.status_code, 302)
         self.footnote.refresh_from_db()
         self.assertEquals(self.footnote.note, 'Changed')
