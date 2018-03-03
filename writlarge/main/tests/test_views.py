@@ -414,7 +414,7 @@ class DisplayDateViewTest(TestCase):
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
         # success
@@ -424,6 +424,6 @@ class DisplayDateViewTest(TestCase):
                                      'month1': '', 'day1': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
         self.assertEquals(the_json['display'], '1673')
