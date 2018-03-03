@@ -397,3 +397,33 @@ class TestFootnoteViews(TestCase):
         self.assertEquals(response.status_code, 302)
         self.assertEquals(self.site.footnotes.count(), 1)
         self.assertEquals(self.site.footnotes.first().note, 'Something')
+
+
+class DisplayDateViewTest(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.url = reverse('display-date-view')
+
+    def test_post(self):
+        # no ajax
+        self.assertEquals(self.client.post(self.url).status_code, 405)
+
+        # no_data(self):
+        response = self.client.post(self.url,
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['success'])
+
+        # success
+        response = self.client.post(self.url,
+                                    {'millenium1': '1', 'century1': '6',
+                                     'decade1': '7', 'year1': '3',
+                                     'month1': '', 'day1': ''},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertTrue(the_json['success'])
+        self.assertEquals(the_json['display'], '1673')

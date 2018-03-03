@@ -6,7 +6,6 @@ from writlarge.main.models import ExtendedDate
 
 
 class ExtendedDateForm(forms.Form):
-    attr = forms.CharField(min_length=1, required=False)
     is_range = forms.BooleanField(initial=False, required=False)
 
     millenium1 = forms.IntegerField(min_value=1, max_value=2, required=False)
@@ -39,9 +38,6 @@ class ExtendedDateForm(forms.Form):
 
         self._set_errors(edt, cleaned_data)
         return cleaned_data
-
-    def get_attr(self):
-        return self.cleaned_data['attr']
 
     def get_extended_date(self):
         return ExtendedDate.objects.from_dict(self.cleaned_data)

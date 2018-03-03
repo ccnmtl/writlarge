@@ -6,15 +6,17 @@ from django.forms.widgets import (TextInput, SelectDateWidget,
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
+
 from rest_framework import viewsets
 
+from writlarge.main.forms import ExtendedDateForm
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
-    ModelFormWidgetMixin, LoggedInEditorMixin)
+    ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin)
 from writlarge.main.models import (
     LearningSite, ArchivalRepository, Place,
     DigitalObject, ArchivalCollection, Footnote)
@@ -271,6 +273,23 @@ class FootnoteDeleteView(LoggedInEditorMixin,
                          DeleteView):
     model = Footnote
     success_view = 'site-detail-view'
+
+
+class DisplayDateView(JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        form = ExtendedDateForm(self.request.POST)
+
+        if not form.is_valid():
+            return self.render_to_json_response({
+                'success': False,
+                'msg': form.get_error_messages()
+            })
+        else:
+            return self.render_to_json_response({
+                'success': True,
+                'display': form.get_extended_date().__str__()
+            })
 
 
 """
