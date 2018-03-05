@@ -159,6 +159,26 @@ class LearningSiteCategory(models.Model):
         return self.name
 
 
+class InstructionalLevel(models.Model):
+    name = models.TextField(unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class Audience(models.Model):
+    name = models.TextField(unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class ArchivalRecordFormat(models.Model):
     name = models.TextField(unique=True)
 
@@ -175,8 +195,10 @@ class LearningSite(models.Model):
 
     description = models.TextField(null=True, blank=True)
     category = models.ManyToManyField(LearningSiteCategory, blank=True)
-    digital_object = models.ManyToManyField(
-        DigitalObject, blank=True)
+    instructional_level = models.ManyToManyField(
+        InstructionalLevel, blank=True)
+    target_audience = models.ManyToManyField(Audience, blank=True)
+    digital_object = models.ManyToManyField(DigitalObject, blank=True)
 
     established = models.OneToOneField(
         ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
@@ -188,7 +210,6 @@ class LearningSite(models.Model):
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
 
-    instructional_level = models.TextField(null=True, blank=True)
     founder = models.TextField(null=True, blank=True)
 
     footnotes = models.ManyToManyField(Footnote, blank=True)

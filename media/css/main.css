@@ -139,6 +139,8 @@ footer li+li {
 }
 
 @media (min-width: 492px) {
+    #edit-detail-container div#id_instructional_level,
+    #edit-detail-container div#id_target_audience,
     #edit-detail-container div#id_category {
         -webkit-columns: 100px 2;
         -moz-columns: 100px 2;
@@ -147,6 +149,8 @@ footer li+li {
 }
 
 @media (min-width: 768px) {
+    #edit-detail-container div#id_instructional_level,
+    #edit-detail-container div#id_target_audience,
     #edit-detail-container div#id_category {
         -webkit-columns: 100px 3;
         -moz-columns: 100px 3;
