@@ -230,11 +230,13 @@ class LearningSiteFormTest(TestCase):
         form = LearningSiteForm(data=data)
         self.assertFalse(form.is_valid())
 
-        msg = ('millenium1: Ensure this value is less than or equal to 2.'
-               '<br />Please specify a valid date<br />')
-        self.assertEquals(form.errors['defunct'], msg)
         self.assertTrue('defunct' in form.errors)
         self.assertFalse('established' in form.errors)
+
+        self.assertTrue(
+            'Please specify a valid date' in form.errors['defunct'])
+        self.assertTrue(
+            'millenium1' in form.errors['defunct'])
 
     def test_save(self):
         site = LearningSiteFactory(defunct=None)
