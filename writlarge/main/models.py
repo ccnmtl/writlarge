@@ -4,15 +4,16 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
+from django.db.models.deletion import SET_NULL
 from django.urls.base import reverse
 from edtf import parse_edtf
 from edtf import text_to_edtf
 from edtf.parser.edtf_exceptions import EDTFParseException
+from edtf.parser.parser_classes import EARLIEST
 from taggit.managers import TaggableManager
 
 from writlarge.main.utils import (
     edtf_to_text, append_approximate, append_uncertain)
-from django.db.models.deletion import SET_NULL
 
 
 class ExtendedDateManager(models.Manager):
@@ -76,6 +77,9 @@ class ExtendedDate(models.Model):
         verbose_name = 'Extended Date Format'
 
     def __str__(self):
+        if len(self.edtf_format) < 1 or self.edtf_format == 'unknown':
+            return ''
+
         return edtf_to_text(self.as_edtf_object())
 
     def as_edtf_object(self):
@@ -93,7 +97,12 @@ class ExtendedDate(models.Model):
     def start(self):
         edtf = self.as_edtf_object()
 
-        dt = edtf.lower_strict()
+        try:
+            dt = edtf._strict_date(EARLIEST)
+        except AttributeError:
+            dt = edtf.lower_strict()
+        except AttributeError:
+            return None
 
         return self._validate_python_date(dt)
 

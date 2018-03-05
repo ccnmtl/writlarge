@@ -1,8 +1,10 @@
 from datetime import date
 
 from django import forms
+from django.forms.widgets import (
+    TextInput, CheckboxSelectMultiple, HiddenInput)
 
-from writlarge.main.models import ExtendedDate
+from writlarge.main.models import ExtendedDate, LearningSite
 
 
 class ExtendedDateForm(forms.Form):
@@ -28,15 +30,21 @@ class ExtendedDateForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(ExtendedDateForm, self).clean()
-        edt = self.get_extended_date()
+        self.is_empty = False
 
-        display_format = edt.__str__()
-        if 'invalid' in display_format or 'None' in display_format:
+        self.instance = self.get_extended_date()
+        display_format = self.instance.__str__()
+
+        if 'invalid' in display_format:
             self._errors['__all__'] = self.error_class([
                 'Please specify a valid date'])
-            return
-
-        self._set_errors(edt, cleaned_data)
+        elif display_format:
+            self._set_errors(self.instance, cleaned_data)
+        else:
+            self.is_empty = True
+            # an empty display_field indicates no values were passed
+            # For this app's purposes, that's okay
+            # @todo, add a "required" form variable
         return cleaned_data
 
     def get_extended_date(self):
@@ -94,3 +102,69 @@ class ExtendedDateForm(forms.Form):
         edtf = self.get_extended_date()
         edtf.save()
         return edtf
+
+    def create_or_update(self, parent, field_name):
+        if self.errors and len(self.errors) > 0:
+            return
+
+        edt = getattr(parent, field_name)
+        if edt and self.is_empty:
+            # remove the date
+            setattr(parent, field_name, None)
+            parent.save()
+            edt.delete()
+        elif edt:
+            # update existing date
+            edt.edtf_format = self.instance.edtf_format
+            edt.save()
+        else:
+            # add new date
+            self.instance.save()
+            setattr(parent, field_name, self.instance)
+            parent.save()
+
+
+class LearningSiteForm(forms.ModelForm):
+
+    class Meta:
+        model = LearningSite
+        fields = ['title', 'description', 'category', 'established',
+                  'defunct', 'instructional_level', 'founder',
+                  'tags', 'notes']
+        widgets = {
+            'title': TextInput,
+            'category': CheckboxSelectMultiple,
+            'established': HiddenInput,
+            'defunct': HiddenInput,
+            'instructional_level': TextInput
+        }
+
+    def get_fields(self, request_data, prefix):
+        data = dict()
+        for k in request_data.keys():
+            if k.startswith(prefix):
+                data[k[len(prefix):]] = request_data[k]
+        return data
+
+    def clean(self):
+        cleaned_data = forms.ModelForm.clean(self)
+
+        self.form_established = ExtendedDateForm(
+            self.get_fields(self.data, 'established-'))
+        self.form_defunct = ExtendedDateForm(
+            self.get_fields(self.data, 'defunct-'))
+
+        if not self.form_established.is_valid():
+            self._errors['established'] = \
+                self.form_established.get_error_messages()
+        if not self.form_defunct.is_valid():
+            self._errors['defunct'] = \
+                self.form_defunct.get_error_messages()
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, commit=commit)
+        self.form_established.create_or_update(instance, 'established')
+        self.form_defunct.create_or_update(instance, 'defunct')
+        return instance

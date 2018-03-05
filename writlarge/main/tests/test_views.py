@@ -415,7 +415,7 @@ class DisplayDateViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertFalse(the_json['success'])
+        self.assertTrue(the_json['success'])
 
         # success
         response = self.client.post(self.url,
@@ -427,3 +427,16 @@ class DisplayDateViewTest(TestCase):
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
         self.assertEquals(the_json['display'], '1673')
+
+        # invalid date
+        response = self.client.post(self.url,
+                                    {'millenium1': '13', 'century1': '6',
+                                     'decade1': '7', 'year1': '3',
+                                     'month1': '', 'day1': ''},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content.decode('utf-8'))
+        self.assertFalse(the_json['success'])
+
+        self.assertTrue('Please specify a valid date' in the_json['msg'])
+        self.assertTrue('millenium1' in the_json['msg'])

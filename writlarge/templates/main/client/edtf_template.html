@@ -5,26 +5,28 @@
         <div class="row">
         <div class="col-md-auto mb-2">
             <label class="d-block">Year</label>
-            <input type="number" class="form-control numeric jump" name="millenium1" min="1" max="2"
+            <input type="number" class="form-control numeric jump millenium" :name="name + '-millenium1'" min="1" max="2"
              maxlength="1" data-content="Millenium<br />Value between 1-2"
              data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
-            <input type="number" class="form-control numeric jump" name="century1" min="0" max="9"
+            <input type="number" class="form-control numeric jump century" :name="name + '-century1'" min="0" max="9"
              maxlength="1" data-content="Century<br />Value between 0-9"
-             data-required="[name='millenium1']"
+             data-required=".millenium"
              data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
-            <input type="number" class="form-control numeric jump" name="decade1" min="0" max="9"
+            <input type="number" class="form-control numeric jump decade"
+             :name="name + '-decade1'" min="0" max="9"
              maxlength="1" data-content="Decade<br />Value between 0-9"
-             data-required="[name='century1'],[name='millenium1']"
+             data-required=".century,.millenium"
              data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
-            <input type="number" class="form-control numeric jump" name="year1" min="0" max="9"
-             data-required="[name='decade1'],[name='century1'],[name='millenium1']"
+            <input type="number" class="form-control numeric jump year"
+             :name="name + '-year1'" min="0" max="9"
+             data-required=".decade,.century,.millenium"
              maxlength="1" data-content="Year<br />Value between 0-9"
              data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
          </div>
          <div class="col-md-auto mb-2">
             <label class="d-block">Month</label>
-            <select class="form-control" name="month1" v-on:change="display"
-             data-required="[name='year1'],[name='decade1'],[name='century1'],[name='millenium1']">
+            <select class="form-control month" :name="name + '-month1'" v-on:change="display"
+             data-required=".year,.decade,.century,.millenium">
                 <option value="">-----</option>
                 <option value="1">January</option>
                 <option value="2">February</option>
@@ -42,16 +44,16 @@
         </div>
         <div class="col-md-auto mb-2">
             <label class="d-block">Day</label>
-            <input type="number" class="form-control"
-             name="day1" maxlength="2" min="1" max="31" 
+            <input type="number" class="form-control day"
+             :name="name + '-day1'" maxlength="2" min="1" max="31" 
              data-content="Day<br />Value between 1-31"
              data-toggle="popover" placeholder='--' v-on:keypress="limit" v-on:change="display"
-             data-required="[name='month1'],[name='year1'],[name='decade1'],[name='century1'],[name='millenium1']" />
+             data-required=".month1,.year1,.decade1,.century1,.millenium1" />
         </div>
         <div class="col-md-auto mb-2">
             <label class="d-block">Traits</label>
             <div class="traits">
-                <input type="checkbox" name="approximate1" v-on:change="display" /> 
+                <input type="checkbox" class="approximate" :name="name + '-approximate1'" v-on:change="display" /> 
                     approximate
 
                 <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
@@ -60,7 +62,7 @@
                 </a>
             </div>
             <div>
-                <input type="checkbox" name="uncertain1" v-on:change="display" /> 
+                <input type="checkbox" class="uncertain" :name="name + '-uncertain1'" v-on:change="display" /> 
                 uncertain
                 <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
                  title="Uncertain dates indicate the information may possibly be accurate, but not definitely.">

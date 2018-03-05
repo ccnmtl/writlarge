@@ -44,13 +44,13 @@
             {% bootstrap_field form.established %}
             <div class="form-group">
                 <label for="id_established">Established</label>
-                <edtf id="edtf-established"/>
+                <edtf id="edtf-established" name="established" {% if form.established.errors %}errors="1"{% endif %} />
             </div>
 
             {% bootstrap_field form.defunct %}
             <div class="form-group">
                 <label for="id_defunct">Defunct</label>
-                <edtf id="edtf-defunct" />
+                <edtf id="edtf-defunct" name="defunct" {% if form.defunct.errors %}errors="1"{% endif %}/>
             </div>
 
             {% bootstrap_field form.category %}
