@@ -97,6 +97,10 @@ urlpatterns = [
         views.LearningSiteGalleryView.as_view(),
         name='site-gallery-view'),
 
+    url(r'^date/display/$',
+        views.DisplayDateView.as_view(),
+        name='display-date-view'),
+
     url(r'^admin/', admin.site.urls),
     url(r'^_impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),

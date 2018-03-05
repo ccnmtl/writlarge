@@ -6,11 +6,6 @@ from writlarge.main.models import ExtendedDate
 
 class ExtendedDateFormTest(TestCase):
 
-    def test_get_attr(self):
-        form = ExtendedDateForm()
-        form.cleaned_data = {'attr': 'foo'}
-        self.assertEquals(form.get_attr(), 'foo')
-
     def test_clean_empty_fields(self):
         data = {
             'is_range': True,
@@ -141,7 +136,7 @@ class ExtendedDateFormTest(TestCase):
 
     def test_clean_incomplete_data(self):
         data = {
-            'approximate1': True, 'approximate2': False, 'attr': u'',
+            'approximate1': True, 'approximate2': False,
             'century1': None, 'century2': None, 'day1': None, 'day2': None,
             'decade1': None, 'decade2': None, 'is_range': False,
             'millenium1': 1, 'millenium2': None,
