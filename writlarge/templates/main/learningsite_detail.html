@@ -31,11 +31,13 @@
         <h2>
             {{object.title}}
         </h2>
-        {% if object.established %}
+        {% with established=object.display_established_date defunct=object.display_defunct_date%}
+        {% if established %}
             <h4 class="text-muted">
-                {{object.established|date:"Y"}} - {% if object.defunct %}{{object.defunct|date:"Y"}}{% else %}present{% endif %}
+                {{established}} - {% if defunct %}{{defunct}}{% else %}present{% endif %}
             </h4>
         {% endif %}
+        {% endwith %}
         {% if object.description %}
             <p class="lead">{{object.description}}</p>
         {% endif %}
