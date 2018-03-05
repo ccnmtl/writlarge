@@ -18,6 +18,18 @@ requirejs(['./common'], function() {
             el: '#edit-detail-container',
             components: {
                 'edtf': ExtendedDateVue
+            },
+            methods: {
+                onSubmit: function(event) {
+                    for (let i=0; i < this.$children.length; i++) {
+                        if (this.$children[i].errors > 0) {
+                            this.$children[i].setFocus();
+                            event.preventDefault();
+                            event.stopPropagation();
+                            break;
+                        }
+                    }
+                }
             }
         });
     });

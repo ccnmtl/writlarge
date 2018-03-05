@@ -33,7 +33,7 @@ class ExtendedDateForm(forms.Form):
         self.is_empty = False
 
         self.instance = self.get_extended_date()
-        display_format = self.instance.__str__()
+        display_format = self.instance and self.instance.__str__()
 
         if 'invalid' in display_format:
             self._errors['__all__'] = self.error_class([
@@ -48,7 +48,10 @@ class ExtendedDateForm(forms.Form):
         return cleaned_data
 
     def get_extended_date(self):
-        return ExtendedDate.objects.from_dict(self.cleaned_data)
+        try:
+            return ExtendedDate.objects.from_dict(self.cleaned_data)
+        except (TypeError, AttributeError):
+            return None
 
     def get_error_messages(self):
         msg = ''

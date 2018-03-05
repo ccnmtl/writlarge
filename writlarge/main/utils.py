@@ -93,7 +93,7 @@ def fmt_precision(date_obj, is_interval):
 
 
 def fmt_edtf_date(edtf_obj, is_interval):
-
+    #  @todo - the model now carries this function, factor it out.
     if isinstance(edtf_obj, UncertainOrApproximate):
         date_obj = edtf_obj.date
         is_uncertain = edtf_obj.ua and edtf_obj.ua.is_uncertain

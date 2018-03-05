@@ -1,16 +1,23 @@
 /* exported ExtendedDateVue */
 
 var ExtendedDateVue = {
-    props: ['id', 'name', 'errors'],
+    props: [
+        'id', 'name', 'initial-errors',
+        'millenium1', 'century1', 'decade1', 'year1',
+        'month1', 'day1', 'approximate1', 'uncertain1'],
     template: '#edtf-template',
     data: function() {
         return {
+            errors: 0,
             dateDisplay: ''
         };
     },
     methods: {
         el: function() {
             return $('#' + this.id);
+        },
+        setFocus: function() {
+            document.getElementById(this.id).scrollIntoView();
         },
         markRequired: function() {
             // If a field is not populated, and subsequent fields *are*
@@ -34,7 +41,7 @@ var ExtendedDateVue = {
             elts = elts.filter(hasValue).get().reverse();
 
             let required = 0;
-            var selector = $(elts).first().data('required');
+            let selector = $(elts).first().attr('data-required');
             $row.find(selector).not(hasValue).each(function() {
                 $(this).addClass('required');
                 required++;
@@ -65,7 +72,7 @@ var ExtendedDateVue = {
 
             const params = {
                 url: WritLarge.baseUrl + 'date/display/',
-                data: this.asEdtf()
+                data: this.toDict()
             };
 
             $.post(params, (response) => {
@@ -76,7 +83,7 @@ var ExtendedDateVue = {
                 }
             });
         },
-        asEdtf: function() {
+        toDict: function() {
             const $el = this.el();
             return {
                 'millenium1': $el
@@ -110,5 +117,36 @@ var ExtendedDateVue = {
             'placement': 'bottom'
         });
         $el.find('[data-toggle="tooltip"]').tooltip();
+
+        if (this.approximate1 === 'True') {
+            $el.find('input.approximate').prop('checked', true);
+        }
+        if (this.uncertain1 === 'True') {
+            $el.find('input.uncertain').prop('checked', true);
+        }
+        if (this.millenium1) {
+            $el.find('.millenium').val(this.millenium1);
+        }
+        if (this.century1) {
+            $el.find('.century').val(this.century1);
+        }
+        if (this.decade1) {
+            $el.find('.decade').val(this.decade1);
+        }
+        if (this.year1) {
+            $el.find('.year').val(this.year1);
+        }
+        if (this.month1) {
+            const selector = '.month option[value=' +
+                this.month1.replace(/^[0]+/g, '') + ']';
+            $el.find(selector).attr('selected','selected');
+        }
+        if (this.day1) {
+            $el.find('.day').val(this.day1);
+        }
+
+        if (this.initialErrors) {
+            this.errors = 1;
+        }
     }
 };

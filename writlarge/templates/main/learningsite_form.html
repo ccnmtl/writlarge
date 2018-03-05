@@ -27,7 +27,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="pb-2 text-center">
     <h2>
         {{object.title}}
@@ -37,20 +36,34 @@
 
 <div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post">{% csrf_token %}
+
+        <form action="." method="post" v-on:submit="onSubmit">{% csrf_token %}
             {% bootstrap_field form.title %}
             {% bootstrap_field form.description %}
+
 
             {% bootstrap_field form.established %}
             <div class="form-group">
                 <label for="id_established">Established</label>
-                <edtf id="edtf-established" name="established" {% if form.established.errors %}errors="1"{% endif %} />
+                <edtf id="edtf-established" name="established"
+                    {% for key, value in object.established.to_dict.items %}
+                        {% if value %}
+                            {{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.established.errors %}initial-errors="1"{% endif %} />
             </div>
 
             {% bootstrap_field form.defunct %}
             <div class="form-group">
                 <label for="id_defunct">Defunct</label>
-                <edtf id="edtf-defunct" name="defunct" {% if form.defunct.errors %}errors="1"{% endif %}/>
+                <edtf id="edtf-defunct" name="defunct"
+                    {% for key, value in object.defunct.to_dict.items %}
+                        {% if value %}
+                            {{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.defunct.errors %}errors="1"{% endif %}/>
             </div>
 
             {% bootstrap_field form.category %}
