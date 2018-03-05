@@ -438,6 +438,5 @@ class DisplayDateViewTest(TestCase):
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
-        msg = ('millenium1: Ensure this value is less than or equal to 2.'
-               '<br />Please specify a valid date<br />')
-        self.assertEquals(the_json['msg'], msg)
+        self.assertTrue('Please specify a valid date' in the_json['msg'])
+        self.assertTrue('millenium1' in the_json['msg'])
