@@ -138,6 +138,22 @@ footer li+li {
     max-width: none;
 }
 
+@media (min-width: 492px) {
+    #edit-detail-container div#id_category {
+        -webkit-columns: 100px 2;
+        -moz-columns: 100px 2;
+        columns: 100px 2;
+    }
+}
+
+@media (min-width: 768px) {
+    #edit-detail-container div#id_category {
+        -webkit-columns: 100px 3;
+        -moz-columns: 100px 3;
+        columns: 100px 3;
+    }
+}
+
 .archivalcollection-create .create-repository {
     margin-top: 1.9em;
 }
