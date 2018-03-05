@@ -240,6 +240,12 @@ class LearningSite(models.Model):
     def empty(self):
         return self.category.count() < 1
 
+    def display_established_date(self):
+        return self.established.__str__() if self.established else ''
+
+    def display_defunct_date(self):
+        return str(self.defunct) if self.defunct else ''
+
 
 class ArchivalRepository(models.Model):
     title = models.TextField(unique=True, verbose_name="Repository Title")
