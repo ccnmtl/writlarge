@@ -79,9 +79,39 @@
                 </dt>
                 <dd class="col-sm-8">
                     {% for category in object.category.all %}
-                        <a href='#'>{{category}}</a>
+                        <a href='#'>{{category}}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </dd>
+
+                {% if object.instructional_level.count > 0 %}
+                <dt class="col-sm-3">
+                    Instructional Level
+                </dt>
+                <dd class="col-sm-8">
+                    {% for level in object.instructional_level.all %}
+                        {{level}}{% if not forloop.last %}, {% endif %}
+                    {% endfor %} 
+                </dd>
+                {% endif %}
+                
+                {% if object.target_audience.count > 0 %}
+                <dt class="col-sm-3">
+                    Audience
+                </dt>
+                <dd class="col-sm-8">
+                    {% for audience in object.target_audience.all %}
+                        {{audience}}{% if not forloop.last %}, {% endif %}
+                    {% endfor %} 
+                </dd>
+                {% endif %}
+
+                <dt class="col-sm-3">
+                    Founders
+                </dt>
+                <dd class="col-sm-8">
+                    {{object.founder}}
+                </dd>
+
                 {% if objects.tags.count > 0 %}
                 <dt class="col-sm-3">
                     Tags
@@ -92,20 +122,6 @@
                     {% endfor %}
                 </dd>
                 {% endif %}
-
-                <dt class="col-sm-3">
-                    Instructional Level
-                </dt>
-                <dd class="col-sm-8">
-                    {{object.instructional_level}}
-                </dd>
-
-                <dt class="col-sm-3">
-                    Founders
-                </dt>
-                <dd class="col-sm-8">
-                    {{object.founder}}
-                </dd>
 
                 {% if object.notes %}
                     <dt class="col-sm-3">
