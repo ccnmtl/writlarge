@@ -1,7 +1,8 @@
 from django.test.testcases import TestCase
 
-from writlarge.main.forms import ExtendedDateForm
+from writlarge.main.forms import ExtendedDateForm, LearningSiteForm
 from writlarge.main.models import ExtendedDate
+from writlarge.main.tests.factories import LearningSiteFactory
 
 
 class ExtendedDateFormTest(TestCase):
@@ -149,3 +150,112 @@ class ExtendedDateFormTest(TestCase):
 
         self.assertEquals(form.get_error_messages(),
                           u'Please specify a valid date<br />')
+
+    def test_create_or_update(self):
+        site = LearningSiteFactory(established=None)
+
+        data = {
+            'is_range': False,
+            'millenium1': '2', 'century1': '0', 'decade1': '1', 'year1': '0',
+            'month1': '2', 'day1': '28',
+            'approximate1': True, 'uncertain1': True,
+            'millenium2': None, 'century2': None, 'decade2': None,
+            'year2': None, 'month2': None, 'day2': None,
+            'approximate2': False, 'uncertain2': False,
+        }
+
+        # add established date
+        form = ExtendedDateForm(data=data)
+        self.assertTrue(form.is_valid())
+        form.create_or_update(site, 'established')
+        site.refresh_from_db()
+        established = site.established
+        self.assertEquals(established.edtf_format, '2010-02-28?~')
+
+        # update established date
+        data['year1'] = 1
+        form = ExtendedDateForm(data=data)
+        self.assertTrue(form.is_valid())
+        form.create_or_update(site, 'established')
+        site.refresh_from_db()
+        self.assertEquals(established.id, site.established.id)
+        self.assertEquals(established.edtf_format, '2011-02-28?~')
+
+        # remove established date
+        data = {
+            'is_range': False,
+            'millenium1': '', 'century1': '', 'decade1': '', 'year1': '',
+            'month1': '', 'day1': '',
+            'approximate1': True, 'uncertain1': True,
+            'millenium2': '', 'century2': '', 'decade2': '',
+            'year2': '', 'month2': '', 'day2': '',
+            'approximate2': False, 'uncertain2': False,
+        }
+        form = ExtendedDateForm(data=data)
+        self.assertTrue(form.is_valid())
+        form.create_or_update(site, 'established')
+        site.refresh_from_db()
+        self.assertIsNone(site.established)
+
+        with self.assertRaises(ExtendedDate.DoesNotExist):
+            ExtendedDate.objects.get(id=established.id)
+
+
+class LearningSiteFormTest(TestCase):
+
+    def test_get_fields(self):
+        data = {
+            'established-millenium1': '1',
+            'established-century1': '2',
+            'defunct-millenium1': '3',
+            'defunct-century1': '3',
+        }
+        data = LearningSiteForm().get_fields(data, 'established-')
+        self.assertEquals(data['millenium1'], '1')
+        self.assertEquals(data['century1'], '2')
+
+    def test_clean_fields(self):
+        data = {
+            'established-is_range': False,
+            'established-millenium1': '2', 'established-century1': '0',
+            'established-decade1': '1', 'established-year1': '0',
+            'established-month1': '', 'established-day1': '',
+            'established-approximate1': True, 'established-uncertain1': True,
+            'defunct-is_range': False,
+            'defunct-millenium1': '3', 'defunct-century1': '0',
+            'defunct-decade1': '1', 'defunct-year1': '0',
+            'defunct-month1': '', 'defunct-day1': '',
+            'defunct-approximate1': True, 'defunct-uncertain1': True,
+        }
+        form = LearningSiteForm(data=data)
+        self.assertFalse(form.is_valid())
+
+        msg = ('millenium1: Ensure this value is less than or equal to 2.'
+               '<br />Please specify a valid date<br />')
+        self.assertEquals(form.errors['defunct'], msg)
+        self.assertTrue('defunct' in form.errors)
+        self.assertFalse('established' in form.errors)
+
+    def test_save(self):
+        site = LearningSiteFactory(defunct=None)
+        data = {
+            'title': 'Foo',
+            'latlng': site.latlng,
+            'established-is_range': False,
+            'established-millenium1': '2', 'established-century1': '0',
+            'established-decade1': '0', 'established-year1': '8',
+            'established-month1': '', 'established-day1': '',
+            'established-approximate1': True, 'established-uncertain1': True,
+            'defunct-is_range': False,
+            'defunct-millenium1': '2', 'defunct-century1': '0',
+            'defunct-decade1': '1', 'defunct-year1': '1',
+            'defunct-month1': '', 'defunct-day1': '',
+            'defunct-approximate1': False, 'defunct-uncertain1': False,
+        }
+        form = LearningSiteForm(data, instance=site)
+        self.assertTrue(form.is_valid())
+        form.save()
+
+        # make sure this was all saved
+        self.assertEquals(site.established.edtf_format, '2008?~')
+        self.assertEquals(site.defunct.edtf_format, '2011')

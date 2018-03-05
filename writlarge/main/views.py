@@ -1,8 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.forms.models import modelform_factory
-from django.forms.widgets import (TextInput, SelectDateWidget,
-                                  CheckboxSelectMultiple, HiddenInput)
+from django.forms.widgets import (TextInput, SelectDateWidget)
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
@@ -10,10 +9,9 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
-
 from rest_framework import viewsets
 
-from writlarge.main.forms import ExtendedDateForm
+from writlarge.main.forms import ExtendedDateForm, LearningSiteForm
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin)
@@ -62,19 +60,9 @@ class LearningSiteDetailView(DetailView):
     model = LearningSite
 
 
-class LearningSiteUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin,
-                             UpdateView):
+class LearningSiteUpdateView(LoggedInEditorMixin, UpdateView):
     model = LearningSite
-    fields = ['title', 'description', 'category', 'established', 'defunct',
-              'instructional_level', 'founder',
-              'tags', 'notes']
-    widgets = {
-        'title': TextInput,
-        'category': CheckboxSelectMultiple,
-        'established': HiddenInput,
-        'defunct': HiddenInput,
-        'instructional_level': TextInput
-    }
+    form_class = LearningSiteForm
 
 
 class DigitalObjectCreateView(LoggedInEditorMixin,

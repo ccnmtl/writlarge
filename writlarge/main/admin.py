@@ -4,9 +4,9 @@ from django.forms.widgets import MultiWidget, TextInput
 
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
-from writlarge.main.models import LearningSite, ArchivalRepository, \
-    ArchivalCollection, DigitalObject, LearningSiteCategory, \
-    ArchivalRecordFormat, Place
+from writlarge.main.models import (
+    LearningSite, ArchivalRepository, ArchivalCollection, DigitalObject,
+    LearningSiteCategory, ArchivalRecordFormat, Place, ExtendedDate)
 
 
 class LatLongWidget(MultiWidget):
@@ -74,3 +74,4 @@ class ArchivalCollectionAdmin(admin.ModelAdmin):
 admin.site.register(DigitalObject)
 admin.site.register(LearningSiteCategory)
 admin.site.register(ArchivalRecordFormat)
+admin.site.register(ExtendedDate)

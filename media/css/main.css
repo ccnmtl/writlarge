@@ -221,14 +221,14 @@ input[type=number] {
     background-color: #f9f2f4;
 }
 
-.editable-edtf input[name=millenium1],
-.editable-edtf input[name=century1],
-.editable-edtf input[name=decade1],
-.editable-edtf input[name=year1] {
+.editable-edtf .millenium,
+.editable-edtf .century,
+.editable-edtf .decade,
+.editable-edtf .year {
     width: 40px !important;
 }
 
-.editable-edtf input[name=day1] {
+.editable-edtf .day1 {
     width: 40px;
     padding: .375rem .5rem;
 }

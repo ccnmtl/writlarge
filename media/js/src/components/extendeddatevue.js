@@ -1,12 +1,11 @@
 /* exported ExtendedDateVue */
 
 var ExtendedDateVue = {
-    props: ['id'],
+    props: ['id', 'name', 'errors'],
     template: '#edtf-template',
     data: function() {
         return {
-            dateDisplay: '',
-            errors: 0,
+            dateDisplay: ''
         };
     },
     methods: {
@@ -80,17 +79,25 @@ var ExtendedDateVue = {
         asEdtf: function() {
             const $el = this.el();
             return {
-                'millenium1': $el.find(
-                    'input[name="millenium1"]').val(),
-                'century1': $el.find('input[name="century1"]').val(),
-                'decade1': $el.find('input[name="decade1"]').val(),
-                'year1': $el.find('input[name="year1"]').val(),
-                'month1': $el.find('select[name="month1"]').val(),
-                'day1': $el.find('input[name="day1"]').val(),
-                'approximate1': $el.find(
-                    'input[name="approximate1"]').prop('checked'),
-                'uncertain1': $el.find(
-                    'input[name="uncertain1"]').prop('checked'),
+                'millenium1': $el
+                    .find('input[name="' + this.name + '-millenium1"]')
+                    .val(),
+                'century1': $el
+                    .find('input[name="' + this.name + '-century1"]').val(),
+                'decade1': $el
+                    .find('input[name="' + this.name + '-decade1"]').val(),
+                'year1': $el
+                    .find('input[name="' + this.name + '-year1"]').val(),
+                'month1': $el
+                    .find('select[name="' + this.name + '-month1"]').val(),
+                'day1': $el
+                    .find('input[name="' + this.name + '-day1"]').val(),
+                'approximate1': $el
+                    .find('input[name="' + this.name + '-approximate1"]')
+                    .prop('checked'),
+                'uncertain1': $el
+                    .find('input[name="' + this.name + '-uncertain1"]')
+                    .prop('checked'),
                 'is_range': false
             };
         },
