@@ -128,15 +128,18 @@ class LearningSiteForm(forms.ModelForm):
 
     class Meta:
         model = LearningSite
-        fields = ['title', 'description', 'category', 'established',
-                  'defunct', 'instructional_level', 'founder',
+        fields = ['title', 'description',
+                  'category', 'instructional_level', 'target_audience',
+                  'established', 'defunct', 'founder',
                   'tags', 'notes']
         widgets = {
             'title': TextInput,
             'category': CheckboxSelectMultiple,
+            'instructional_level': CheckboxSelectMultiple,
+            'target_audience': CheckboxSelectMultiple,
             'established': HiddenInput,
             'defunct': HiddenInput,
-            'instructional_level': TextInput
+            'founder': TextInput
         }
 
     def get_fields(self, request_data, prefix):
