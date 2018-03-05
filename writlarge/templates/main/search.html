@@ -6,4 +6,74 @@
 {% endblock %}
 
 {% block content %}
+<form method="get" action=".">
+<div class="pt-5 pb-2 text-center">
+    <h2>
+        Sites of Teaching & Learning
+    </h2>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="input-group">
+            <span class="input-group-addon">Filter</span>
+            <input type="text" class="form-control" name="q"
+                placeholder="by title, author" value="{{query}}" />
+            {% if query %}
+            <span class="input-group-btn">
+                <a class="btn btn-light btn-clear-search" href="{% url 'search-view' %}">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+            </span>
+            {% endif %}
+            <span class="input-group-btn">
+                <button class="btn btn-secondary btn-search-text" type="submit">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-md-4">
+        {{paginator.count}} sites
+    </div>
+    <div class="col-md-8">
+        {% include 'main/pagination.html' %}
+    </div>
+</div>
+
+<table class="table table-bordered mt-1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Established</th>
+            <th>Defunct</th>
+            <th>Category</th>
+            <th>Created By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for site in object_list %}
+            <tr> 
+            <td><a href="{% url 'site-detail-view' site.id %}">{{site}}</a></td>
+            <td>
+                {{site.display_established_date}} 
+            </td>
+            <td>
+                {{site.display_defunct_date}} 
+            </td>
+            <td>
+                {% for category in site.category.all %}
+                    {{category}}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {{site.created_by.get_full_name|default:site.created_by.username}}
+            </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</form>
 {% endblock %}

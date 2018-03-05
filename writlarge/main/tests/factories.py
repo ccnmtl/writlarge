@@ -66,6 +66,7 @@ class LearningSiteFactory(factory.DjangoModelFactory):
     latlng = FuzzyPoint()
     established = factory.SubFactory(ExtendedDateFactory)
     defunct = factory.SubFactory(ExtendedDateFactory)
+    created_by = factory.SubFactory(UserFactory)
 
     @factory.post_generation
     def category(self, create, extracted, **kwargs):

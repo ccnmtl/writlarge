@@ -81,7 +81,7 @@
                 </dt>
                 <dd class="col-sm-8">
                     {% for category in object.category.all %}
-                        <a href='#'>{{category}}</a>{% if not forloop.last %}, {% endif %}
+                        {{category}}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </dd>
 
