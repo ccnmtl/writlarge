@@ -89,6 +89,35 @@ class ExtendedDateTest(TestCase):
         self.assertEquals(dt.__str__(),
                           'unknown month 17, 1980 - unknown month 18, 1997')
 
+    def test_to_dict_invalid(self):
+        dt = ExtendedDate.objects.create(edtf_format='999')
+        d = dt.to_dict()
+        self.assertEquals(len(d), 0)
+
+    def test_to_dict_partial(self):
+        dt = ExtendedDate.objects.create(edtf_format='1uuu')
+        d = dt.to_dict()
+        self.assertFalse(d['approximate1'])
+        self.assertFalse(d['uncertain1'])
+        self.assertEquals(d['millenium1'], '1')
+        self.assertIsNone(d['century1'])
+        self.assertIsNone(d['decade1'])
+        self.assertIsNone(d['year1'])
+        self.assertIsNone(d['month1'])
+        self.assertIsNone(d['day1'])
+
+    def test_to_dict_full(self):
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        d = dt.to_dict()
+        self.assertTrue(d['approximate1'])
+        self.assertTrue(d['uncertain1'])
+        self.assertEquals(d['millenium1'], '1')
+        self.assertEquals(d['century1'], '6')
+        self.assertEquals(d['decade1'], '5')
+        self.assertEquals(d['year1'], '9')
+        self.assertEquals(d['month1'], '06')
+        self.assertEquals(d['day1'], '30')
+
 
 class PlaceTest(TestCase):
 
