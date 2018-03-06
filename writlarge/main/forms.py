@@ -4,7 +4,8 @@ from django import forms
 from django.forms.widgets import (
     TextInput, CheckboxSelectMultiple, HiddenInput, SelectDateWidget)
 
-from writlarge.main.models import ExtendedDate, LearningSite, DigitalObject
+from writlarge.main.models import (
+    ExtendedDate, LearningSite, DigitalObject, ArchivalCollection)
 from writlarge.main.utils import filter_fields
 
 
@@ -154,6 +155,43 @@ class LearningSiteForm(forms.ModelForm):
         instance = forms.ModelForm.save(self, commit=commit)
         self.form_established.create_or_update(instance, 'established')
         self.form_defunct.create_or_update(instance, 'defunct')
+        return instance
+
+
+class ArchivalCollectionForm(forms.ModelForm):
+    class Meta:
+        model = ArchivalCollection
+
+        fields = ['title', 'description',
+                  'finding_aid_url', 'linear_feet',
+                  'inclusive_start', 'inclusive_end']
+        widgets = {
+            'title': TextInput,
+            'inclusive_start': HiddenInput,
+            'inclusive_end': HiddenInput
+        }
+
+    def clean(self):
+        cleaned_data = forms.ModelForm.clean(self)
+
+        self.form_start = ExtendedDateForm(
+            filter_fields(self.data, 'inclusive-start-'))
+        self.form_end = ExtendedDateForm(
+            filter_fields(self.data, 'inclusive-end-'))
+
+        if not self.form_start.is_valid():
+            self._errors['inclusive-start'] = \
+                self.form_start.get_error_messages()
+        if not self.form_end.is_valid():
+            self._errors['inclusive-end'] = \
+                self.form_end.get_error_messages()
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, commit=commit)
+        self.form_start.create_or_update(instance, 'inclusive_start')
+        self.form_end.create_or_update(instance, 'inclusive_end')
         return instance
 
 

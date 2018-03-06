@@ -63,7 +63,7 @@
                             {{key}}="{{value}}"
                         {% endif %}
                     {% endfor %}
-                    {% if form.defunct.errors %}errors="1"{% endif %}/>
+                    {% if form.defunct.errors %}initial-errors="1"{% endif %}/>
             </div>
 
             {% bootstrap_field form.category %}

@@ -22,12 +22,14 @@
         <h2>
             {{object.title}}
         </h2>
-        {% with established=object.display_established_date defunct=object.display_defunct_date%}
+        {% with established=object.established defunct=object.defunct %}
         {% if established %}
             <h4 class="text-muted">
                 {{established}} - {% if defunct %}{{defunct}}{% else %}present{% endif %}
             </h4>
-        {% endif %}
+        {% else %}{% if defunct %}
+            <h4 class="text-muted">? - {{defunct}}</h4>
+        {% endif %}{% endif %}
         {% endwith %}
         {% if object.description %}
             <p class="lead">{{object.description}}</p>
@@ -162,6 +164,15 @@
                         <div class="col-md-11 pl-3">
                             <div>{{collection.title}}</div>
                             <div>{{collection.repository.title}}</div>
+                            {% with start=collection.inclusive_start end=collection.inclusive_end %}
+                            {% if start %}
+                                {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
+                            {% else %}{% if end %}
+                                ? - {{end}}
+                            {% endif %}
+                            {% endif %}
+                            
+                            {% endwith %}
                         </div>
                     </div>
                 </li>
@@ -173,7 +184,7 @@
             {% endif %}
         </div>
     </div>
-    
+
     {% if object.footnotes.count > 0 or is_editor %}
     <div class="row">
         <div class="col-md-12">
