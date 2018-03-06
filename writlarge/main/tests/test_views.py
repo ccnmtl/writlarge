@@ -440,3 +440,45 @@ class DisplayDateViewTest(TestCase):
 
         self.assertTrue('Please specify a valid date' in the_json['msg'])
         self.assertTrue('millenium1' in the_json['msg'])
+
+
+class SearchViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username='editor')
+        self.site1 = LearningSiteFactory(title='foo', created_by=self.user)
+        self.site2 = LearningSiteFactory(title='bar')
+
+    def test_search_by_title(self):
+        url = "{}?q=bar".format(reverse('search-view'))
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 1)
+        self.assertEquals(
+            response.context['page_obj'].object_list[0], self.site2)
+
+        self.assertEquals(response.context['query'], 'bar')
+        self.assertEquals(
+            response.context['base_url'], '/search/?q=bar&page=')
+
+    def test_search_by_creator(self):
+        url = "{}?q={}".format(reverse('search-view'), self.user.username)
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 1)
+        self.assertEquals(
+            response.context['page_obj'].object_list[0], self.site1)
+
+        self.assertEquals(response.context['query'], self.user.username)
+
+    def test_empty_search(self):
+        url = reverse('search-view')
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 2)
+        self.assertTrue(
+            self.site1 in response.context['page_obj'].object_list)
+        self.assertTrue(
+            self.site2 in response.context['page_obj'].object_list)

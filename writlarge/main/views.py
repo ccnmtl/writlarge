@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.db.models.query_utils import Q
 from django.forms.models import modelform_factory
 from django.forms.widgets import (TextInput, SelectDateWidget)
 from django.http.response import HttpResponseRedirect
@@ -40,8 +41,36 @@ class MapView(TemplateView):
     template_name = "main/map.html"
 
 
-class SearchView(TemplateView):
+class SearchView(ListView):
+    model = LearningSite
     template_name = "main/search.html"
+    paginate_by = 15
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data(**kwargs)
+
+        query = self.request.GET.get('q', '')
+        context['query'] = query
+
+        base = reverse('search-view')
+        context['base_url'] = u'{}?q={}&page='.format(base, query)
+
+        return context
+
+    def filter(self, qs):
+        q = self.request.GET.get('q', '')
+        if len(q) < 1:
+            return qs
+
+        return qs.filter(Q(title__icontains=q) |
+                         Q(created_by__first_name__icontains=q) |
+                         Q(created_by__last_name__icontains=q) |
+                         Q(created_by__username__icontains=q))
+
+    def get_queryset(self):
+        qs = super(SearchView, self).get_queryset()
+        qs = self.filter(qs)
+        return qs
 
 
 class PlaceDetailView(DetailView):

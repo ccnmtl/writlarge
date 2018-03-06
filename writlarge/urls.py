@@ -51,7 +51,9 @@ urlpatterns = [
     auth_urls,
 
     url(r'^map/$', views.MapView.as_view(), name='map-view'),
+
     url(r'^search/$', views.SearchView.as_view(), name='search-view'),
+
     url(r'^view/(?P<pk>\d+)/$', views.LearningSiteDetailView.as_view(),
         name='site-detail-view'),
     url(r'^edit/(?P<pk>\d+)/$', views.LearningSiteUpdateView.as_view(),

@@ -261,3 +261,10 @@ input[type=number] {
 .editable-edtf .alert {
     margin-top: 5px;
 }
+
+/* Search Page */
+.page-number {
+    width: 50px;
+    display: inline;
+    text-align: right;
+}
