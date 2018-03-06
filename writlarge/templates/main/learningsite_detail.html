@@ -107,20 +107,22 @@
                 </dd>
                 {% endif %}
 
+                {% if object.founder %}
                 <dt class="col-sm-3">
-                    Founders
+                    Founder(s)
                 </dt>
                 <dd class="col-sm-8">
                     {{object.founder}}
                 </dd>
+                {% endif %}
 
-                {% if objects.tags.count > 0 %}
+                {% if object.tags.count > 0 %}
                 <dt class="col-sm-3">
                     Tags
                 </dt>
                 <dd class="col-sm-8">
                     {% for tag in object.tags.all %}
-                        <a href='#'>{{tag}}</a>{% if not forloop.last %}, {% endif %}
+                        {{tag}}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </dd>
                 {% endif %}
