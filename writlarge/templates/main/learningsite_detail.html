@@ -143,8 +143,10 @@
             <h4 class="mb-3 mt-5 text-muted">Archival Resources</h4>
             <ul class="list-group">
             {% for collection in object.archivalcollection_set.all %}
-                <li class="list-group-item pl-5 mb-2">
+                <li class="list-group-item mb-2">
                     {% if is_editor %}
+                    <div class="row">
+                    <div class="col-md-12">
                     <a class="float-right text-secondary"
                         href="{% url 'collection-delete-view' object.id collection.id %}">
                         <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
@@ -157,12 +159,14 @@
                     <a class="float-right text-secondary mr-4" href="{% url 'collection-edit-view' object.id collection.id %}">
                         <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
                     </a>
+                    </div>
+                    </div>
                     {% endif %}
-                    <div class="row">
-                        <div class="col-md2 text-secondary">
+                    <div class="row no-gutters">
+                        <div class="col-md-1 text-secondary">
                             <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
                         </div>
-                        <div class="col-md10 pl-3">
+                        <div class="col-md-11 pl-3">
                             <div>{{collection.title}}</div>
                             <div>{{collection.repository.title}}</div>
                         </div>
