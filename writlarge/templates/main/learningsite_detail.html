@@ -209,6 +209,17 @@
             </ol>
         </div>
     </div>
+
+    {% if is_editor %}
+        {% if request.user.is_superuser or object.created_by == request.user %}
+        <h4 class="mb-3 mt-5 text-muted">Manage</h4>
+        <a href="{% url 'site-delete-view' object.id %}" class="btn btn-danger mt-2 mb-3">
+            <i class="fa fa-trashcan" aria-hidden="true"></i> Delete {{object.title}}
+        </a>
+        {% endif %}
+    {% endif %}
+
  </div>
 {% endblock %}
 
+    

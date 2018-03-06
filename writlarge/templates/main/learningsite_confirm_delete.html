@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Delete Photo{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' object.id %}">{{object.title}}</a></li>
+            <li class="breadcrumb-item">Delete</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="pb-2 text-center">
+    <h2>
+        {{object.title}}
+    </h2>
+    <h4 class="text-muted">Delete {{object.title}}</h4>
+</div>
+
+<div class="row mb-5 text-center">
+    <div class="col-md-12 order-md-1">
+        <form action="" method="post">{% csrf_token %}
+            <div class="mb-3">
+                <span>Are you sure you want to delete this site of teaching &amp; learning?</span>
+            </div>
+            <button type="submit" class="btn btn-danger btn-block mb-2">Delete</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' object.id %}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

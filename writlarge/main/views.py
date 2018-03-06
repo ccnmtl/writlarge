@@ -16,7 +16,8 @@ from writlarge.main.forms import (
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
-    ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin)
+    ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin,
+    SingleObjectCreatorMixin)
 from writlarge.main.models import (
     LearningSite, ArchivalRepository, Place,
     DigitalObject, ArchivalCollection, Footnote)
@@ -84,6 +85,14 @@ class PlaceUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin, UpdateView):
     widgets = {
         'title': TextInput
     }
+
+
+class LearningSiteDeleteView(LoggedInEditorMixin, SingleObjectCreatorMixin,
+                             DeleteView):
+    model = LearningSite
+
+    def get_success_url(self):
+        return reverse('map-view')
 
 
 class LearningSiteDetailView(DetailView):
