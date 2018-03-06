@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Learning Site{% endblock %}
+{% block title %}{{object.title}}{% endblock %}
 
 {% block client_templates %}
 <meta name="csrf-token" content="{{csrf_token}}">
