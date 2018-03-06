@@ -46,7 +46,7 @@
     <div class="mb-5 text-center">
         {% for d in object.digital_object.all|slice:":5" %}
         <div class="site-thumbnails">
-            <img src="{{d.file.url}}" alt="{{d.description}}" />
+            <img src="{{d.get_url}}" alt="{{d.description}}" />
         </div>
         {% endfor %}
         {% if object.digital_object.count < 1 and is_editor %}

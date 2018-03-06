@@ -1,6 +1,7 @@
 from django.test.testcases import TestCase
 
-from writlarge.main.forms import ExtendedDateForm, LearningSiteForm
+from writlarge.main.forms import (
+    ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
 from writlarge.main.models import ExtendedDate
 from writlarge.main.tests.factories import LearningSiteFactory
 
@@ -261,3 +262,31 @@ class LearningSiteFormTest(TestCase):
         # make sure this was all saved
         self.assertEquals(site.established.edtf_format, '2008?~')
         self.assertEquals(site.defunct.edtf_format, '2011')
+
+
+class TestDigitalObjectForm(TestCase):
+
+    def test_form_clean_errors(self):
+        form = DigitalObjectForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'file': '',
+            'source_url': '',
+        }
+
+        form.clean()
+        self.assertEquals(len(form.errors), 3)
+        self.assertTrue('file' in form.errors)
+        self.assertTrue('source_url' in form.errors)
+        self.assertTrue('__all__' in form.errors)
+
+    def test_form_clean_success(self):
+        form = DigitalObjectForm()
+        form._errors = {}
+        form.cleaned_data = {
+            'file': '',
+            'source_url': 'https://writlarge.ctl.columbia.edu',
+        }
+
+        form.clean()
+        self.assertEquals(len(form.errors), 0)

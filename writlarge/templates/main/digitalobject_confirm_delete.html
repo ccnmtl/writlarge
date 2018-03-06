@@ -26,7 +26,7 @@
             <div class="mb-3">
                 <span>Are you sure you want to delete this photo?</span>
             </div>
-            <img src="{{object.file.url}}" class="img-fluid w-25 mb-4" alt="{{object.description}}">
+            <img src="{{object.get_url}}" class="img-fluid w-25 mb-4" alt="{{object.description}}">
             <button type="submit" class="btn btn-primary btn-block mb-2">Delete</button>
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-gallery-view' parent.id %}">Cancel</a>
         </form>
