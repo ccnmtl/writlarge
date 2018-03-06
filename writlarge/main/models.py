@@ -162,11 +162,15 @@ class Footnote(models.Model):
 
 
 class DigitalObject(models.Model):
-    file = models.FileField(upload_to="%Y/%m/%d/")
-    description = models.TextField()
-
-    datestamp = models.DateField(null=True, blank=True, verbose_name='Date')
+    file = models.FileField(upload_to="%Y/%m/%d/", null=True, blank=True)
     source_url = models.URLField(null=True, blank=True)
+
+    description = models.TextField()
+    datestamp = models.DateField(
+        null=True, blank=True, verbose_name='Date Taken')
+    source = models.TextField(
+        null=True, blank=True,
+        help_text="Where did you find this photo?")
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -177,6 +181,12 @@ class DigitalObject(models.Model):
 
     def __str__(self):
         return self.description
+
+    def get_url(self):
+        if self.file:
+            return self.file.url
+        else:
+            return self.source_url
 
 
 class LearningSiteCategory(models.Model):

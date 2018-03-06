@@ -18,13 +18,40 @@
         {{parent.title}}
     </h2>
     <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Photo</h4>
+    <p class="lead">Upload a photo or specify a source url.<br />
 </div>
 
 <div class="row">
     <div class="col-md-12 order-md-1">
         <form action="." method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {% bootstrap_form form %}
+            {% if form.non_field_errors %}
+            {% for err in form.non_field_errors %}
+                <div class="text-danger">{{ err }}</div>
+            {% endfor %}
+            {% endif %}
+            <div class="row">
+                <div class="col-md-5">
+                    {% bootstrap_field form.file %}
+                </div>
+                <div class="col-md-1 text-center">
+                    <h2 class="mt-3 text-muted">OR</h2>
+                </div>
+                <div class="col-md-5">
+                    <div>
+                    {% bootstrap_field form.source_url %}
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+            Reminder: Before uploading or sourcing an
+            image, you must have permission to use it. Google provides an easy-to-use guide that helps find
+            and choose appropriate images. See here for more information:
+            <a target="about:blank" href="https://support.google.com/websearch/answer/29508?hl=en">Find free-to-use images</a>.
+            </div>
+            {% bootstrap_field form.description %}
+            {% bootstrap_field form.datestamp %}
+            {% bootstrap_field form.source %}
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-gallery-view' parent.id %}">Cancel</a>

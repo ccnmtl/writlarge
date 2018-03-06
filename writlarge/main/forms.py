@@ -2,9 +2,9 @@ from datetime import date
 
 from django import forms
 from django.forms.widgets import (
-    TextInput, CheckboxSelectMultiple, HiddenInput)
+    TextInput, CheckboxSelectMultiple, HiddenInput, SelectDateWidget)
 
-from writlarge.main.models import ExtendedDate, LearningSite
+from writlarge.main.models import ExtendedDate, LearningSite, DigitalObject
 
 
 class ExtendedDateForm(forms.Form):
@@ -174,3 +174,29 @@ class LearningSiteForm(forms.ModelForm):
         self.form_established.create_or_update(instance, 'established')
         self.form_defunct.create_or_update(instance, 'defunct')
         return instance
+
+
+class DigitalObjectForm(forms.ModelForm):
+
+    class Meta:
+        model = DigitalObject
+
+        fields = [
+            'file', 'source_url', 'description', 'datestamp', 'source'
+        ]
+        widgets = {
+            'description': TextInput,
+            'datestamp': SelectDateWidget(years=range(1500, 2018)),
+            'source': TextInput
+        }
+
+    def clean(self):
+        cleaned_data = forms.ModelForm.clean(self)
+
+        if not cleaned_data['file'] and not cleaned_data['source_url']:
+            self.add_error('source_url', '')
+            self.add_error('file', '')
+            self.add_error(
+                None, 'Please upload a file or specify a source url')
+
+        return cleaned_data

@@ -53,10 +53,19 @@
                         </label>
                         {{d.description}}
                     </div>
+
+                    {% if d.source %}
+                    <div class="mb-3">
+                        <label class="d-block">
+                            Source
+                        </label>
+                        {{d.source}}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-md-8">
-                <img src="{{d.file.url}}" class="img-fluid" alt="{{d.description}}">
+                <img src="{{d.get_url}}" class="img-fluid" alt="{{d.description}}">
             </div>
         </div>
      {% endfor %}

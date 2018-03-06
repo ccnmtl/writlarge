@@ -11,7 +11,8 @@ from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 
-from writlarge.main.forms import ExtendedDateForm, LearningSiteForm
+from writlarge.main.forms import (
+    ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin)
@@ -66,15 +67,10 @@ class LearningSiteUpdateView(LoggedInEditorMixin, UpdateView):
 
 
 class DigitalObjectCreateView(LoggedInEditorMixin,
-                              ModelFormWidgetMixin,
                               LearningSiteParamMixin,
                               CreateView):
     model = DigitalObject
-    fields = ['file', 'description', 'datestamp', 'source_url']
-    widgets = {
-        'description': TextInput,
-        'datestamp': SelectDateWidget(years=range(1500, 2018))
-    }
+    form_class = DigitalObjectForm
 
     def get_success_url(self):
         self.parent.digital_object.add(self.object)
@@ -82,16 +78,11 @@ class DigitalObjectCreateView(LoggedInEditorMixin,
 
 
 class DigitalObjectUpdateView(LoggedInEditorMixin,
-                              ModelFormWidgetMixin,
                               LearningSiteRelatedMixin,
                               UpdateView):
     model = DigitalObject
+    form_class = DigitalObjectForm
     success_view = 'site-gallery-view'
-    fields = ['file', 'description', 'datestamp', 'source_url']
-    widgets = {
-        'description': TextInput,
-        'datestamp': SelectDateWidget(years=range(1500, 2018))
-    }
 
 
 class DigitalObjectDeleteView(LoggedInEditorMixin,
