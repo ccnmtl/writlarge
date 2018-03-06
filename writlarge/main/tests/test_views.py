@@ -5,7 +5,7 @@ from django.test.client import Client, RequestFactory
 from django.test.utils import override_settings
 from django.urls.base import reverse
 
-from writlarge.main.models import ArchivalCollection
+from writlarge.main.models import ArchivalCollection, LearningSite
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory, FootnoteFactory)
@@ -105,7 +105,7 @@ class ApiViewTest(TestCase):
         self.assertEquals(response.status_code, 201)
 
 
-class TestUpdateView(TestCase):
+class TestLearningSiteUpdateView(TestCase):
 
     def setUp(self):
         self.site = LearningSiteFactory()
@@ -129,6 +129,46 @@ class TestUpdateView(TestCase):
         self.client.login(username=editor.username, password='test')
         response = self.client.get(self.url)
         self.assertEquals(response.status_code, 200)
+
+
+class TestLearningSiteDeleteView(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+
+        grp = GroupFactory(name='Editor')
+
+        self.editor = UserFactory()
+        self.editor.groups.add(grp)
+
+        self.creator = UserFactory()
+        self.creator.groups.add(grp)
+
+        self.site = LearningSiteFactory(created_by=self.creator)
+        self.url = reverse('site-delete-view', kwargs={'pk': self.site.id})
+
+    def test_restricted_access(self):
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        user = UserFactory()  # random user
+        self.client.login(username=user.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        self.client.login(username=self.editor.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 302)
+
+    def test_creator(self):
+        self.client.login(username=self.creator.username, password='test')
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.client.post(self.url)
+        self.assertEquals(response.status_code, 302)
+
+        self.assertTrue(LearningSite.objects.count(), 0)
 
 
 class TestDigitalObjectCreateView(TestCase):

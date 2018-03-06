@@ -56,6 +56,10 @@ urlpatterns = [
         name='site-detail-view'),
     url(r'^edit/(?P<pk>\d+)/$', views.LearningSiteUpdateView.as_view(),
         name='site-update-view'),
+    url(r'^delete/(?P<pk>\d+)/$',
+        views.LearningSiteDeleteView.as_view(),
+        name='site-delete-view'),
+
 
     url(r'^add/photo/(?P<parent>\d+)/$',
         views.DigitalObjectCreateView.as_view(),

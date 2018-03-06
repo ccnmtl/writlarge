@@ -90,3 +90,14 @@ class LoggedInEditorMixin(object):
             return HttpResponseRedirect('/accounts/login/')
 
         return super(LoggedInEditorMixin, self).dispatch(*args, **kwargs)
+
+
+class SingleObjectCreatorMixin(object):
+
+    def dispatch(self, *args, **kwargs):
+        if (not self.request.user == self.get_object().created_by and
+                not self.request.user.is_superuser):
+            return HttpResponseRedirect('/accounts/login/')
+
+        return super(
+            SingleObjectCreatorMixin, self).dispatch(*args, **kwargs)
