@@ -3,17 +3,8 @@
 {% block title %}Learning Site{% endblock %}
 
 {% block client_templates %}
-<meta name="csrf-token" content="{{csrf_token}}">
-    {% verbatim %}
-    <script type="text/x-template" id="google-mini-map-template">
-        <div class="card mb-5">
-            <div class="google-map" :id="mapName"></div>
-            <div class="card-body">
-            <p class="card-text text-left">{{address}}</p>
-            </div>
-        </div>
-    </script>
-    {% endverbatim %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/minimal_map_template.html" %}
 {% endblock %}
 
 {% block js %}
