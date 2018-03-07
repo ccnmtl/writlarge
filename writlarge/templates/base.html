@@ -106,9 +106,11 @@
     {% block breadcrumb %}
     {% endblock %}
     <main role="main" class="{% block mainclass %}container{% endblock %}">
+        {% if messages %}
         <div class="mt-2">
             {% bootstrap_messages %}
         </div>
+        {% endif %}
 
         {% block content %}
         {% endblock %}
