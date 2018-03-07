@@ -1,0 +1,20 @@
+{% verbatim %}
+<script type="text/x-template" id="google-map-template">
+    <div>
+        <div class="address-bar">
+            <div class="input-group">
+                <input type="text" v-model="address"
+                    class="form-control form-control w-25"
+                    placeholder="Address"
+                    name="address" autocomplete='street-address'
+                    aria-label="Enter an address" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button"
+                        v-on:click="geocode"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="google-map" :id="mapName"></div>
+    </div>
+</script>
+{% endverbatim %}
