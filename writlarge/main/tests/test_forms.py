@@ -204,17 +204,6 @@ class ExtendedDateFormTest(TestCase):
 
 class LearningSiteFormTest(TestCase):
 
-    def test_get_fields(self):
-        data = {
-            'established-millenium1': '1',
-            'established-century1': '2',
-            'defunct-millenium1': '3',
-            'defunct-century1': '3',
-        }
-        data = LearningSiteForm().get_fields(data, 'established-')
-        self.assertEquals(data['millenium1'], '1')
-        self.assertEquals(data['century1'], '2')
-
     def test_clean_fields(self):
         data = {
             'established-is_range': False,

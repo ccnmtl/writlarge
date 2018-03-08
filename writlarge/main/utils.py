@@ -7,6 +7,14 @@ from edtf.parser.parser_classes import (
 from edtf.parser.edtf_exceptions import EDTFParseException
 
 
+def filter_fields(request_data, prefix):
+    data = dict()
+    for k in request_data.keys():
+        if k.startswith(prefix):
+            data[k[len(prefix):]] = request_data[k]
+    return data
+
+
 class ExtendedDateWrapper(object):
     month_names = {
         1: 'January', 2: 'February', 3: 'March', 4: 'April',

@@ -5,6 +5,7 @@ from django.forms.widgets import (
     TextInput, CheckboxSelectMultiple, HiddenInput, SelectDateWidget)
 
 from writlarge.main.models import ExtendedDate, LearningSite, DigitalObject
+from writlarge.main.utils import filter_fields
 
 
 class ExtendedDateForm(forms.Form):
@@ -132,20 +133,13 @@ class LearningSiteForm(forms.ModelForm):
             'founder': TextInput
         }
 
-    def get_fields(self, request_data, prefix):
-        data = dict()
-        for k in request_data.keys():
-            if k.startswith(prefix):
-                data[k[len(prefix):]] = request_data[k]
-        return data
-
     def clean(self):
         cleaned_data = forms.ModelForm.clean(self)
 
         self.form_established = ExtendedDateForm(
-            self.get_fields(self.data, 'established-'))
+            filter_fields(self.data, 'established-'))
         self.form_defunct = ExtendedDateForm(
-            self.get_fields(self.data, 'defunct-'))
+            filter_fields(self.data, 'defunct-'))
 
         if not self.form_established.is_valid():
             self._errors['established'] = \
