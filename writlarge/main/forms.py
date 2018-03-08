@@ -33,18 +33,18 @@ class ExtendedDateForm(forms.Form):
         self.is_empty = False
 
         self.instance = self.get_extended_date()
-        display_format = self.instance and self.instance.__str__()
+        (lower, upper) = self.instance.wrap()
 
-        if 'invalid' in display_format:
+        if lower.is_invalid():
             self._errors['__all__'] = self.error_class([
                 'Please specify a valid date'])
-        elif display_format:
-            self._set_errors(self.instance, cleaned_data)
-        else:
+        elif lower.is_empty():
             self.is_empty = True
-            # an empty display_field indicates no values were passed
-            # For this app's purposes, that's okay
-            # @todo, add a "required" form variable
+        elif cleaned_data['is_range']:
+            self._set_range_errors(lower, upper)
+        else:
+            self._set_errors(lower)
+
         return cleaned_data
 
     def get_extended_date(self):
@@ -62,32 +62,20 @@ class ExtendedDateForm(forms.Form):
             msg += '<br />'
         return msg
 
-    def get_start_date(self, edt):
-        try:
-            return edt.start()
-        except ValueError:
-            return None
+    def _set_errors(self, edt):
+        start = edt.start_date()
 
-    def get_end_date(self, edt):
-        try:
-            return edt.end()
-        except ValueError:
-            return None
-
-    def _set_errors(self, edt, cleaned_data):
-        start = self.get_start_date(edt)
-
-        if cleaned_data['is_range']:
-            end = self.get_end_date(edt)
-            self._set_errors_is_range(start, end)
-        elif start is None:
+        if start is None:
             self._errors['__all__'] = self.error_class([
                 'Please specify a valid date'])
         elif start > date.today():
             self._errors['__all__'] = self.error_class([
                 'The date must be today or earlier'])
 
-    def _set_errors_is_range(self, start, end):
+    def _set_range_errors(self, lower, upper):
+        start = lower.start_date()
+        end = upper and upper.end_date()
+
         if start is None:
             self._errors['__all__'] = self.error_class([
                 'Please specify a valid start date'])
@@ -102,9 +90,8 @@ class ExtendedDateForm(forms.Form):
                 'The start date must be earlier than the end date.'])
 
     def save(self):
-        edtf = self.get_extended_date()
-        edtf.save()
-        return edtf
+        self.instance.save()
+        return self.instance
 
     def create_or_update(self, parent, field_name):
         if self.errors and len(self.errors) > 0:

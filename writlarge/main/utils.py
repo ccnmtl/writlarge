@@ -1,125 +1,187 @@
+from datetime import date
 import re
 
+from edtf import parse_edtf
 from edtf.parser.parser_classes import (
-    EARLIEST, PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY, Interval,
-    UncertainOrApproximate)
+    EARLIEST, PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY)
+from edtf.parser.edtf_exceptions import EDTFParseException
 
 
-month_names = {
-    1: 'January', 2: 'February', 3: 'March', 4: 'April',
-    5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September',
-    10: 'October', 11: 'November', 12: 'December'}
+class ExtendedDateWrapper(object):
+    month_names = {
+        1: 'January', 2: 'February', 3: 'March', 4: 'April',
+        5: 'May', 6: 'June', 7: 'July', 8: 'August', 9: 'September',
+        10: 'October', 11: 'November', 12: 'December'}
 
+    modifiers = [
+        'unknown',  # empty date
+        'open'  # range modifier, no beginning date or no end date specified
+    ]
 
-def append_uncertain(dt, uncertain):
-    if uncertain:
-        dt = '{}?'.format(dt)
-    return dt
+    @classmethod
+    def _as_edtf_object(cls, edtf_format):
+        try:
+            return parse_edtf(edtf_format)
+        except EDTFParseException:
+            return None
 
+    @classmethod
+    def create(cls, edtf_format):
+        edtf_object = cls._as_edtf_object(edtf_format)
 
-def append_approximate(dt, approximate):
-    if approximate:
-        dt = '{}~'.format(dt)
-    return dt
+        if hasattr(edtf_object, 'upper'):
+            upper = ExtendedDateWrapper(edtf_object.upper)
+        else:
+            upper = None
 
+        if hasattr(edtf_object, 'lower'):
+            lower = ExtendedDateWrapper(edtf_object.lower)
+        elif edtf_object is None and edtf_format in cls.modifiers:
+            lower = ExtendedDateWrapper(edtf_format)
+        else:
+            lower = ExtendedDateWrapper(edtf_object)
 
-def ordinal(n):
-    # cribbed from http://codegolf.stackexchange.com/
-    # questions/4707/outputting-ordinal-numbers-1st-2nd-3rd#answer-4712
-    return "%d%s" % (
-        n, "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+        return (lower, upper)
 
+    def __init__(self, edtf_object):
 
-def fmt_modifier(edtf_obj):
-    if edtf_obj == 'open':
-        return 'present'
-    if edtf_obj == 'unknown':
-        return '?'
+        if hasattr(edtf_object, 'date'):
+            self.edtf_date = edtf_object.date
+        else:
+            self.edtf_date = edtf_object
 
+        if hasattr(edtf_object, 'ua') and edtf_object.ua:
+            self.is_uncertain = edtf_object.ua.is_uncertain
+            self.is_approximate = edtf_object.ua.is_approximate
+        else:
+            self.is_uncertain = False
+            self.is_approximate = False
 
-def fmt_century(year, is_interval):
-    if is_interval:
-        return '{}s'.format(year)
+    def _validate_python_date(self, dt):
+        # the python-edtf library returns "date.max" on a ValueError
+        # and, if approximate or uncertain are set, the day/month are adjusted
+        # just compare the year 9999 to the returned year
+        return None if dt.year == date.max.year else dt
 
-    century = int(str(year)[:2]) + 1
+    def start_date(self):
+        try:
+            dt = self.edtf_date._strict_date(EARLIEST)
+        except AttributeError:
+            dt = self.edtf_date.lower_strict()
+        except AttributeError:
+            return None
 
-    return '{} century'.format(ordinal(century))
+        return self._validate_python_date(dt)
 
+    def end_date(self):
+        dt = self.edtf_date.upper_strict()
+        return self._validate_python_date(dt)
 
-def fmt_millenium(millenium):
-    millenium = int(millenium) + 1
-    return '{} millenium'.format(ordinal(millenium))
+    def get_year(self):
+        return self.edtf_date.get_year()
 
+    def get_month(self):
+        return self.edtf_date.get_month()
 
-def fmt_month(month):
-    try:
-        return month_names[int(month)]
-    except (KeyError, ValueError):
-        return 'unknown month'
+    def get_day(self):
+        return self.edtf_date.day
 
+    def get_precision(self):
+        return self.edtf_date.precision
 
-def fmt_precision(date_obj, is_interval):
-    if isinstance(date_obj, str):
-        return fmt_modifier(date_obj)
+    def get_precise_year(self):
+        return self.edtf_date._precise_year(EARLIEST)
 
-    precision = date_obj.precision
+    def is_empty(self):
+        return self.edtf_date == 'unknown'
 
-    if precision == PRECISION_DAY:
-        return '{} {}, {}'.format(
-            fmt_month(date_obj.get_month()),
-            date_obj.day, date_obj.get_year())
+    def is_invalid(self):
+        return self.edtf_date is None
 
-    if precision == PRECISION_MONTH:
-        return '{} {}'.format(
-            fmt_month(date_obj.get_month()), date_obj.get_year())
+    def ordinal(self, n):
+        # cribbed from http://codegolf.stackexchange.com/
+        # questions/4707/outputting-ordinal-numbers-1st-2nd-3rd#answer-4712
+        return "%d%s" % (
+            n, "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
-    if precision != PRECISION_YEAR:
-        return 'invalid'
+    def fmt_modifier(self):
+        if self.edtf_date == 'open':
+            return 'present'
+        if self.edtf_date == 'unknown':
+            return '?'
 
-    year = date_obj.year
-    m = re.match('([1-2])uuu', year)
-    if m:
-        return fmt_millenium(m.group(1))
+    def fmt_century(self, century):
+        return '{}s'.format(century)
 
-    m = re.match('([1-2][0-9])uu', year)
-    if m:
-        return fmt_century(date_obj._precise_year(EARLIEST), is_interval)
+    def fmt_millenium(self, millenium):
+        millenium = int(millenium) + 1
+        return '{} millenium'.format(self.ordinal(millenium))
 
-    m = re.match('([1-2][0-9][0-9])u', year)
-    if m:
-        return '{}s'.format(date_obj._precise_year(EARLIEST))
+    def fmt_month(self):
+        month = self.get_month()
+        try:
+            return self.month_names[int(month)]
+        except (KeyError, ValueError):
+            return 'unknown month'
 
-    return '{}'.format(date_obj._precise_year(EARLIEST))
+    def fmt_precision(self):
+        precision = self.get_precision()
 
+        if precision not in (PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY):
+            return 'invalid'
 
-def fmt_edtf_date(edtf_obj, is_interval):
-    #  @todo - the model now carries this function, factor it out.
-    if isinstance(edtf_obj, UncertainOrApproximate):
-        date_obj = edtf_obj.date
-        is_uncertain = edtf_obj.ua and edtf_obj.ua.is_uncertain
-        is_approximate = edtf_obj.ua and edtf_obj.ua.is_approximate
-    else:
-        date_obj = edtf_obj
-        is_uncertain = False
-        is_approximate = False
+        if precision == PRECISION_DAY:
+            return '{} {}, {}'.format(
+                self.fmt_month(), self.get_day(), self.get_year())
 
-    result = fmt_precision(date_obj, is_interval)
+        if precision == PRECISION_MONTH:
+            return '{} {}'.format(
+                self.fmt_month(), self.get_year())
 
-    if is_uncertain:
-        result += '?'
+        year = self.get_year()
+        m = re.match('([1-2])uuu', year)
+        if m:
+            return self.fmt_millenium(m.group(1))
 
-    if is_approximate:
-        result = 'c. ' + result
+        m = re.match('([1-2][0-9])uu', year)
+        if m:
+            return self.fmt_century(self.get_precise_year())
 
-    return result
+        m = re.match('([1-2][0-9][0-9])u', year)
+        if m:
+            return '{}s'.format(self.get_precise_year())
 
+        return '{}'.format(self.get_precise_year())
 
-def edtf_to_text(edtf_object):
-    if edtf_object is None:
-        return 'invalid'
+    def format(self):
+        if self.edtf_date is None:
+            return 'invalid'
 
-    if isinstance(edtf_object, Interval):
-        return "%s - %s" % (fmt_edtf_date(edtf_object.lower, True),
-                            fmt_edtf_date(edtf_object.upper, True))
-    else:
-        return fmt_edtf_date(edtf_object, False)
+        if isinstance(self.edtf_date, str):
+            return self.fmt_modifier()
+
+        result = self.fmt_precision()
+
+        if self.is_uncertain:
+            result += '?'
+
+        if self.is_approximate:
+            result = 'c. ' + result
+
+        return result
+
+    def to_dict(self, ordinal):
+        if not self.edtf_date or self.edtf_date in self.modifiers:
+            return {}
+
+        year = self.get_year()
+        return {
+            'approximate{}'.format(ordinal): self.is_approximate,
+            'uncertain{}'.format(ordinal): self.is_uncertain,
+            'millenium{}'.format(ordinal): year[0],
+            'century{}'.format(ordinal): None if year[1] == 'u' else year[1],
+            'decade{}'.format(ordinal): None if year[2] == 'u' else year[2],
+            'year{}'.format(ordinal): None if year[3] == 'u' else year[3],
+            'month{}'.format(ordinal): self.get_month(),
+            'day{}'.format(ordinal): self.get_day()
+        }
