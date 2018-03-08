@@ -1,19 +1,12 @@
-from datetime import date
-
 from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
 from django.db.models.deletion import SET_NULL
 from django.urls.base import reverse
-from edtf import parse_edtf
 from edtf import text_to_edtf
-from edtf.parser.edtf_exceptions import EDTFParseException
-from edtf.parser.parser_classes import EARLIEST, UncertainOrApproximate
 from taggit.managers import TaggableManager
-
-from writlarge.main.utils import (
-    edtf_to_text, append_approximate, append_uncertain)
+from writlarge.main.utils import ExtendedDateWrapper
 
 
 class ExtendedDateManager(models.Manager):
@@ -40,8 +33,11 @@ class ExtendedDateManager(models.Manager):
         else:
             return 'unknown'
 
-        dt = append_uncertain(dt, uncertain)
-        dt = append_approximate(dt, approximate)
+        if uncertain:
+            dt += '?'
+
+        if approximate:
+            dt += '~'
 
         return dt
 
@@ -76,78 +72,30 @@ class ExtendedDate(models.Model):
     class Meta:
         verbose_name = 'Extended Date Format'
 
+    def wrap(self):
+        return ExtendedDateWrapper.create(self.edtf_format)
+
     def __str__(self):
-        if len(self.edtf_format) < 1 or self.edtf_format == 'unknown':
-            return ''
+        (lower, upper) = self.wrap()
 
-        return edtf_to_text(self.as_edtf_object())
-
-    def as_edtf_object(self):
-        try:
-            return parse_edtf(self.edtf_format)
-        except EDTFParseException:
-            return None
-
-    def as_edtf_date(self):
-        edtf_obj = self.as_edtf_object()
-        if not edtf_obj:
-            return (None, False, False)
-
-        if isinstance(edtf_obj, UncertainOrApproximate):
-            return (edtf_obj.date,
-                    edtf_obj.ua and edtf_obj.ua.is_uncertain,
-                    edtf_obj.ua and edtf_obj.ua.is_approximate)
-
-        return (edtf_obj, False, False)
-
-    def _validate_python_date(self, dt):
-        # the python-edtf library returns "date.max" on a ValueError
-        # and, if approximate or uncertain are set, the day/month are adjusted
-        # just compare the year 9999 to the returned year
-        return None if dt.year == date.max.year else dt
-
-    def start(self):
-        edtf = self.as_edtf_object()
-
-        try:
-            dt = edtf._strict_date(EARLIEST)
-        except AttributeError:
-            dt = edtf.lower_strict()
-        except AttributeError:
-            return None
-
-        return self._validate_python_date(dt)
-
-    def end(self):
-        edtf = self.as_edtf_object()
-
-        if not hasattr(edtf, 'upper'):
-            return None
-
-        dt = edtf.upper_strict()
-
-        return self._validate_python_date(dt)
+        if lower and upper:
+            return "%s - %s" % (lower.format(), upper.format())
+        else:
+            return lower.format()
 
     def match_string(self, date_str):
         return self.edtf_format == str(text_to_edtf(date_str))
 
     def to_dict(self):
-        (dt, is_uncertain, is_approximate) = self.as_edtf_date()
-        if not dt:
-            return {}
+        (lower, upper) = self.wrap()
 
-        year = dt.get_year()
+        d = {}
+        if lower:
+            d.update(lower.to_dict(1))
+        if upper:
+            d.update(upper.to_dict(2))
 
-        return {
-            'approximate1': is_approximate,
-            'uncertain1': is_uncertain,
-            'millenium1': year[0],
-            'century1': None if year[1] == 'u' else year[1],
-            'decade1': None if year[2] == 'u' else year[2],
-            'year1': None if year[3] == 'u' else year[3],
-            'month1': dt.get_month(),
-            'day1': dt.day
-        }
+        return d
 
 
 class Footnote(models.Model):

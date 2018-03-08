@@ -10,7 +10,7 @@ class ExtendedDateTest(TestCase):
         '999': 'invalid',
         '1uuu': '2nd millenium',
         '2uuu': '3rd millenium',
-        '14uu': '15th century',  # PRECISION_CENTURY
+        '14uu': '1400s',  # PRECISION_CENTURY
         '192u': '1920s',  # PRECISION_DECADE
         '1613': '1613',  # PRECISION_YEAR
         '1944-11': 'November 1944',  # PRECISION_MONTH
@@ -28,6 +28,17 @@ class ExtendedDateTest(TestCase):
         for key, val in self.use_cases.items():
             e = ExtendedDate(edtf_format=key)
             self.assertEquals(e.__str__(), val)
+
+    def test_create_from_dict_empty(self):
+        values = {
+            'is_range': False,
+            'millenium1': None, 'century1': None, 'decade1': None,
+            'year1': None, 'month1': None, 'day1': None,
+            'approximate1': False, 'uncertain1': False}
+
+        dt = ExtendedDate.objects.from_dict(values)
+        self.assertEquals(dt.edtf_format, 'unknown')
+        self.assertEquals(dt.__str__(), '?')
 
     def test_create_from_dict(self):
         values = {
