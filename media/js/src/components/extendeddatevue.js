@@ -3,13 +3,22 @@
 var ExtendedDateVue = {
     props: [
         'id', 'name', 'initial-errors',
-        'millenium1', 'century1', 'decade1', 'year1',
-        'month1', 'day1', 'approximate1', 'uncertain1'],
+        'initial-millenium1', 'initial-century1', 'initial-decade1',
+        'initial-year1', 'initial-month1', 'initial-day1',
+        'initial-approximate1', 'initial-uncertain1'],
     template: '#edtf-template',
     data: function() {
         return {
             errors: 0,
-            dateDisplay: ''
+            dateDisplay: '',
+            millenium1: '',
+            century1: '',
+            decade1: '',
+            year1: '',
+            month1: '',
+            day1: '',
+            approximate1: false,
+            uncertain1: false
         };
     },
     methods: {
@@ -84,27 +93,15 @@ var ExtendedDateVue = {
             });
         },
         toDict: function() {
-            const $el = this.el();
             return {
-                'millenium1': $el
-                    .find('input[name="' + this.name + '-millenium1"]')
-                    .val(),
-                'century1': $el
-                    .find('input[name="' + this.name + '-century1"]').val(),
-                'decade1': $el
-                    .find('input[name="' + this.name + '-decade1"]').val(),
-                'year1': $el
-                    .find('input[name="' + this.name + '-year1"]').val(),
-                'month1': $el
-                    .find('select[name="' + this.name + '-month1"]').val(),
-                'day1': $el
-                    .find('input[name="' + this.name + '-day1"]').val(),
-                'approximate1': $el
-                    .find('input[name="' + this.name + '-approximate1"]')
-                    .prop('checked'),
-                'uncertain1': $el
-                    .find('input[name="' + this.name + '-uncertain1"]')
-                    .prop('checked'),
+                'millenium1': this.millenium1,
+                'century1': this.century1,
+                'decade1': this.decade1,
+                'year1': this.year1,
+                'month1': this.month1,
+                'day1': this.day1,
+                'approximate1': this.approximate1,
+                'uncertain1': this.uncertain1,
                 'is_range': false
             };
         },
@@ -118,35 +115,14 @@ var ExtendedDateVue = {
         });
         $el.find('[data-toggle="tooltip"]').tooltip();
 
-        if (this.approximate1 === 'True') {
-            $el.find('input.approximate').prop('checked', true);
-        }
-        if (this.uncertain1 === 'True') {
-            $el.find('input.uncertain').prop('checked', true);
-        }
-        if (this.millenium1) {
-            $el.find('.millenium').val(this.millenium1);
-        }
-        if (this.century1) {
-            $el.find('.century').val(this.century1);
-        }
-        if (this.decade1) {
-            $el.find('.decade').val(this.decade1);
-        }
-        if (this.year1) {
-            $el.find('.year').val(this.year1);
-        }
-        if (this.month1) {
-            const selector = '.month option[value=' +
-                this.month1.replace(/^[0]+/g, '') + ']';
-            $el.find(selector).attr('selected','selected');
-        }
-        if (this.day1) {
-            $el.find('.day').val(this.day1);
-        }
-
-        if (this.initialErrors) {
-            this.errors = 1;
-        }
+        this.approximate1 = this.initialApproximate1;
+        this.uncertain1 = this.initialUncertain1;
+        this.millenium1 = this.initialMillenium1;
+        this.century1 = this.initialCentury1;
+        this.decade1 = this.initialDecade1;
+        this.year1 = this.initialYear1;
+        this.month1 = this.initialMonth1;
+        this.day1 = this.initialDay1;
+        this.errors = this.initialErrors;
     }
 };
