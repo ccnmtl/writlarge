@@ -44,7 +44,7 @@
                 <edtf id="edtf-inclusive-start" name="inclusive-start"
                     {% for key, value in object.inclusive_start.to_dict.items %}
                         {% if value %}
-                            {{key}}="{{value}}"
+                            {{key}}="{{value}}" initial-{{key}}="{{value}}"
                         {% endif %}
                     {% endfor %}
                     {% if form.inclusive_start.errors %}initial-errors="1"{% endif %} />
@@ -56,7 +56,7 @@
                 <edtf id="edtf-inclusive-end" name="inclusive-end"
                     {% for key, value in object.inclusive_end.to_dict.items %}
                         {% if value %}
-                            {{key}}="{{value}}"
+                            {{key}}="{{value}}" initial-{{key}}="{{value}}"
                         {% endif %}
                     {% endfor %}
                     {% if form.inclusive_end.errors %}initial-errors="1"{% endif %}/>
