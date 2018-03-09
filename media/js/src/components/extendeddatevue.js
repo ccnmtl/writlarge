@@ -121,7 +121,7 @@ var ExtendedDateVue = {
         this.century1 = this.initialCentury1;
         this.decade1 = this.initialDecade1;
         this.year1 = this.initialYear1;
-        this.month1 = this.initialMonth1;
+        this.month1 = this.initialMonth1 ? this.initialMonth1 : '';
         this.day1 = this.initialDay1;
         this.errors = this.initialErrors;
     }
