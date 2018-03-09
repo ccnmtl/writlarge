@@ -6,19 +6,19 @@
         <div class="col-md-auto mb-2">
             <label class="d-block">Year</label>
             <input type="number" class="form-control numeric jump millenium" :name="name + '-millenium1'" min="1" max="2"
-             maxlength="1" data-content="Millenium<br />Value between 1-2"
+             maxlength="1" data-content="Millenium<br />Value between 1-2" v-model="millenium1"
              data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
             <input type="number" class="form-control numeric jump century" :name="name + '-century1'" min="0" max="9"
-             maxlength="1" data-content="Century<br />Value between 0-9"
+             maxlength="1" data-content="Century<br />Value between 0-9"  v-model="century1"
              data-required=".millenium"
              data-toggle="popover" placeholder='-' v-on:keypress="limit"  v-on:change="display" />
             <input type="number" class="form-control numeric jump decade"
-             :name="name + '-decade1'" min="0" max="9"
+             :name="name + '-decade1'" min="0" max="9"  v-model="decade1"
              maxlength="1" data-content="Decade<br />Value between 0-9"
              data-required=".century,.millenium"
              data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
             <input type="number" class="form-control numeric jump year"
-             :name="name + '-year1'" min="0" max="9"
+             :name="name + '-year1'" min="0" max="9"  v-model="year1"
              data-required=".decade,.century,.millenium"
              maxlength="1" data-content="Year<br />Value between 0-9"
              data-toggle="popover" placeholder='-' v-on:keypress="limit" v-on:change="display" />
@@ -26,17 +26,17 @@
          <div class="col-md-auto mb-2">
             <label class="d-block">Month</label>
             <select class="form-control month" :name="name + '-month1'" v-on:change="display"
-             data-required=".year,.decade,.century,.millenium">
+             data-required=".year,.decade,.century,.millenium"  v-model="month1">
                 <option value="">-----</option>
-                <option value="1">January</option>
-                <option value="2">February</option>
-                <option value="3">March</option>
-                <option value="4">April</option>
-                <option value="5">May</option>
-                <option value="6">June</option>
-                <option value="7">July</option>
-                <option value="8">August</option>
-                <option value="9">September</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
                 <option value="10">October</option>
                 <option value="11">November</option>
                 <option value="12">December</option>
@@ -46,14 +46,15 @@
             <label class="d-block">Day</label>
             <input type="number" class="form-control day"
              :name="name + '-day1'" maxlength="2" min="1" max="31" 
-             data-content="Day<br />Value between 1-31"
+             data-content="Day<br />Value between 1-31"  v-model="day1"
              data-toggle="popover" placeholder='--' v-on:keypress="limit" v-on:change="display"
              data-required=".month,.year,.decade,.century,.millenium" />
         </div>
         <div class="col-md-auto mb-2">
             <label class="d-block">Traits</label>
             <div class="traits">
-                <input type="checkbox" class="approximate" :name="name + '-approximate1'" v-on:change="display" /> 
+                <input type="checkbox" class="approximate" :name="name + '-approximate1'"
+                    v-on:change="display"  v-model="approximate1" /> 
                     approximate
 
                 <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
@@ -62,7 +63,8 @@
                 </a>
             </div>
             <div>
-                <input type="checkbox" class="uncertain" :name="name + '-uncertain1'" v-on:change="display" /> 
+                <input type="checkbox" class="uncertain" :name="name + '-uncertain1'"
+                    v-on:change="display"  v-model="uncertain1" /> 
                 uncertain
                 <a href="javascript:void(0);" data-toggle="tooltip" data-placement="left"
                  title="Uncertain dates indicate the information may possibly be accurate, but not definitely.">
