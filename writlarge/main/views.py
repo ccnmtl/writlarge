@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.db.models.query_utils import Q
 from django.forms.models import modelform_factory
-from django.forms.widgets import (TextInput, SelectDateWidget)
+from django.forms.widgets import TextInput
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
@@ -11,8 +11,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
-
 from writlarge.main.forms import (
+    ArchivalCollectionForm,
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
@@ -201,12 +201,9 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
     model = ArchivalCollection
     template_name = 'main/archivalcollection_create.html'
     fields = ['repository', 'title', 'description',
-              'finding_aid_url', 'linear_feet',
-              'inclusive_start_date', 'inclusive_end_date']
+              'finding_aid_url', 'linear_feet']
     widgets = {
-        'title': TextInput,
-        'inclusive_start_date': SelectDateWidget(years=range(1500, 2018)),
-        'inclusive_end_date': SelectDateWidget(years=range(1500, 2018))
+        'title': TextInput
     }
 
     repository_fields = ['title', 'latlng']
@@ -232,18 +229,10 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
 
 
 class ArchivalCollectionUpdateView(LoggedInEditorMixin,
-                                   ModelFormWidgetMixin,
                                    LearningSiteParamMixin,
                                    UpdateView):
     model = ArchivalCollection
-    fields = ['title', 'description',
-              'finding_aid_url', 'linear_feet',
-              'inclusive_start_date', 'inclusive_end_date']
-    widgets = {
-        'title': TextInput,
-        'inclusive_start_date': SelectDateWidget(years=range(1500, 2018)),
-        'inclusive_end_date': SelectDateWidget(years=range(1500, 2018))
-    }
+    form_class = ArchivalCollectionForm
 
     def get_success_url(self):
         messages.add_message(

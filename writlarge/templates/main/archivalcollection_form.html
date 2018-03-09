@@ -2,6 +2,17 @@
 {% load bootstrap4 %}
 {% block title %}Edit Archival Collection{% endblock %}
 
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/edtf_template.html" %}
+{% endblock %}
+
+{% block js %}
+    <script
+        data-main="{{STATIC_URL}}js/src/editDetail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
@@ -19,10 +30,38 @@
     <h4 class="text-muted">Edit Archival Collection</h4>
 </div>
 
-<div class="row">
+<div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post">{% csrf_token %}
-            {% bootstrap_form form %}
+        <form action="." method="post" v-on:submit="onSubmit">{% csrf_token %}
+            {% bootstrap_field form.title %}
+            {% bootstrap_field form.description %}
+            {% bootstrap_field form.finding_aid_url %}
+            {% bootstrap_field form.linear_feet %}
+
+            {% bootstrap_field form.inclusive_start %}
+            <div class="form-group">
+                <label for="id_inclusive_start">Inclusive Start Date</label>
+                <edtf id="edtf-inclusive-start" name="inclusive-start"
+                    {% for key, value in object.inclusive_start.to_dict.items %}
+                        {% if value %}
+                            {{key}}="{{value}}" initial-{{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.inclusive_start.errors %}initial-errors="1"{% endif %} />
+            </div>
+
+            {% bootstrap_field form.inclusive_end %}
+            <div class="form-group">
+                <label for="id_inclusive_end">Inclusive End Date</label>
+                <edtf id="edtf-inclusive-end" name="inclusive-end"
+                    {% for key, value in object.inclusive_end.to_dict.items %}
+                        {% if value %}
+                            {{key}}="{{value}}" initial-{{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.inclusive_end.errors %}initial-errors="1"{% endif %}/>
+            </div>
+
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>

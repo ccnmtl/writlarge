@@ -228,12 +228,6 @@ class LearningSite(models.Model):
     def empty(self):
         return self.category.count() < 1
 
-    def display_established_date(self):
-        return self.established.__str__() if self.established else ''
-
-    def display_defunct_date(self):
-        return str(self.defunct) if self.defunct else ''
-
 
 class ArchivalRepository(models.Model):
     title = models.TextField(unique=True, verbose_name="Repository Title")
@@ -274,6 +268,13 @@ class ArchivalCollection(models.Model):
     finding_aid_url = models.URLField(null=True, blank=True)
     linear_feet = models.FloatField(null=True, blank=True)
     record_format = models.ManyToManyField(ArchivalRecordFormat, blank=True)
+
+    inclusive_start = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        related_name='collection_start')
+    inclusive_end = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        related_name='collection_end')
 
     inclusive_start_date = models.DateField(null=True)
     inclusive_end_date = models.DateField(null=True)
