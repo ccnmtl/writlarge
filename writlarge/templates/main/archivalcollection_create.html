@@ -15,6 +15,13 @@
 
     <script>
         WritLarge.collectionForm = {% if form.data %}true{% else %} false{% endif %};
+        WritLarge.repositories = [
+            {% for repo in initial_repositories %}
+            { 'id': '{{repo.id}}', 'title': '{{repo.title}}' },
+            {% endfor %}
+        ];
+        WritLarge.repository = 
+            {% if form.data.repository%}"{{form.data.repository}}"{% else %}""{% endif %};
     </script>
 
     <script data-main="{{STATIC_URL}}js/src/createRepository.js"
@@ -48,16 +55,13 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="id_repository">Select or create an archival repository</label>
-                        <select name="repository" v-on:change="onSelectRepository"
-                            required="required" class="form-control">
-                            {% for id, name in form.repository.field.choices %}
-                                <option value="{{ id }}"
-                                {% if form.data.repository == id|stringformat:"i" %}
-                                    selected
-                                {% endif %}>{{ name }}</option>
-                            {% endfor %}
-                            <!--  dynamically created repositories go here -->
-                            <option v-for="repo in repositories">{{repo.title}}</option>
+                        <select name="repository" class="form-control" v-model="selectedRepository">
+                            <option value="">-----</option>
+                            {% verbatim %}
+                            <option v-for="repo in repositories" v-bind:value="repo.id">
+                                {{repo.title}}
+                            </option>
+                            {% endverbatim %}
                             <option value="create">Create New Repository</option>
                         </select>
                     </div>
@@ -68,7 +72,11 @@
                     <div class="card-body bg-light">
                         <div class="invalid-feedback mb-1"><strong>Oops!</strong> The title and address fields are required.</div>
 
-                        {% bootstrap_field repository_form.title %}
+                        <div class="form-group">
+                            <label for="id_repository_title">Repository Title</label>
+                            <input type="text" name="repository-title" placeholder="Repository Title"
+                                id="id_repository_title" required="required" class="form-control" v-model="repositoryTitle">
+                        </div>
 
                         <label for="id_latlng">Repository Location</label>
                         <small class="text-muted">Search by address and select a location, or click the map to drop a marker.</small>

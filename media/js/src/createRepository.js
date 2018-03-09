@@ -25,17 +25,22 @@ requirejs(['./common'], function() {
                     titleError: false,
                     collectionForm: false,
                     repositoryForm: false,
-                    repositories: []
+                    repositories: [],
+                    selectedRepository: '',
+                    repositoryTitle: ''
                 };
+            },
+            watch: {
+                selectedRepository: function(value) {
+                    this.repositoryForm = value && value === 'create';
+                    this.collectionForm = value && value !== 'create';
+                }
             },
             methods: {
                 onCreateRepository: function(event) {
-                    const q = '.create-repository-form input[name="title"]';
-                    const title = $(q).val();
                     const place = this.$children[0].getPlace();
-
                     this.addressError = !place;
-                    this.titleError = !title;
+                    this.titleError = !this.repositoryTitle;
 
                     if (this.addressError || this.titleError) {
                         return;
@@ -46,7 +51,7 @@ requirejs(['./common'], function() {
                         dataType: 'json',
                         contentType: 'application/json',
                         data: JSON.stringify({
-                            'title': title,
+                            'title': this.repositoryTitle,
                             'latlng': place.position.toJSON()
                         })
                     };
@@ -54,17 +59,11 @@ requirejs(['./common'], function() {
                     $.post(params, (response) => {
                         this.repositoryForm = false;
                         this.collectionForm = true;
-                        $('select[name="repository"]').append(
-                            $('<option></option>')
-                                .attr('value', response.id)
-                                .text(response.title));
-                        $('select[name="repository"]').val(response.id);
+                        this.repositories.push({
+                            'id': response.id, 'title': response.title
+                        });
+                        this.selectedRepository = response.id;
                     });
-                },
-                onSelectRepository: function(event) {
-                    const value = $(event.currentTarget).val();
-                    this.repositoryForm = value && value === 'create';
-                    this.collectionForm = value && value !== 'create';
                 },
                 hideForm: function(event) {
                     this.repositoryForm = false;
@@ -72,7 +71,9 @@ requirejs(['./common'], function() {
             },
             created: function() {
                 this.collectionForm = WritLarge.collectionForm;
-            },
+                this.repositories = WritLarge.repositories;
+                this.selectedRepository = WritLarge.repository;
+            }
         });
     });
 });
