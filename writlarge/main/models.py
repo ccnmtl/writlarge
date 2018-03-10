@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
-from django.db.models.deletion import SET_NULL
 from django.urls.base import reverse
 from edtf import text_to_edtf
 from taggit.managers import TaggableManager
@@ -189,10 +188,10 @@ class LearningSite(models.Model):
     digital_object = models.ManyToManyField(DigitalObject, blank=True)
 
     established = models.OneToOneField(
-        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_established')
     defunct = models.OneToOneField(
-        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_defunct')
 
     notes = models.TextField(null=True, blank=True)
@@ -270,10 +269,10 @@ class ArchivalCollection(models.Model):
     record_format = models.ManyToManyField(ArchivalRecordFormat, blank=True)
 
     inclusive_start = models.OneToOneField(
-        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='collection_start')
     inclusive_end = models.OneToOneField(
-        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='collection_end')
 
     inclusive_start_date = models.DateField(null=True)
