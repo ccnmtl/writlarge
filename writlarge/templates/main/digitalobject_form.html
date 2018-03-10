@@ -2,6 +2,17 @@
 {% load bootstrap4 %}
 {% block title %}{% if object %}Edit{% else %}Add{% endif %} Photo{% endblock %}
 
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/edtf_template.html" %}
+{% endblock %}
+
+{% block js %}
+    <script
+        data-main="{{STATIC_URL}}js/src/editDetail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
@@ -20,8 +31,7 @@
     <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Photo</h4>
     <p class="lead">Upload a photo or specify a source url.<br />
 </div>
-
-<div class="row">
+<div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
         <form action="." method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -50,7 +60,19 @@
             <a target="about:blank" href="https://support.google.com/websearch/answer/29508?hl=en">Find free-to-use images</a>.
             </div>
             {% bootstrap_field form.description %}
-            {% bootstrap_field form.datestamp %}
+           
+           {% bootstrap_field form.date_taken %}
+            <div class="form-group">
+                <label>Date Taken</label>
+                <edtf id="edtf-date-taken" name="date-taken"
+                    {% for key, value in object.date_taken.to_dict.items %}
+                        {% if value %}
+                            {{key}}="{{value}}" initial-{{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.date_taken.errors %}initial-errors="1"{% endif %} />
+            </div>
+           
             {% bootstrap_field form.source %}
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
