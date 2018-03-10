@@ -47,14 +47,19 @@ requirejs(['./common'], function() {
                         return;
                     }
 
+                    const data = {
+                        'title': this.repositoryTitle,
+                        'place': {
+                            'title': this.$children[0].getAddress(),
+                            'latlng': place.position.toJSON()
+                        }
+                    };
+
                     const params = {
                         url: WritLarge.baseUrl + 'api/repository/',
                         dataType: 'json',
                         contentType: 'application/json',
-                        data: JSON.stringify({
-                            'title': this.repositoryTitle,
-                            'latlng': place.position.toJSON()
-                        })
+                        data: JSON.stringify(data)
                     };
 
                     $.post(params, (response) => {

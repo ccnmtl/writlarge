@@ -27,26 +27,43 @@ class LearningSiteCategorySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'name')
 
 
-class ArchivalRepositorySerializer(serializers.HyperlinkedModelSerializer):
+class PlaceSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
     latitude = serializers.SerializerMethodField(read_only=True)
     longitude = serializers.SerializerMethodField(read_only=True)
 
     def get_latitude(self, obj):
-        return obj.latlng.y
+        return obj.latitude()
 
     def get_longitude(self, obj):
-        return obj.latlng.x
+        return obj.longitude()
 
     def validate_latlng(self, data):
         if 'lat' in data and 'lng' in data:
             return Point(data['lng'], data['lat'])
 
     class Meta:
+        model = Place
+        fields = ('id', 'title', 'latlng', 'latitude', 'longitude',
+                  'created_at', 'modified_at')
+
+
+class ArchivalRepositorySerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    place = PlaceSerializer()
+
+    def create(self, validated_data):
+        place_data = validated_data.pop('place')
+        place = Place.objects.create(**place_data)
+        repo = ArchivalRepository.objects.create(**validated_data)
+        repo.place = place
+        repo.save()
+        return repo
+
+    class Meta:
         model = ArchivalRepository
-        fields = ('id', 'title', 'description', 'latlng', 'notes',
-                  'created_at', 'modified_at',
-                  'latitude', 'longitude')
+        fields = ('id', 'title', 'description', 'place', 'notes',
+                  'created_at', 'modified_at')
 
 
 class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
@@ -73,19 +90,4 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'title', 'latlng', 'notes',
                   'category', 'digital_object', 'latitude', 'longitude',
                   'verified', 'verified_modified_at', 'empty', 'tags',
-                  'created_at', 'modified_at')
-
-
-class PlaceSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    digital_object = DigitalObjectSerializer(read_only=True, many=True)
-
-    def validate_latlng(self, data):
-        if 'lat' in data and 'lng' in data:
-            return Point(data['lng'], data['lat'])
-
-    class Meta:
-        model = Place
-        fields = ('id', 'title', 'latlng', 'notes', 'empty',
-                  'digital_object', 'latitude', 'longitude',
                   'created_at', 'modified_at')

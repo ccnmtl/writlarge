@@ -79,7 +79,6 @@ class ArchivalRepositoryFactory(factory.DjangoModelFactory):
         model = ArchivalRepository
 
     title = factory.Sequence(lambda n: "repository%03d" % n)
-    latlng = FuzzyPoint()
 
 
 class ArchivalCollectionFactory(factory.DjangoModelFactory):

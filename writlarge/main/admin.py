@@ -53,18 +53,10 @@ class LearningSiteAdmin(admin.ModelAdmin):
     list_display = ("title", "established", "defunct",
                     "created_at", "modified_at")
 
-    formfield_overrides = {
-        PointField: {'widget': LatLongWidget},
-    }
-
 
 @admin.register(ArchivalRepository)
 class ArchivalRepositoryAdmin(admin.ModelAdmin):
     list_display = ("title", "created_at", "modified_at")
-
-    formfield_overrides = {
-        PointField: {'widget': LatLongWidget},
-    }
 
 
 @admin.register(ArchivalCollection)
