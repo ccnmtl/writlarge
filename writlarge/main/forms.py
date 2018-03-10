@@ -162,7 +162,7 @@ class ArchivalCollectionForm(forms.ModelForm):
     class Meta:
         model = ArchivalCollection
 
-        fields = ['title', 'description',
+        fields = ['repository', 'title', 'description',
                   'finding_aid_url', 'linear_feet',
                   'inclusive_start', 'inclusive_end']
         widgets = {
