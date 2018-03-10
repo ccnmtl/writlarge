@@ -245,7 +245,7 @@ class Place(models.Model):
 class LearningSite(models.Model):
     title = models.TextField(unique=True)
 
-    latlng = PointField()
+    place = models.ManyToManyField(Place, blank=True)
 
     description = models.TextField(null=True, blank=True)
     category = models.ManyToManyField(LearningSiteCategory, blank=True)

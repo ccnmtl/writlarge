@@ -43,7 +43,11 @@ var GoogleMapVue = {
         savePin: function(event) {
             const data = {
                 'title': this.newTitle,
-                'latlng': this.newPin.position.toJSON()
+                'latlng': this.newPin.position.toJSON(), // to be deprecated
+                'place': [{
+                    'title': this.address,
+                    'latlng': this.newPin.position.toJSON()
+                }]
             };
 
             const params = {
@@ -159,17 +163,17 @@ var GoogleMapVue = {
     },
     updated: function() {
         this.bounds = new google.maps.LatLngBounds();
-        this.places.forEach((place) => {
+        this.places.forEach((site) => {
             const position = new google.maps.LatLng(
-                place.latitude, place.longitude);
+                site.place[0].latitude, site.place[0].longitude);
             const marker = new google.maps.Marker({
                 position: position,
                 map: this.map
             });
-            place.marker = marker;
+            site.marker = marker;
             google.maps.event.addListener(marker, 'click', (ev) => {
                 this.clearNewPin();
-                this.selectedPlace = place;
+                this.selectedPlace = site;
             });
             if (!this.newPin) {
                 this.map.fitBounds(this.bounds.extend(position));
