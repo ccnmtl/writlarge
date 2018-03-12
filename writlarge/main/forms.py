@@ -2,7 +2,7 @@ from datetime import date
 
 from django import forms
 from django.forms.widgets import (
-    TextInput, CheckboxSelectMultiple, HiddenInput, SelectDateWidget)
+    TextInput, CheckboxSelectMultiple, HiddenInput)
 
 from writlarge.main.models import (
     ExtendedDate, LearningSite, DigitalObject, ArchivalCollection)
@@ -201,11 +201,11 @@ class DigitalObjectForm(forms.ModelForm):
         model = DigitalObject
 
         fields = [
-            'file', 'source_url', 'description', 'datestamp', 'source'
+            'file', 'source_url', 'description', 'date_taken', 'source'
         ]
         widgets = {
             'description': TextInput,
-            'datestamp': SelectDateWidget(years=range(1500, 2018)),
+            'date_taken': HiddenInput,
             'source': TextInput
         }
 
@@ -218,4 +218,16 @@ class DigitalObjectForm(forms.ModelForm):
             self.add_error(
                 None, 'Please upload a file or specify a source url')
 
+        self.form_date_taken = ExtendedDateForm(
+            filter_fields(self.data, 'date-taken-'))
+
+        if not self.form_date_taken.is_valid():
+            self._errors['date_taken'] = \
+                self.form_date_taken.get_error_messages()
+
         return cleaned_data
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, commit=commit)
+        self.form_date_taken.create_or_update(instance, 'date_taken')
+        return instance

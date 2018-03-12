@@ -114,6 +114,9 @@ class DigitalObject(models.Model):
     source_url = models.URLField(null=True, blank=True)
 
     description = models.TextField()
+    date_taken = models.ForeignKey(
+        ExtendedDate, null=True, blank=True, on_delete=SET_NULL,
+        verbose_name='Date Taken')
     datestamp = models.DateField(
         null=True, blank=True, verbose_name='Date Taken')
     source = models.TextField(
