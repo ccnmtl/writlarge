@@ -23,8 +23,8 @@ requirejs(['./common'], function() {
                 return {
                     addressError: false,
                     titleError: false,
-                    createForm: false,
                     collectionForm: false,
+                    repositoryForm: false,
                     repositories: []
                 };
             },
@@ -52,7 +52,7 @@ requirejs(['./common'], function() {
                     };
 
                     $.post(params, (response) => {
-                        this.createForm = false;
+                        this.repositoryForm = false;
                         this.collectionForm = true;
                         $('select[name="repository"]').append(
                             $('<option></option>')
@@ -63,15 +63,15 @@ requirejs(['./common'], function() {
                 },
                 onSelectRepository: function(event) {
                     const value = $(event.currentTarget).val();
-                    this.createForm = value === 'create';
+                    this.repositoryForm = value && value === 'create';
                     this.collectionForm = value && value !== 'create';
                 },
                 hideForm: function(event) {
-                    this.createForm = false;
+                    this.repositoryForm = false;
                 }
             },
             created: function() {
-                this.collectionForm = WritLarge.boundForm;
+                this.collectionForm = WritLarge.collectionForm;
             },
         });
     });

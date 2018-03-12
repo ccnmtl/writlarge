@@ -14,7 +14,7 @@
         src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
 
     <script>
-        WritLarge.boundForm = {% if form.data %}true{% else %} false{% endif %};
+        WritLarge.collectionForm = {% if form.data %}true{% else %} false{% endif %};
     </script>
 
     <script data-main="{{STATIC_URL}}js/src/createRepository.js"
@@ -63,9 +63,9 @@
                     </div>
                 </div>
             </div>
-            <div v-if="createForm" class="create-repository-form bg-light mb-3">
-                <div class="card">
-                    <div class="card-body bg-light" v-bind:class="{'invalid-feedback': addressError || titleError}">
+            <div v-if="repositoryForm" class="create-repository-form bg-light mb-3">
+                <div class="card" v-bind:class="{'is-invalid': addressError || titleError}">
+                    <div class="card-body bg-light">
                         <div class="invalid-feedback mb-1"><strong>Oops!</strong> The title and address fields are required.</div>
 
                         {% bootstrap_field repository_form.title %}
@@ -96,7 +96,7 @@
                 <hr class="mb-4">
                 <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             </div>
-            <a v-if="!createForm" class="btn btn-secondary btn-block mb-4" href="{% url 'collection-link-view' parent.id %}">Cancel</a>
+            <a v-if="!repositoryForm" class="btn btn-secondary btn-block mb-4" href="{% url 'collection-link-view' parent.id %}">Cancel</a>
         </form>
     </div>
 </div>

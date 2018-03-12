@@ -180,8 +180,12 @@ footer li+li {
     font-weight: bold;
 }
 
-.archivalcollection-create .card.is-invalid .invalid-feedback {
+.archivalcollection-create .create-repository-form .card.is-invalid .invalid-feedback {
     display: block;
+}
+
+.archivalcollection-create .create-repository-form .card.is-invalid label {
+    color: #dc3545;
 }
 
 /* EDTF component */
