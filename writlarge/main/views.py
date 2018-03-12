@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db.models.query_utils import Q
-from django.forms.models import modelform_factory
 from django.forms.widgets import TextInput
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -206,16 +205,9 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
         'title': TextInput
     }
 
-    repository_fields = ['title', 'latlng']
-    repository_widgets = {
-        'title': TextInput,
-    }
-
     def get_context_data(self, *args, **kwargs):
         ctx = LearningSiteParamMixin.get_context_data(self, *args, **kwargs)
-        ctx['repository_form'] = modelform_factory(
-            ArchivalRepository, fields=self.repository_fields,
-            widgets=self.repository_widgets)
+        ctx['initial_repositories'] = ArchivalRepository.objects.all()
         return ctx
 
     def get_success_url(self):
