@@ -99,8 +99,15 @@ footer li+li {
     z-index: 2000;
     margin-left: 10px;
     margin-top: 10px;
-    width: 50%;
     width: 350px;
+}
+
+.map-view .overlay-picker {
+    position: absolute;
+    z-index: 2000;
+    margin-top: 10px;
+    width: 75px;
+    right: 85px;
 }
 
 

@@ -106,6 +106,24 @@ var GoogleMapVue = {
                     this.address = '';
                 }
             });
+        },
+        changeOverlay: function(event) {
+            const id = jQuery(event.currentTarget).data('id');
+            var overlay = new google.maps.ImageMapType({
+                getTileUrl: function(coord, zoom) {
+                    return 'http://maps.nypl.org/warper/layers/tile/' + id
+                        + '/' + zoom + '/' + coord.x + '/' + coord.y +
+                        '.png';
+                },
+                tileSize: new google.maps.Size(256, 256),
+                maxZoom: 9,
+                minZoom: 0,
+                name: 'NYPL Overlay'
+            });
+            if (this.map.overlayMapTypes.getLength() > 0) {
+                this.map.overlayMapTypes.pop();
+            }
+            this.map.overlayMapTypes.insertAt(0, overlay);
         }
     },
     created: function() {
@@ -125,7 +143,10 @@ var GoogleMapVue = {
             mapTypeControl: false,
             clickableIcons: false,
             zoom: 10,
-            center: new google.maps.LatLng(40.778572, -73.970616)
+            center: new google.maps.LatLng(40.778572, -73.970616),
+            fullscreenControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            }
         });
         if (!this.isReadOnly()) {
             this.map.addListener('click', (ev) => {
