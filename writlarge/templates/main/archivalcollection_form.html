@@ -33,6 +33,7 @@
 <div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
         <form action="." method="post" v-on:submit="onSubmit">{% csrf_token %}
+            {% bootstrap_field form.repository %}
             {% bootstrap_field form.title %}
             {% bootstrap_field form.description %}
             {% bootstrap_field form.finding_aid_url %}

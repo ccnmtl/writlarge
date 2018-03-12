@@ -287,12 +287,15 @@ class TestArchivalCollectionCreateView(TestCase):
         data = {
             'title': 'New', 'description': '', 'finding_aid_url': '',
             'repository': '{}'.format(self.repository.id),
-            'linear_feet': '', 'inclusive_start_date_month': '1',
-            'inclusive_start_date_day': '1',
-            'inclusive_start_date_year': '2018',
-            'inclusive_end_date_month': '1',
-            'inclusive_end_date_day': '1',
-            'inclusive_end_date_year': '2018'
+            'linear_feet': '',
+            'inclusive-start-millenium1': '2',
+            'inclusive-start-century1': '0',
+            'inclusive-start-decade1': '0',
+            'inclusive-start-year1': '0',
+            'inclusive-end-millenium1': '2',
+            'inclusive-end-century1': '0',
+            'inclusive-end-decade1': '0',
+            'inclusive-end-year1': '1',
         }
         response = self.client.post(self.url, data)
         self.assertEquals(response.status_code, 302)
@@ -300,6 +303,8 @@ class TestArchivalCollectionCreateView(TestCase):
         collection = ArchivalCollection.objects.get(title='New')
         self.assertTrue(collection.learning_sites.filter(
             title=self.site.title).exists())
+        self.assertEquals(collection.inclusive_start.edtf_format, '2000')
+        self.assertEquals(collection.inclusive_end.edtf_format, '2001')
 
 
 class TestArchivalCollectionUpdateView(TestCase):
@@ -331,19 +336,25 @@ class TestArchivalCollectionUpdateView(TestCase):
         self.assertEquals(response.status_code, 200)
 
         data = {
+            'repository': self.collection.repository.id,
             'title': 'Updated', 'description': '', 'finding_aid_url': '',
-            'linear_feet': '', 'inclusive_start_date_month': '1',
-            'inclusive_start_date_day': '1',
-            'inclusive_start_date_year': '2018',
-            'inclusive_end_date_month': '1',
-            'inclusive_end_date_day': '1',
-            'inclusive_end_date_year': '2018'
+            'linear_feet': '',
+            'inclusive-start-millenium1': '2',
+            'inclusive-start-century1': '0',
+            'inclusive-start-decade1': '0',
+            'inclusive-start-year1': '0',
+            'inclusive-end-millenium1': '2',
+            'inclusive-end-century1': '0',
+            'inclusive-end-decade1': '0',
+            'inclusive-end-year1': '1',
         }
         response = self.client.post(self.url, data)
         self.assertEquals(response.status_code, 302)
 
         self.collection.refresh_from_db()
         self.assertEquals(self.collection.title, 'Updated')
+        self.assertEquals(self.collection.inclusive_start.edtf_format, '2000')
+        self.assertEquals(self.collection.inclusive_end.edtf_format, '2001')
 
 
 class TestArchivalCollectionDeleteView(TestCase):

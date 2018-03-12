@@ -194,16 +194,11 @@ class ArchivalCollectionUnlinkView(LoggedInEditorMixin,
 
 
 class ArchivalCollectionCreateView(LoggedInEditorMixin,
-                                   ModelFormWidgetMixin,
                                    LearningSiteParamMixin,
                                    CreateView):
     model = ArchivalCollection
+    form_class = ArchivalCollectionForm
     template_name = 'main/archivalcollection_create.html'
-    fields = ['repository', 'title', 'description',
-              'finding_aid_url', 'linear_feet']
-    widgets = {
-        'title': TextInput
-    }
 
     def get_context_data(self, *args, **kwargs):
         ctx = LearningSiteParamMixin.get_context_data(self, *args, **kwargs)

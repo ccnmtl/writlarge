@@ -1,8 +1,8 @@
-/* global GoogleMapVue:true, csrfSafeMethod:true */
+/* global GoogleMapVue:true, ExtendedDateVue: true, csrfSafeMethod:true */
 
 requirejs(['./common'], function() {
-    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'mapVue'];
-    requirejs(a, function($, utils, bootstrap, Vue, mapVue) {
+    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'mapVue', 'edtfVue'];
+    requirejs(a, function($, utils, bootstrap, Vue, mapVue, edtfVue) {
 
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
@@ -18,6 +18,7 @@ requirejs(['./common'], function() {
             el: '#archival-collection-create',
             components: {
                 'google-map': GoogleMapVue,
+                'edtf': ExtendedDateVue
             },
             data: function() {
                 return {
@@ -67,6 +68,16 @@ requirejs(['./common'], function() {
                 },
                 hideForm: function(event) {
                     this.repositoryForm = false;
+                },
+                onSubmit: function(event) {
+                    for (let i=0; i < this.$children.length; i++) {
+                        if (this.$children[i].errors > 0) {
+                            this.$children[i].setFocus();
+                            event.preventDefault();
+                            event.stopPropagation();
+                            break;
+                        }
+                    }
                 }
             },
             created: function() {
