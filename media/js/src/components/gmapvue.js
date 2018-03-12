@@ -26,6 +26,7 @@ var GoogleMapVue = {
                 this.newPin.setMap(null);
                 this.newPin = null;
                 this.address = '';
+                this.newTitle = '';
             }
         },
         dropPin: function(event) {
@@ -57,6 +58,7 @@ var GoogleMapVue = {
                 this.places.push(response);
                 this.selectedPlace = response;
                 this.newPin = null;
+                this.newTitle = '';
             });
         },
         deselectPlace: function(event) {
