@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             repo.save()
 
     dependencies = [
-        ('main', '0017_auto_20180308_1618'),
+        ('main', '0018_auto_20180310_1134'),
     ]
 
     operations = [
