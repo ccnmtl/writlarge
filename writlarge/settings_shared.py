@@ -72,7 +72,8 @@ INSTALLED_APPS += [  # noqa
     'django.contrib.gis',
     'rest_framework',
     'lti_provider',
-    'edtf'
+    'edtf',
+    'debug_toolbar',
 ]
 
 LOGIN_REDIRECT_URL = "/"
