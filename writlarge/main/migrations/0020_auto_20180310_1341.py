@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             site.place.add(p)
 
     dependencies = [
-        ('main', '0018_auto_20180310_1244'),
+        ('main', '0019_auto_20180310_1244'),
     ]
 
     operations = [
