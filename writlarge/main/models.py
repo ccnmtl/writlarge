@@ -179,8 +179,72 @@ class ArchivalRecordFormat(models.Model):
         return self.name
 
 
+class PlaceManager(models.Manager):
+
+    def __init__(self, fields=None, *args, **kwargs):
+        super(PlaceManager, self).__init__(
+            *args, **kwargs)
+        self._fields = fields
+
+    @classmethod
+    def string_to_point(cls, str):
+        a = str.split(',')
+        return Point(float(a[1].strip()), float(a[0].strip()))
+
+    def get_or_create_from_string(self, latlng):
+        point = self.string_to_point(latlng)
+
+        created = False
+        pl = Place.objects.filter(latlng=point).first()
+
+        if pl is None:
+            pl = Place.objects.create(latlng=point)
+            created = True
+
+        return pl, created
+
+
+class Place(models.Model):
+    objects = PlaceManager()
+
+    title = models.TextField()
+    latlng = PointField()
+
+    digital_object = models.ManyToManyField(
+        DigitalObject, blank=True)
+
+    notes = models.TextField(null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
+    def latitude(self):
+        return self.latlng.coords[1]
+
+    def longitude(self):
+        return self.latlng.coords[0]
+
+    def match_string(self, latlng):
+        s = '{},{}'.format(self.latitude(), self.longitude())
+        return s == latlng
+
+    def get_absolute_url(self):
+        return reverse(
+            'place-detail-view', kwargs={'pk': self.id})
+
+    def empty(self):
+        return True
+
+
 class LearningSite(models.Model):
     title = models.TextField(unique=True)
+
     latlng = PointField()
 
     description = models.TextField(null=True, blank=True)
@@ -233,7 +297,10 @@ class LearningSite(models.Model):
 
 class ArchivalRepository(models.Model):
     title = models.TextField(unique=True, verbose_name="Repository Title")
-    latlng = PointField()
+
+    place = models.ForeignKey(
+        Place, blank=True, null=True, on_delete=models.SET_NULL)
+
     description = models.TextField(null=True, blank=True)
 
     notes = models.TextField(null=True, blank=True)
@@ -299,66 +366,3 @@ class ArchivalCollection(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class PlaceManager(models.Manager):
-
-    def __init__(self, fields=None, *args, **kwargs):
-        super(PlaceManager, self).__init__(
-            *args, **kwargs)
-        self._fields = fields
-
-    @classmethod
-    def string_to_point(cls, str):
-        a = str.split(',')
-        return Point(float(a[1].strip()), float(a[0].strip()))
-
-    def get_or_create_from_string(self, latlng):
-        point = self.string_to_point(latlng)
-
-        created = False
-        pl = Place.objects.filter(latlng=point).first()
-
-        if pl is None:
-            pl = Place.objects.create(latlng=point)
-            created = True
-
-        return pl, created
-
-
-class Place(models.Model):
-    objects = PlaceManager()
-
-    title = models.TextField()
-    latlng = PointField()
-
-    digital_object = models.ManyToManyField(
-        DigitalObject, blank=True)
-
-    notes = models.TextField(null=True, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
-
-    def latitude(self):
-        return self.latlng.coords[1]
-
-    def longitude(self):
-        return self.latlng.coords[0]
-
-    def match_string(self, latlng):
-        s = '{},{}'.format(self.latitude(), self.longitude())
-        return s == latlng
-
-    def get_absolute_url(self):
-        return reverse(
-            'place-detail-view', kwargs={'pk': self.id})
-
-    def empty(self):
-        return True

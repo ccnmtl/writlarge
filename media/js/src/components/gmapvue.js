@@ -64,6 +64,9 @@ var GoogleMapVue = {
         deselectPlace: function(event) {
             this.selectedPlace = null;
         },
+        getAddress: function(event) {
+            return this.address;
+        },
         getPlace: function(event) {
             return this.selectedPlace || this.newPin;
         },
