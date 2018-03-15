@@ -70,24 +70,25 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
     category = LearningSiteCategorySerializer(read_only=True, many=True)
     digital_object = DigitalObjectSerializer(read_only=True, many=True)
-
-    latitude = serializers.SerializerMethodField(read_only=True)
-    longitude = serializers.SerializerMethodField(read_only=True)
+    place = PlaceSerializer(many=True)
     tags = StringListField(read_only=True)
-
-    def get_latitude(self, obj):
-        return obj.latlng.y
-
-    def get_longitude(self, obj):
-        return obj.latlng.x
-
-    def validate_latlng(self, data):
-        if 'lat' in data and 'lng' in data:
-            return Point(data['lng'], data['lat'])
 
     class Meta:
         model = LearningSite
-        fields = ('id', 'title', 'latlng', 'notes',
-                  'category', 'digital_object', 'latitude', 'longitude',
-                  'verified', 'verified_modified_at', 'empty', 'tags',
-                  'created_at', 'modified_at')
+        fields = ('id', 'title', 'place', 'notes', 'category',
+                  'digital_object', 'verified', 'verified_modified_at',
+                  'empty', 'tags', 'created_at', 'modified_at')
+
+    def create(self, validated_data):
+        place_data = validated_data.pop('place')
+        site = LearningSite.objects.create(**validated_data)
+
+        for p in place_data:
+            place = Place.objects.create(**p)
+            site.place.add(place)
+        return site
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.save()
+        return instance

@@ -58,12 +58,20 @@ class LearningSiteCategoryFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: "category%03d" % n)
 
 
+class PlaceFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = Place
+
+    latlng = FuzzyPoint()
+    title = 'Cracow, Poland'
+
+
 class LearningSiteFactory(factory.DjangoModelFactory):
     class Meta:
         model = LearningSite
 
     title = factory.Sequence(lambda n: "site%03d" % n)
-    latlng = FuzzyPoint()
+    place = factory.SubFactory(PlaceFactory)
     established = factory.SubFactory(ExtendedDateFactory)
     defunct = factory.SubFactory(ExtendedDateFactory)
     created_by = factory.SubFactory(UserFactory)
@@ -73,12 +81,18 @@ class LearningSiteFactory(factory.DjangoModelFactory):
         if create:
             self.category.add(LearningSiteCategoryFactory())
 
+    @factory.post_generation
+    def place(self, create, extracted, **kwargs):
+        if create:
+            self.place.add(PlaceFactory())
+
 
 class ArchivalRepositoryFactory(factory.DjangoModelFactory):
     class Meta:
         model = ArchivalRepository
 
     title = factory.Sequence(lambda n: "repository%03d" % n)
+    place = factory.SubFactory(PlaceFactory)
 
 
 class ArchivalCollectionFactory(factory.DjangoModelFactory):
@@ -87,23 +101,6 @@ class ArchivalCollectionFactory(factory.DjangoModelFactory):
 
     title = factory.Sequence(lambda n: "collection%03d" % n)
     repository = factory.SubFactory(ArchivalRepositoryFactory)
-
-
-class PlaceFactory(factory.DjangoModelFactory):
-    class Meta:
-        model = Place
-
-    latlng = FuzzyPoint()
-    country = 'Poland'
-    city = 'Cracow'
-
-    @factory.post_generation
-    def position(self, create, extracted, **kwargs):
-        if create:
-            if not extracted:
-                extracted = '50.064650,19.944979'
-            self.latlng = Place.objects.string_to_point(extracted)
-            self.save()
 
 
 class FootnoteFactory(factory.DjangoModelFactory):

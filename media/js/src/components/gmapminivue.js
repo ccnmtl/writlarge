@@ -11,22 +11,7 @@ var GoogleMiniMapVue = {
             address: null
         };
     },
-    methods: {
-        reverseGeocode: function(marker) {
-            this.geocoder.geocode({
-                latLng: marker.getPosition(),
-            }, (responses) => {
-                if (responses && responses.length > 0) {
-                    this.address = responses[0].formatted_address;
-                } else {
-                    this.address = '';
-                }
-            });
-        }
-    },
     mounted: function() {
-        this.geocoder = new google.maps.Geocoder();
-
         const elt = document.getElementById(this.mapName);
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
@@ -38,13 +23,13 @@ var GoogleMiniMapVue = {
             this.place = data;
 
             const position = new google.maps.LatLng(
-                this.place.latitude, this.place.longitude);
+                this.place.place[0].latitude, this.place.place[0].longitude);
             const marker = new google.maps.Marker({
                 position: position,
                 map: this.map
             });
             this.place.marker = marker;
-            this.reverseGeocode(marker);
+            this.address = this.place.place[0].title;
         });
     },
     updated: function() {

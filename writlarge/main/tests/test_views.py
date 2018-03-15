@@ -90,12 +90,11 @@ class ApiViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 403)
 
-    def test_update(self):
+    def test_create(self):
         self.client.login(username=self.user.username, password='test')
         data = {
-            'id': self.site.id, 'title': 'Foo',
-            'latlng': {'lat': 5, 'lng': 6},
-            'established': '', 'defunct': ''
+            'title': 'Foo',
+            'place': [{'title': 'Bar', 'latlng': {'lat': 5, 'lng': 6}}]
         }
         response = self.client.post(
             '/api/site/',
@@ -103,6 +102,25 @@ class ApiViewTest(TestCase):
             content_type="application/json",
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 201)
+
+        site = LearningSite.objects.get(title='Foo')
+        self.assertEquals(site.place.first().title, 'Bar')
+
+    def test_update(self):
+        self.client.login(username=self.user.username, password='test')
+        data = {
+            'id': self.site.id, 'title': 'Foo',
+            'place': [{'title': 'Bar', 'latlng': {'lat': 5, 'lng': 6}}],
+            'established': '', 'defunct': ''
+        }
+        response = self.client.put(
+            '/api/site/{}/'.format(self.site.id),
+            dumps(data),
+            content_type="application/json",
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.site.refresh_from_db()
+        self.assertEquals(self.site.title, 'Foo')
 
 
 class TestLearningSiteUpdateView(TestCase):

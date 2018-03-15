@@ -232,7 +232,6 @@ class LearningSiteFormTest(TestCase):
         site = LearningSiteFactory(defunct=None)
         data = {
             'title': 'Foo',
-            'latlng': site.latlng,
             'established-is_range': False,
             'established-millenium1': '2', 'established-century1': '0',
             'established-decade1': '0', 'established-year1': '8',
