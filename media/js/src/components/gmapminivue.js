@@ -1,4 +1,5 @@
 /* global google: true, enlargeBounds: true */
+/* global lightGrayStyle: true */
 /* exported GoogleMiniMapVue */
 
 var GoogleMiniMapVue = {
@@ -15,8 +16,13 @@ var GoogleMiniMapVue = {
         const elt = document.getElementById(this.mapName);
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
-            clickableIcons: false
+            clickableIcons: false,
+            mapTypeControlOptions: {
+                mapTypeIds: ['styled_map']
+            }
         });
+        this.map.mapTypes.set('styled_map', lightGrayStyle);
+        this.map.setMapTypeId('styled_map');
 
         const url = WritLarge.baseUrl + 'api/site/' + this.placeid + '/';
         jQuery.getJSON(url, (data) => {

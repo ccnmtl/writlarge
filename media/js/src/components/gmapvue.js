@@ -1,4 +1,4 @@
-/* global google: true, enlargeBounds: true */
+/* global google: true, enlargeBounds: true, lightGrayStyle: true */
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
@@ -152,9 +152,15 @@ var GoogleMapVue = {
             zoom: 10,
             center: new google.maps.LatLng(40.778572, -73.970616),
             fullscreenControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
+                position: google.maps.ControlPosition.RIGHT_BOTTOM,
+            },
+            mapTypeControlOptions: {
+                mapTypeIds: ['styled_map']
             }
         });
+        this.map.mapTypes.set('styled_map', lightGrayStyle);
+        this.map.setMapTypeId('styled_map');
+
         if (!this.isReadOnly()) {
             this.map.addListener('click', (ev) => {
                 this.dropPin(ev);
