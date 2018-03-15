@@ -3,13 +3,11 @@
 /* exported GoogleMiniMapVue */
 
 var GoogleMiniMapVue = {
-    props: ['placeid'],
+    props: ['latitude', 'longitude'],
     template: '#google-mini-map-template',
     data: function() {
         return {
             mapName: 'the-map',
-            place: null,
-            address: null
         };
     },
     mounted: function() {
@@ -19,32 +17,21 @@ var GoogleMiniMapVue = {
             clickableIcons: false,
             mapTypeControlOptions: {
                 mapTypeIds: ['styled_map']
-            }
+            },
         });
         this.map.mapTypes.set('styled_map', lightGrayStyle);
         this.map.setMapTypeId('styled_map');
 
-        const url = WritLarge.baseUrl + 'api/site/' + this.placeid + '/';
-        jQuery.getJSON(url, (data) => {
-            this.place = data;
-
-            const position = new google.maps.LatLng(
-                this.place.place[0].latitude, this.place.place[0].longitude);
-            const marker = new google.maps.Marker({
-                position: position,
-                map: this.map
-            });
-            this.place.marker = marker;
-            this.address = this.place.place[0].title;
+        const position = new google.maps.LatLng(
+            parseFloat(this.latitude), parseFloat(this.longitude));
+        this.marker = new google.maps.Marker({
+            position: position,
+            map: this.map
         });
-    },
-    updated: function() {
-        this.bounds = new google.maps.LatLngBounds();
 
-        // zoom in on the pin, but not too far
-        this.bounds = new google.maps.LatLngBounds();
-        this.bounds.extend(this.place.marker.position);
-        this.bounds = enlargeBounds(this.bounds);
-        this.map.fitBounds(this.bounds);
+        let bounds = new google.maps.LatLngBounds();
+        bounds.extend(this.marker.position);
+        bounds = enlargeBounds(bounds);
+        this.map.fitBounds(bounds);
     }
 };
