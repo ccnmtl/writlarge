@@ -161,7 +161,7 @@ var GoogleMapVue = {
         this.map.mapTypes.set('styled_map', lightGrayStyle);
         this.map.setMapTypeId('styled_map');
         this.map.data.loadGeoJson(
-            'https://wyvern.ccnmtl.columbia.edu/media/data/neighborhoods.geojson');
+            'https://wyvern.ccnmtl.columbia.edu/media/data/map.geojson');
 
         this.map.data.setStyle(function(feature) {
             var color = 'gray';
