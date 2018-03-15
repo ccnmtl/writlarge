@@ -160,7 +160,21 @@ var GoogleMapVue = {
         });
         this.map.mapTypes.set('styled_map', lightGrayStyle);
         this.map.setMapTypeId('styled_map');
+        this.map.data.loadGeoJson(
+            'https://wyvern.ccnmtl.columbia.edu/media/data/neighborhoods.geojson');
 
+        this.map.data.setStyle(function(feature) {
+            var color = 'gray';
+            if (feature.getProperty('isColorful')) {
+              color = feature.getProperty('color');
+            }
+            return /** @type {google.maps.Data.StyleOptions} */({
+              fillOpacity: 0.0,
+              strokeColor: color,
+              strokeWeight: .5
+            });
+          });
+        
         if (!this.isReadOnly()) {
             this.map.addListener('click', (ev) => {
                 this.dropPin(ev);
