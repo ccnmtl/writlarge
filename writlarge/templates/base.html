@@ -83,6 +83,13 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    {% if not request.user.is_anonymous %}
+                        <li class="mr-4">
+                            <span class="navbar-text">
+                                {{request.user.get_full_name}} {% if is_editor %}(Editor){% endif %}
+                            </span>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="/about/">About</a>
                     </li>
