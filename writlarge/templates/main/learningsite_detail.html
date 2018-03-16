@@ -62,6 +62,33 @@
                         latitude="{{object.place.first.latitude}}"
                         longitude="{{object.place.first.longitude}}" />
                 </div>
+                <ul class="list-group">
+                {% for place in object.place.all %}
+                    <li class="list-group-item">
+                        {% if is_editor %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if forloop.counter > 1 %}
+                                <a class="float-right text-secondary ml-4"
+                                    href="{% url 'place-delete-view' object.id place.id %}">
+                                    <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
+                                </a>
+                                {% endif %}
+                                <a class="float-right text-secondary" href="{% url 'place-edit-view' object.id place.id %}">
+                                    <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row no-gutters">{{place.title}}</div>
+                     </li>
+                {% endfor %}
+                </ul>
+                {% if is_editor %}
+                <a href="{% url 'place-add-view' object.id %}" class="btn btn-light btn-block mt-2">
+                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Place
+                </a>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-8 order-md-1">

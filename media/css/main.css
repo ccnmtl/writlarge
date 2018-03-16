@@ -74,7 +74,6 @@ footer li+li {
 }
 
 /* Map View */
-
 .map-view .google-map {
     position: absolute;
     width: 100%;
@@ -112,6 +111,7 @@ footer li+li {
 
 
 /* Detail View */
+#edit-detail-container .google-map,
 #detail-container .google-map {
     width: 100%;
     height: 300px;

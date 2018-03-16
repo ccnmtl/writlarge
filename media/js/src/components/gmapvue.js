@@ -2,7 +2,7 @@
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
-    props: ['readonly', 'showplaces'],
+    props: ['readonly', 'showplaces', 'latitude', 'longitude', 'title'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -16,6 +16,17 @@ var GoogleMapVue = {
             newType: '',
             selectedPlace: null
         };
+    },
+    computed: {
+        latlng: {
+            get: function() {
+                if (this.newPin) {
+                    return 'SRID=4326;POINT(' +
+                        this.newPin.position.lng() + ' ' +
+                        this.newPin.position.lat() + ')';
+                }
+            },
+        }
     },
     methods: {
         isReadOnly: function() {
@@ -184,23 +195,36 @@ var GoogleMapVue = {
                 this.dropPin(ev);
             });
         }
-    },
-    updated: function() {
-        this.bounds = new google.maps.LatLngBounds();
-        this.places.forEach((site) => {
+
+        if (this.latitude && this.longitude) {
             const position = new google.maps.LatLng(
-                site.place[0].latitude, site.place[0].longitude);
+                this.latitude, this.longitude);
             const marker = new google.maps.Marker({
                 position: position,
                 map: this.map
             });
-            site.marker = marker;
-            google.maps.event.addListener(marker, 'click', (ev) => {
-                this.clearNewPin();
-                this.selectedPlace = site;
-            });
-            if (!this.newPin) {
-                this.map.fitBounds(this.bounds.extend(position));
+            this.newPin = marker;
+            this.address = this.title;
+        }
+    },
+    updated: function() {
+        this.bounds = new google.maps.LatLngBounds();
+        this.places.forEach((site) => {
+            if (!site.marker) {
+                const position = new google.maps.LatLng(
+                    site.place[0].latitude, site.place[0].longitude);
+                const marker = new google.maps.Marker({
+                    position: position,
+                    map: this.map
+                });
+                site.marker = marker;
+                google.maps.event.addListener(marker, 'click', (ev) => {
+                    this.clearNewPin();
+                    this.selectedPlace = site;
+                });
+                if (!this.newPin) {
+                    this.map.fitBounds(this.bounds.extend(position));
+                }
             }
         });
     }

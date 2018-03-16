@@ -1,6 +1,8 @@
 {% verbatim %}
 <script type="text/x-template" id="google-map-template">
     <div>
+        <input type="hidden" name="title" v-model="address">
+        <input type="hidden" name="latlng" geom_type="POINT" v-model="latlng">
         <div class="address-bar">
             <div class="input-group">
                 <input type="text" v-model="address"

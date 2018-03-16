@@ -25,6 +25,7 @@ if hasattr(settings, 'CAS_BASE'):
 router = routers.DefaultRouter()
 router.register(r'site', views.LearningSiteViewSet)
 router.register(r'repository', views.ArchivalRepositoryViewSet)
+router.register(r'place', views.PlaceViewSet)
 
 urlpatterns = [
     url(r'^$', views.CoverView.as_view()),
@@ -62,7 +63,6 @@ urlpatterns = [
         views.LearningSiteDeleteView.as_view(),
         name='site-delete-view'),
 
-
     url(r'^add/photo/(?P<parent>\d+)/$',
         views.DigitalObjectCreateView.as_view(),
         name='digital-object-create-view'),
@@ -98,6 +98,16 @@ urlpatterns = [
     url(r'^delete/footnote/(?P<parent>\d+)/(?P<pk>\d+)/$',
         views.FootnoteDeleteView.as_view(),
         name='footnote-delete-view'),
+
+    url(r'^add/place/(?P<parent>\d+)/$',
+        views.PlaceCreateView.as_view(),
+        name='place-add-view'),
+    url(r'^edit/place/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.PlaceUpdateView.as_view(),
+        name='place-edit-view'),
+    url(r'^delete/place/(?P<parent>\d+)/(?P<pk>\d+)/$',
+        views.PlaceDeleteView.as_view(),
+        name='place-delete-view'),
 
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),

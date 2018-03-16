@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.db.models.query_utils import Q
-from django.forms.widgets import TextInput
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
@@ -10,12 +9,13 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView, DeleteView
 from django.views.generic.list import ListView
 from rest_framework import viewsets
+
 from writlarge.main.forms import (
     ArchivalCollectionForm,
-    ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
+    ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
-    ModelFormWidgetMixin, LoggedInEditorMixin, JSONResponseMixin,
+    LoggedInEditorMixin, JSONResponseMixin,
     SingleObjectCreatorMixin)
 from writlarge.main.models import (
     LearningSite, ArchivalRepository, Place,
@@ -74,16 +74,28 @@ class SearchView(ListView):
         return qs
 
 
-class PlaceDetailView(DetailView):
+class PlaceCreateView(LoggedInEditorMixin,
+                      LearningSiteParamMixin, CreateView):
     model = Place
+    form_class = PlaceForm
+
+    def get_success_url(self):
+        self.parent.place.add(self.object)
+        return reverse('site-detail-view', args=[self.parent.id])
 
 
-class PlaceUpdateView(LoggedInEditorMixin, ModelFormWidgetMixin, UpdateView):
+class PlaceUpdateView(LoggedInEditorMixin,
+                      LearningSiteRelatedMixin, UpdateView):
     model = Place
-    fields = ['title', 'notes']
-    widgets = {
-        'title': TextInput
-    }
+    form_class = PlaceForm
+    success_view = 'site-detail-view'
+
+
+class PlaceDeleteView(LoggedInEditorMixin,
+                      LearningSiteRelatedMixin,
+                      DeleteView):
+    model = Place
+    success_view = 'site-detail-view'
 
 
 class LearningSiteDeleteView(LoggedInEditorMixin, SingleObjectCreatorMixin,
