@@ -58,7 +58,9 @@
             <h4 class="mb-3 text-muted">Places</h4>
             <div class="w-100 text-center">
                 <div id="map-container">
-                    <google-mini-map placeid="{{object.id}}" />
+                    <google-mini-map
+                        latitude="{{object.place.first.latitude}}"
+                        longitude="{{object.place.first.longitude}}" />
                 </div>
             </div>
         </div>
