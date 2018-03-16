@@ -5,7 +5,7 @@ from django.forms.widgets import (
     TextInput, CheckboxSelectMultiple, HiddenInput)
 
 from writlarge.main.models import (
-    ExtendedDate, LearningSite, DigitalObject, ArchivalCollection)
+    ExtendedDate, LearningSite, DigitalObject, ArchivalCollection, Place)
 from writlarge.main.utils import filter_fields
 
 
@@ -231,3 +231,14 @@ class DigitalObjectForm(forms.ModelForm):
         instance = forms.ModelForm.save(self, commit=commit)
         self.form_date_taken.create_or_update(instance, 'date_taken')
         return instance
+
+
+class PlaceForm(forms.ModelForm):
+
+    class Meta:
+        model = Place
+        fields = ['title', 'latlng']
+        widgets = {
+            'title': HiddenInput,
+            'latlng': HiddenInput
+        }

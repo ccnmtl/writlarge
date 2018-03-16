@@ -1,7 +1,7 @@
-/* global ExtendedDateVue, csrfSafeMethod:true */
+/* global ExtendedDateVue:true, csrfSafeMethod:true, GoogleMapVue:true */
 
 requirejs(['./common'], function() {
-    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'edtfVue'];
+    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'edtfVue', 'mapVue'];
     requirejs(a, function($, utils, bootstrap, Vue, edtfVue) {
 
         $.ajaxSetup({
@@ -17,7 +17,8 @@ requirejs(['./common'], function() {
         new Vue({
             el: '#edit-detail-container',
             components: {
-                'edtf': ExtendedDateVue
+                'edtf': ExtendedDateVue,
+                'google-map': GoogleMapVue,
             },
             methods: {
                 onSubmit: function(event) {

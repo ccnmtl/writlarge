@@ -1,29 +1,53 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Place{% endblock %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Place{% endblock %}
+
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/pick_location_template.html" %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script data-main="{{STATIC_URL}}js/src/editDetail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">{% if object %}Edit{% else %}Add{% endif %} Place</li>
+        </ol>
+    </nav>
+{% endblock %}
 
 {% block content %}
-<div class="py-5 text-center">
-    <h2>{{object.title}}</h2>
+<div class="pb-2 text-center">
+    <h2>
+        {{parent.title}}
+    </h2>
+    <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Place</h4>
 </div>
 
-<div class="row">
-    <div class="col-md-4 order-md-2 mb-4">
-        <div class="w-100 text-center">
-            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Map</span>
-            </h4>
-            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Photos</span>
-            </h4>
-        </div>
-    </div>
-    <div class="col-md-8 order-md-1">
-        <h4 class="mb-3">Details</h4>
-        <form action="." method="post">{% csrf_token %}
-            {% bootstrap_form form %}
+<div id="edit-detail-container" class="row">
+    <div class="col-md-12 order-md-1">
+        <form action="." method="post" enctype="multipart/form-data" v-on:submit="onSubmit" onkeypress="return event.keyCode != 13;">
+            {% csrf_token %}
+            {% if form.title.errors or form.latlng.errors %}
+                <div class="text-danger">
+                    Search by address and select a location, or
+                    click the map to drop a marker.</div>
+            {% endif %}
+             <div>
+                <google-map readonly="false" showplaces="false"
+                    {% if object %}title="{{object.title}}" latitude="{{object.latitude}}" longitude="{{object.longitude}}"{% endif %} />
+            </div>
             <hr class="mb-4">
-            <button type="submit" class="btn btn-primary btn-block mb-4">Save</button>
+            <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
         </form>
     </div>
 </div>
