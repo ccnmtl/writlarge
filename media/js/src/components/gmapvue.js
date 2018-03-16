@@ -164,6 +164,20 @@ var GoogleMapVue = {
         });
         this.map.mapTypes.set('styled_map', lightGrayStyle);
         this.map.setMapTypeId('styled_map');
+        this.map.data.loadGeoJson(
+            WritLarge.staticUrl + 'data/map.geojson');
+
+        this.map.data.setStyle(function(feature) {
+            var color = 'gray';
+            if (feature.getProperty('isColorful')) {
+                color = feature.getProperty('color');
+            }
+            return ({
+                fillOpacity: 0.0,
+                strokeColor: color,
+                strokeWeight: .5
+            });
+        });
 
         if (!this.isReadOnly()) {
             this.map.addListener('click', (ev) => {
