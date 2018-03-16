@@ -116,6 +116,13 @@ var GoogleMapVue = {
         },
         changeOverlay: function(event) {
             const id = jQuery(event.currentTarget).data('id');
+            if (this.map.overlayMapTypes.getLength() > 0) {
+                this.map.overlayMapTypes.pop();
+            }
+            if (id === 'present') {
+                return;
+            }
+
             var overlay = new google.maps.ImageMapType({
                 getTileUrl: function(coord, zoom) {
                     return 'http://maps.nypl.org/warper/layers/tile/' + id
@@ -127,9 +134,6 @@ var GoogleMapVue = {
                 minZoom: 0,
                 name: 'NYPL Overlay'
             });
-            if (this.map.overlayMapTypes.getLength() > 0) {
-                this.map.overlayMapTypes.pop();
-            }
             this.map.overlayMapTypes.insertAt(0, overlay);
         }
     },
