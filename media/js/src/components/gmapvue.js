@@ -14,7 +14,8 @@ var GoogleMapVue = {
             newPin: null,
             newTitle: '',
             newType: '',
-            selectedPlace: null
+            selectedPlace: null,
+            year: 'Present'
         };
     },
     computed: {
@@ -130,7 +131,7 @@ var GoogleMapVue = {
             if (this.map.overlayMapTypes.getLength() > 0) {
                 this.map.overlayMapTypes.pop();
             }
-            if (id === 'present') {
+            if (id === 'Present') {
                 return;
             }
 
@@ -146,6 +147,7 @@ var GoogleMapVue = {
                 name: 'NYPL Overlay'
             });
             this.map.overlayMapTypes.insertAt(0, overlay);
+            this.year = jQuery(event.currentTarget).html();
         }
     },
     created: function() {
