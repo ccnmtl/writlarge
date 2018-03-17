@@ -194,6 +194,9 @@ var GoogleMapVue = {
             this.map.addListener('click', (ev) => {
                 this.dropPin(ev);
             });
+            this.map.data.addListener('click', (ev) => {
+                this.dropPin(ev);
+            });
         }
 
         if (this.latitude && this.longitude) {
