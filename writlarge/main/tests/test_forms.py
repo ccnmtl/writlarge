@@ -1,9 +1,9 @@
 from django.test.testcases import TestCase
 
 from writlarge.main.forms import (
-    ExtendedDateForm, LearningSiteForm, DigitalObjectForm)
+    ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.models import ExtendedDate
-from writlarge.main.tests.factories import LearningSiteFactory
+from writlarge.main.tests.factories import LearningSiteFactory, PlaceFactory
 
 
 class ExtendedDateFormTest(TestCase):
@@ -278,3 +278,52 @@ class TestDigitalObjectForm(TestCase):
 
         form.clean()
         self.assertEquals(len(form.errors), 0)
+
+
+class TestPlaceForm(TestCase):
+    def test_clean_fields(self):
+        data = {
+            'start_date-is_range': False,
+            'start_date-millenium1': '2', 'start_date-century1': '0',
+            'start_date-decade1': '1', 'start_date-year1': '0',
+            'start_date-month1': '', 'start_date-day1': '',
+            'start_date-approximate1': True, 'start_date-uncertain1': True,
+            'end_date-is_range': False,
+            'end_date-millenium1': '3', 'end_date-century1': '0',
+            'end_date-decade1': '1', 'end_date-year1': '0',
+            'end_date-month1': '', 'end_date-day1': '',
+            'end_date-approximate1': True, 'end_date-uncertain1': True,
+        }
+        form = PlaceForm(data=data)
+        self.assertFalse(form.is_valid())
+
+        self.assertTrue('end_date' in form.errors)
+        self.assertFalse('start_ate' in form.errors)
+
+        self.assertTrue(
+            'Please specify a valid date' in form.errors['end_date'])
+        self.assertTrue('millenium1' in form.errors['end_date'])
+
+    def test_save(self):
+        place = PlaceFactory(end_date=None)
+        data = {
+            'title': 'Foo',
+            'latlng': 'SRID=4326;POINT(1 1)',
+            'start_date-is_range': False,
+            'start_date-millenium1': '2', 'start_date-century1': '0',
+            'start_date-decade1': '0', 'start_date-year1': '8',
+            'start_date-month1': '', 'start_date-day1': '',
+            'start_date-approximate1': True, 'start_date-uncertain1': True,
+            'end_date-is_range': False,
+            'end_date-millenium1': '2', 'end_date-century1': '0',
+            'end_date-decade1': '1', 'end_date-year1': '1',
+            'end_date-month1': '', 'end_date-day1': '',
+            'end_date-approximate1': False, 'end_date-uncertain1': False,
+        }
+        form = PlaceForm(data, instance=place)
+        self.assertTrue(form.is_valid())
+        form.save()
+
+        # make sure this was all saved
+        self.assertEquals(place.start_date.edtf_format, '2008?~')
+        self.assertEquals(place.end_date.edtf_format, '2011')

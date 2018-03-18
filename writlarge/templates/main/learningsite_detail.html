@@ -80,7 +80,20 @@
                             </div>
                         </div>
                         {% endif %}
-                        <div class="row no-gutters">{{place.title}}</div>
+                        <div class="row no-gutters text-left">
+                            <div class="col">
+                                <div>{{place.title}}</div>
+                                <div class="small text-muted">
+                                {% with start_date=place.start_date end_date=place.end_date %}
+                                {% if start_date %}
+                                    {{start_date}} - {% if not end_date or end_date.is_unknown %}present{% else %}{{end_date}}{% endif %}
+                                {% else %}{% if end_date %}
+                                    ? - {{end_date}}
+                                {% endif %}{% endif %}
+                                {% endwith %}
+                                </div>
+                            </div>
+                        </div>
                      </li>
                 {% endfor %}
                 </ul>

@@ -82,6 +82,9 @@ class ExtendedDate(models.Model):
         else:
             return lower.format()
 
+    def is_unknown(self):
+        return self.edtf_format == 'unknown'
+
     def match_string(self, date_str):
         return self.edtf_format == str(text_to_edtf(date_str))
 
@@ -210,10 +213,13 @@ class Place(models.Model):
     title = models.TextField()
     latlng = PointField()
 
-    digital_object = models.ManyToManyField(
-        DigitalObject, blank=True)
+    start_date = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='place_start_date')
 
-    notes = models.TextField(null=True, blank=True)
+    end_date = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='place_end_date')
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

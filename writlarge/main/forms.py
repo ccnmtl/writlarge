@@ -237,8 +237,33 @@ class PlaceForm(forms.ModelForm):
 
     class Meta:
         model = Place
-        fields = ['title', 'latlng']
+        fields = ['title', 'latlng', 'start_date', 'end_date']
         widgets = {
             'title': HiddenInput,
-            'latlng': HiddenInput
+            'latlng': HiddenInput,
+            'start_date': HiddenInput,
+            'end_date': HiddenInput
         }
+
+    def clean(self):
+        cleaned_data = forms.ModelForm.clean(self)
+
+        self.form_start = ExtendedDateForm(
+            filter_fields(self.data, 'start_date-'))
+        self.form_end = ExtendedDateForm(
+            filter_fields(self.data, 'end_date-'))
+
+        if not self.form_start.is_valid():
+            self._errors['start_date'] = \
+                self.form_start.get_error_messages()
+        if not self.form_end.is_valid():
+            self._errors['end_date'] = \
+                self.form_end.get_error_messages()
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, commit=commit)
+        self.form_start.create_or_update(instance, 'start_date')
+        self.form_end.create_or_update(instance, 'end_date')
+        return instance
