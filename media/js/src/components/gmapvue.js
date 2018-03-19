@@ -16,6 +16,7 @@ var GoogleMapVue = {
             newType: '',
             selectedPlace: null,
             year: 'Present'
+            initial: true
         };
     },
     computed: {
@@ -196,6 +197,9 @@ var GoogleMapVue = {
             this.map.addListener('click', (ev) => {
                 this.dropPin(ev);
             });
+            this.map.data.addListener('click', (ev) => {
+                this.dropPin(ev);
+            });
         }
 
         if (this.latitude && this.longitude) {
@@ -224,10 +228,11 @@ var GoogleMapVue = {
                     this.clearNewPin();
                     this.selectedPlace = site;
                 });
-                if (!this.newPin) {
+                if (this.initial) {
                     this.map.fitBounds(this.bounds.extend(position));
                 }
             }
         });
+        this.initial = false;
     }
 };
