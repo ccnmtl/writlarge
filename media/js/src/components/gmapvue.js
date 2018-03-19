@@ -14,7 +14,8 @@ var GoogleMapVue = {
             newPin: null,
             newTitle: '',
             newType: '',
-            selectedPlace: null
+            selectedPlace: null,
+            initial: true
         };
     },
     computed: {
@@ -225,10 +226,11 @@ var GoogleMapVue = {
                     this.clearNewPin();
                     this.selectedPlace = site;
                 });
-                if (!this.newPin) {
+                if (this.initial) {
                     this.map.fitBounds(this.bounds.extend(position));
                 }
             }
         });
+        this.initial = false;
     }
 };
