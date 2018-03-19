@@ -5,6 +5,7 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "main/client/pick_location_template.html" %}
+    {% include "main/client/edtf_template.html" %}
 {% endblock %}
 
 {% block js %}
@@ -41,10 +42,36 @@
                     Search by address and select a location, or
                     click the map to drop a marker.</div>
             {% endif %}
-             <div>
+             <div class="mb-4">
+                <label>Location</label>
                 <google-map readonly="false" showplaces="false"
                     {% if object %}title="{{object.title}}" latitude="{{object.latitude}}" longitude="{{object.longitude}}"{% endif %} />
             </div>
+
+            {% bootstrap_field form.start_date %}
+            <div class="form-group">
+                <label for="id_start_date">Start</label>
+                <edtf id="edtf-start-date" name="start_date"
+                    {% for key, value in object.star_date.to_dict.items %}
+                        {% if value %}
+                            initial-{{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.start_date.errors %}initial-errors="1"{% endif %} />
+            </div>
+
+            {% bootstrap_field form.end_date %}
+            <div class="form-group">
+                <label for="id_end_date">End Date</label>
+                <edtf id="edtf-end-date" name="end_date"
+                    {% for key, value in object.end_date.to_dict.items %}
+                        {% if value %}
+                            initial-{{key}}="{{value}}"
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.end_date.errors %}initial-errors="1"{% endif %}/>
+            </div>
+
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>

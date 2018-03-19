@@ -64,6 +64,8 @@ class PlaceFactory(factory.DjangoModelFactory):
 
     latlng = FuzzyPoint()
     title = 'Cracow, Poland'
+    start_date = factory.SubFactory(ExtendedDateFactory)
+    end_date = factory.SubFactory(ExtendedDateFactory)
 
 
 class LearningSiteFactory(factory.DjangoModelFactory):
