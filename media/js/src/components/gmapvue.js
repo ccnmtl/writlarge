@@ -15,7 +15,7 @@ var GoogleMapVue = {
             newTitle: '',
             newType: '',
             selectedPlace: null,
-            year: 'Present'
+            year: 'Present',
             initial: true
         };
     },
