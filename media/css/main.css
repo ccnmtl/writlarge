@@ -1,7 +1,15 @@
+* {font-family: "futura-pt",sans-serif;} 
+
+h1.display-1, a.navbar-brand {font-weight: 700;}
+nav a {font-weight: 500;}
+p.lead {font-family: "adobe-garamond-pro",serif;}
+
+
 html {
     position: relative;
     height: 100%;
 }
+
 
 main {
 }
