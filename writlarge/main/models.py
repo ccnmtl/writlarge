@@ -2,9 +2,11 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
+from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from edtf import text_to_edtf
 from taggit.managers import TaggableManager
+
 from writlarge.main.utils import ExtendedDateWrapper
 
 
@@ -264,6 +266,9 @@ class LearningSite(models.Model):
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_defunct')
 
+    children = models.ManyToManyField(
+        'self', blank=True, related_name='children')
+
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
 
@@ -296,6 +301,25 @@ class LearningSite(models.Model):
 
     def empty(self):
         return self.category.count() < 1
+
+    def ancestors(self):
+        return LearningSite.objects.filter(children=self)
+
+    def relationships(self):
+        return LearningSiteRelationship.objects.filter(
+            Q(site_one=self) | Q(site_two=self))
+
+    def has_relationships(self):
+        return (self.children.all().exists() or
+                self.relationships().exists() or
+                self.ancestors().exists())
+
+
+class LearningSiteRelationship(models.Model):
+    site_one = models.ForeignKey(
+        LearningSite, related_name='site_one', on_delete=models.CASCADE)
+    site_two = models.ForeignKey(
+        LearningSite, related_name='site_two', on_delete=models.CASCADE)
 
 
 class ArchivalRepository(models.Model):

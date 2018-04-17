@@ -1,7 +1,9 @@
 from django.test import TestCase
 
-from writlarge.main.models import Place, ExtendedDate
-from writlarge.main.tests.factories import ExtendedDateFactory
+from writlarge.main.models import Place, ExtendedDate, LearningSite
+from writlarge.main.tests.factories import (
+    ExtendedDateFactory, LearningSiteFactory,
+    LearningSiteRelationshipFactory)
 
 
 class ExtendedDateTest(TestCase):
@@ -140,3 +142,35 @@ class PlaceTest(TestCase):
         self.assertEquals(place.__str__(), '')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
+
+
+class LearningSiteTest(TestCase):
+
+    def test_parent_child_relationships(self):
+        parent = LearningSiteFactory()
+        child = LearningSiteFactory()
+
+        parent.children.add(child)
+
+        qs = child.ancestors()
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs[0], parent)
+        self.assertTrue(parent.has_relationships())
+        self.assertTrue(child.has_relationships())
+
+    def test_empty_relationships(self):
+        site = LearningSiteFactory()
+        self.assertFalse(site.has_relationships())
+
+    def test_relationships(self):
+        r = LearningSiteRelationshipFactory()
+
+        self.assertTrue(r.site_one.has_relationships())
+        self.assertTrue(r.site_two.has_relationships())
+
+    def test_empty(self):
+        site = LearningSiteFactory()
+        self.assertFalse(site.empty())
+
+        site = LearningSite.objects.create(title='Foo')
+        self.assertTrue(site.empty())
