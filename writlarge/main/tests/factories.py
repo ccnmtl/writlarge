@@ -6,8 +6,8 @@ import factory
 from factory.fuzzy import BaseFuzzyAttribute
 
 from writlarge.main.models import (
-    LearningSiteCategory, LearningSite, ExtendedDate,
-    ArchivalRepository, Place, ArchivalCollection, Footnote)
+    LearningSiteCategory, LearningSite, LearningSiteRelationship,
+    ExtendedDate, ArchivalRepository, Place, ArchivalCollection, Footnote)
 
 
 class FuzzyPoint(BaseFuzzyAttribute):
@@ -110,3 +110,11 @@ class FootnoteFactory(factory.DjangoModelFactory):
         model = Footnote
 
     note = factory.Sequence(lambda n: "footnote%03d" % n)
+
+
+class LearningSiteRelationshipFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = LearningSiteRelationship
+
+    site_one = factory.SubFactory(LearningSiteFactory)
+    site_two = factory.SubFactory(LearningSiteFactory)
