@@ -151,6 +151,15 @@
                 </dd>
                 {% endif %}
 
+                {% if object.corporate_body %}
+                <dt class="col-sm-3">
+                    Corporate Body
+                </dt>
+                <dd class="col-sm-8">
+                    {{object.corporate_body}}
+                </dd>
+                {% endif %}
+
                 {% if object.tags.count > 0 %}
                 <dt class="col-sm-3">
                     Tags
