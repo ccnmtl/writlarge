@@ -273,6 +273,7 @@ class LearningSite(models.Model):
     tags = TaggableManager(blank=True)
 
     founder = models.TextField(null=True, blank=True)
+    corporate_body = models.TextField(null=True, blank=True)
 
     footnotes = models.ManyToManyField(Footnote, blank=True)
 

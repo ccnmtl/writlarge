@@ -122,7 +122,7 @@ class LearningSiteForm(forms.ModelForm):
         model = LearningSite
         fields = ['title', 'description',
                   'category', 'instructional_level', 'target_audience',
-                  'established', 'defunct', 'founder',
+                  'established', 'defunct', 'founder', 'corporate_body',
                   'tags', 'notes']
         widgets = {
             'title': TextInput,
@@ -131,7 +131,8 @@ class LearningSiteForm(forms.ModelForm):
             'target_audience': CheckboxSelectMultiple,
             'established': HiddenInput,
             'defunct': HiddenInput,
-            'founder': TextInput
+            'founder': TextInput,
+            'corporate_body': TextInput
         }
 
     def clean(self):
