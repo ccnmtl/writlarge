@@ -313,7 +313,7 @@ class ConnectionCreateView(LoggedInEditorMixin,
         return frm
 
     def form_valid(self, form):
-        if form.cleaned_data['connection_type'] == 'antecdent':
+        if form.cleaned_data['connection_type'] == 'antecedent':
             form.cleaned_data['site'].children.add(self.parent)
         elif form.cleaned_data['connection_type'] == 'descendant':
             self.parent.children.add(form.cleaned_data['site'])

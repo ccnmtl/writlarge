@@ -571,11 +571,11 @@ class ConnectionCreateViewTest(TestCase):
         self.assertEquals(frm.fields['site'].queryset.count(), 1)
         self.assertEquals(frm.fields['site'].queryset[0], self.site)
 
-    def test_form_valid_antecdents(self):
+    def test_form_valid_antecedents(self):
         site = LearningSiteFactory()
         frm = ConnectionForm()
         frm.cleaned_data = {
-            'connection_type': 'antecdent',
+            'connection_type': 'antecedent',
             'site': site
         }
         view = ConnectionCreateView()

@@ -272,9 +272,9 @@ class PlaceForm(forms.ModelForm):
 class ConnectionForm(forms.Form):
     CONNECTION_TYPES = [
         ('', '---------'),
-        ('antecdent', 'Antecdent of this site'),
+        ('antecedent', 'Antecedent of this site'),
         ('associate', 'Associated with this site'),
-        ('descendent', 'Descendant of this site')
+        ('descendant', 'Descendant of this site')
     ]
     site = forms.ModelChoiceField(
         label="Choose a Site of Teaching & Learning",
