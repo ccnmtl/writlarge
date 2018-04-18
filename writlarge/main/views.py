@@ -6,19 +6,20 @@ from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView, CreateView, DeleteView
+from django.views.generic.edit import (
+    UpdateView, CreateView, DeleteView, FormView)
 from django.views.generic.list import ListView
 from rest_framework import viewsets
 
 from writlarge.main.forms import (
-    ArchivalCollectionForm,
+    ArchivalCollectionForm, ConnectionForm,
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
     LoggedInEditorMixin, JSONResponseMixin,
     SingleObjectCreatorMixin)
 from writlarge.main.models import (
-    LearningSite, ArchivalRepository, Place,
+    LearningSite, LearningSiteRelationship, ArchivalRepository, Place,
     DigitalObject, ArchivalCollection, Footnote)
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
@@ -295,6 +296,35 @@ class DisplayDateView(JSONResponseMixin, View):
                 'success': True,
                 'display': form.get_extended_date().__str__()
             })
+
+
+class ConnectionCreateView(LoggedInEditorMixin,
+                           LearningSiteParamMixin, FormView):
+
+    template_name = 'main/connection.html'
+    form_class = ConnectionForm
+
+    def get_form(self, form_class=None):
+        frm = FormView.get_form(self, form_class=form_class)
+
+        ids = self.parent.connections()
+        frm.fields['site'].queryset = \
+            LearningSite.objects.exclude(id__in=ids)
+        return frm
+
+    def form_valid(self, form):
+        if form.cleaned_data['connection_type'] == 'antecedent':
+            form.cleaned_data['site'].children.add(self.parent)
+        elif form.cleaned_data['connection_type'] == 'descendant':
+            self.parent.children.add(form.cleaned_data['site'])
+        elif form.cleaned_data['connection_type'] == 'associate':
+            LearningSiteRelationship.objects.create(
+                site_one=self.parent,
+                site_two=form.cleaned_data['site'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('site-detail-view', args=[self.parent.id])
 
 
 """

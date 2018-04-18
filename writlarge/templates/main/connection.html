@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Connection{% endblock %}
+
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">{% if object %}Edit{% else %}Add{% endif %} Connection</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="pb-2 text-center">
+    <h2>
+        {{parent.title}}
+    </h2>
+    <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Connection</h4>
+</div>
+
+<div id="edit-detail-container" class="row">
+    <div class="col-md-12 order-md-1">
+        <form action="." method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+
+            <hr class="mb-4">
+            <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

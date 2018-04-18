@@ -267,3 +267,18 @@ class PlaceForm(forms.ModelForm):
         self.form_start.create_or_update(instance, 'start_date')
         self.form_end.create_or_update(instance, 'end_date')
         return instance
+
+
+class ConnectionForm(forms.Form):
+    CONNECTION_TYPES = [
+        ('', '---------'),
+        ('antecedent', 'Antecedent of this site'),
+        ('associate', 'Associated with this site'),
+        ('descendant', 'Descendant of this site')
+    ]
+    site = forms.ModelChoiceField(
+        label="Choose a Site of Teaching & Learning",
+        queryset=LearningSite.objects.all())
+    connection_type = forms.ChoiceField(
+        label='How is this site connected?',
+        choices=CONNECTION_TYPES)
