@@ -1,8 +1,9 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
-from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from edtf import text_to_edtf
 from taggit.managers import TaggableManager
@@ -266,8 +267,7 @@ class LearningSite(models.Model):
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_defunct')
 
-    children = models.ManyToManyField(
-        'self', blank=True, related_name='children')
+    children = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
@@ -302,17 +302,45 @@ class LearningSite(models.Model):
     def empty(self):
         return self.category.count() < 1
 
-    def ancestors(self):
-        return LearningSite.objects.filter(children=self)
+    def sort_date(self):
+        if self.established:
+            (lower, upper) = self.established.wrap()
+            if lower and not lower.is_empty():
+                return lower.start_date()
 
-    def relationships(self):
-        return LearningSiteRelationship.objects.filter(
-            Q(site_one=self) | Q(site_two=self))
+        return date.min
 
-    def has_relationships(self):
+    def descendants(self):
+        lst = list(self.children.all())
+        lst.sort(key=lambda obj: obj.sort_date())
+        return lst
+
+    def antecedents(self):
+        lst = list(LearningSite.objects.filter(children=self))
+        lst.sort(key=lambda obj: obj.sort_date())
+        return lst
+
+    def associates(self):
+        lst = LearningSiteRelationship.objects.filter(
+            site_one=self).values_list('site_two__id', 'site_two__title')
+        lst2 = LearningSiteRelationship.objects.filter(
+            site_two=self).values_list('site_one__id', 'site_one__title')
+        return lst.union(lst2)
+
+    def has_connections(self):
         return (self.children.all().exists() or
-                self.relationships().exists() or
-                self.ancestors().exists())
+                self.associates().exists() or
+                LearningSite.objects.filter(children=self).exists())
+
+    def connections(self):
+        a = list(self.children.values_list('id', flat=True))
+
+        qs = self.associates()
+        a.extend([r[0] for r in qs])
+
+        a.extend([site.id for site in self.antecedents()])
+        a.append(self.id)
+        return a
 
 
 class LearningSiteRelationship(models.Model):

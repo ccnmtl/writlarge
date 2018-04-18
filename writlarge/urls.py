@@ -109,6 +109,10 @@ urlpatterns = [
         views.PlaceDeleteView.as_view(),
         name='place-delete-view'),
 
+    url(r'^add/connection/(?P<parent>\d+)/$',
+        views.ConnectionCreateView.as_view(),
+        name='connection-add-view'),
+
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
         name='site-gallery-view'),

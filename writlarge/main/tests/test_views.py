@@ -5,11 +5,13 @@ from django.test.client import Client, RequestFactory
 from django.test.utils import override_settings
 from django.urls.base import reverse
 
+from writlarge.main.forms import ConnectionForm
 from writlarge.main.models import ArchivalCollection, LearningSite
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory, FootnoteFactory)
-from writlarge.main.views import django_settings, DigitalObjectCreateView
+from writlarge.main.views import (
+    django_settings, DigitalObjectCreateView, ConnectionCreateView)
 
 
 class BasicTest(TestCase):
@@ -551,3 +553,63 @@ class SearchViewTest(TestCase):
             self.site1 in response.context['page_obj'].object_list)
         self.assertTrue(
             self.site2 in response.context['page_obj'].object_list)
+
+
+class ConnectionCreateViewTest(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.parent = LearningSiteFactory()
+
+    def test_get_form(self):
+        view = ConnectionCreateView()
+        view.parent = self.parent
+        view.request = RequestFactory()
+        view.request.method = 'GET'
+
+        frm = view.get_form()
+        self.assertEquals(frm.fields['site'].queryset.count(), 1)
+        self.assertEquals(frm.fields['site'].queryset[0], self.site)
+
+    def test_form_valid_antecdents(self):
+        site = LearningSiteFactory()
+        frm = ConnectionForm()
+        frm.cleaned_data = {
+            'connection_type': 'antecdent',
+            'site': site
+        }
+        view = ConnectionCreateView()
+        view.parent = self.parent
+        view.form_valid(frm)
+
+        self.assertTrue(len(self.parent.antecedents()), 1)
+        self.assertEquals(self.parent.antecedents()[0], site)
+
+    def test_form_valid_associates(self):
+        site = LearningSiteFactory()
+        frm = ConnectionForm()
+        frm.cleaned_data = {
+            'connection_type': 'associate',
+            'site': site
+        }
+        view = ConnectionCreateView()
+        view.parent = self.parent
+        view.form_valid(frm)
+
+        self.assertTrue(len(self.parent.associates()), 1)
+        self.assertEquals(self.parent.associates()[0],
+                          (site.id, site.title))
+
+    def test_form_valid_descendants(self):
+        site = LearningSiteFactory()
+        frm = ConnectionForm()
+        frm.cleaned_data = {
+            'connection_type': 'descendant',
+            'site': site
+        }
+        view = ConnectionCreateView()
+        view.parent = self.parent
+        view.form_valid(frm)
+
+        self.assertTrue(len(self.parent.descendants()), 1)
+        self.assertEquals(self.parent.descendants()[0], site)

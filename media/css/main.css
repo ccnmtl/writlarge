@@ -1,8 +1,7 @@
-* {font-family: "futura-pt",sans-serif;} 
+* {font-family: "futura-pt",sans-serif;}
 
 h1.display-1, a.navbar-brand {font-weight: 700;}
 nav a {font-weight: 500;}
-p.lead {font-family: "adobe-garamond-pro",serif;}
 
 
 html {
@@ -40,6 +39,9 @@ h4 {
     width: 100vw;
     height: 90vh;
 }
+
+.cover-page p.lead {font-family: "adobe-garamond-pro",serif;}
+
 
 .btn-cover,
 .btn-cover:hover,
