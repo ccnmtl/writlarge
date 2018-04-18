@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Edit Details{% endblock %}
 
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
@@ -38,9 +37,12 @@
     <div class="col-md-12 order-md-1">
 
         <form action="." method="post" v-on:submit="onSubmit">{% csrf_token %}
-            {% bootstrap_field form.title %}
-            {% bootstrap_field form.description %}
+            <div class="form-group">
+                <label for="id_title">Title <small class="ml-1 text-danger">*required</small></label>
+                <input type="text" name="title" value="{% if form.data.title %}{{form.data.title}}{% else %}{{form.initial.title}}{% endif %}" placeholder="Title" title="" required="required" id="id_title" class="form-control">
+            </div>
 
+            {% bootstrap_field form.description %}
 
             {% bootstrap_field form.established %}
             <div class="form-group">
