@@ -327,6 +327,31 @@ class ConnectionCreateView(LoggedInEditorMixin,
         return reverse('site-detail-view', args=[self.parent.id])
 
 
+class ConnectionDeleteView(LoggedInEditorMixin, LearningSiteParamMixin,
+                           DeleteView):
+
+    model = LearningSite
+    template_name = 'main/connection_confirm_delete.html'
+
+    def delete(self, request, *args, **kwargs):
+        success_url = reverse('site-detail-view', args=[self.parent.id])
+
+        connection_type = kwargs.pop('type')
+        site = self.get_object()
+
+        if connection_type == 'antecedent':
+            site.children.remove(self.parent)
+        elif connection_type == 'descendant':
+            self.parent.children.remove(site)
+        elif connection_type == 'associate':
+            lsr = LearningSiteRelationship.objects.filter(
+                Q(site_one=self.parent, site_two=site) |
+                Q(site_one=site, site_two=self.parent))
+            lsr.delete()
+
+        return HttpResponseRedirect(success_url)
+
+
 """
 Rest API endpoints
 """

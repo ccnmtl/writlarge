@@ -192,6 +192,12 @@
                 <ul class="list-group">
                 {% for site in object.antecedents %}
                     <li class="list-group-item">
+                        {% if is_editor %}
+                        <a class="float-right text-secondary"
+                            href="{% url 'connection-delete-view' object.id 'antecedent' site.id %}">
+                            <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
+                        </a>
+                        {% endif %}
                         <i class="fa fa-long-arrow-up text-secondary" aria-hidden="true"></i>
                         <a href="{% url 'site-detail-view' site.id %}">{{site}}</a>
                     </li>
@@ -199,19 +205,31 @@
 
                 {% for site in object.associates %}
                     <li class="list-group-item">
+                        {% if is_editor %}
+                        <a class="float-right text-secondary"
+                            href="{% url 'connection-delete-view' object.id 'associate' site.0 %}">
+                            <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
+                        </a>
+                        {% endif %}
                         <i class="fa fa-arrows-h text-secondary" aria-hidden="true"></i> <a href="{% url 'site-detail-view' site.0 %}">{{site.1}}</a>
                     </li>
                 {% endfor %}
 
                 {% for site in object.descendants %}
                     <li class="list-group-item">
+                        {% if is_editor %}
+                        <a class="float-right text-secondary"
+                            href="{% url 'connection-delete-view' object.id 'descendant' site.id %}">
+                            <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
+                        </a>
+                        {% endif %}
                         <i class="fa fa-long-arrow-down text-secondary" aria-hidden="true"></i> <a href="{% url 'site-detail-view' site.id %}">{{site}}</a>
                     </li>
                 {% endfor %}
                 </ul>
                 {% if is_editor %}
                     <a href="{% url 'connection-add-view' object.id %}" class="btn btn-light btn-block mt-2">
-                        <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Connection
+                        <i class="fa fa-chain text-secondary form-check-input" aria-hidden="true"></i> Add Connection
                     </a>
                 {% endif %}
             </div>
