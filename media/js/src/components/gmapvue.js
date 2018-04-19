@@ -97,16 +97,6 @@ var GoogleMapVue = {
                 if (responses && responses.length > 0) {
                     this.address = responses[0].formatted_address;
                     const position = responses[0].geometry.location;
-                    if (!this.isReadOnly()) {
-                        if (this.newPin) {
-                            this.newPin.setMap(null);
-                        }
-
-                        this.newPin = new google.maps.Marker({
-                            position: position,
-                            map: this.map
-                        });
-                    }
 
                     // zoom in on the location, but not too far
                     this.bounds = new google.maps.LatLngBounds();
