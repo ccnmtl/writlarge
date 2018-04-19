@@ -147,6 +147,7 @@ class DigitalObject(models.Model):
 
 class LearningSiteCategory(models.Model):
     name = models.TextField(unique=True)
+    group = models.TextField(default='other')
 
     class Meta:
         ordering = ['name']

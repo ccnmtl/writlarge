@@ -24,7 +24,7 @@ class LearningSiteCategorySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = LearningSiteCategory
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'group')
 
 
 class PlaceSerializer(serializers.HyperlinkedModelSerializer):
