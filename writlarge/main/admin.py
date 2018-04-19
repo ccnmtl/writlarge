@@ -48,6 +48,11 @@ class PlaceAdmin(admin.ModelAdmin):
     }
 
 
+@admin.register(LearningSiteCategory)
+class LearningSiteCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "group")
+
+
 @admin.register(LearningSite)
 class LearningSiteAdmin(admin.ModelAdmin):
     list_display = ("title", "established", "defunct",
@@ -68,6 +73,5 @@ class ArchivalCollectionAdmin(admin.ModelAdmin):
 admin.site.register(Audience)
 admin.site.register(InstructionalLevel)
 admin.site.register(DigitalObject)
-admin.site.register(LearningSiteCategory)
 admin.site.register(ArchivalRecordFormat)
 admin.site.register(ExtendedDate)
