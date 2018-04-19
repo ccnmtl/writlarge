@@ -9,7 +9,8 @@ from writlarge.main.forms import ConnectionForm
 from writlarge.main.models import ArchivalCollection, LearningSite
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
-    GroupFactory, ArchivalCollectionFactory, FootnoteFactory)
+    GroupFactory, ArchivalCollectionFactory, FootnoteFactory,
+    LearningSiteRelationshipFactory)
 from writlarge.main.views import (
     django_settings, DigitalObjectCreateView, ConnectionCreateView)
 
@@ -613,3 +614,46 @@ class ConnectionCreateViewTest(TestCase):
 
         self.assertTrue(len(self.parent.descendants()), 1)
         self.assertEquals(self.parent.descendants()[0], site)
+
+
+class ConnectionDeleteViewTest(TestCase):
+
+    def setUp(self):
+        self.site = LearningSiteFactory()
+        self.parent = LearningSiteFactory()
+
+        editor = UserFactory()
+        editor.groups.add(GroupFactory(name='Editor'))
+        self.client.login(username=editor.username, password='test')
+
+    def test_remove_antecdent(self):
+        self.site.children.add(self.parent)
+        url = reverse('connection-delete-view', kwargs={
+            'parent': self.parent.pk,
+            'type': 'antecedent',
+            'pk': self.site.pk})
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 302)
+        self.assertTrue(self.site not in self.parent.antecedents())
+
+    def test_remove_descendant(self):
+        self.parent.children.add(self.site)
+        url = reverse('connection-delete-view', kwargs={
+            'parent': self.parent.pk,
+            'type': 'descendant',
+            'pk': self.site.pk})
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 302)
+        self.assertTrue(self.site not in self.parent.descendants())
+
+    def test_remove_associate(self):
+        LearningSiteRelationshipFactory(
+            site_one=self.parent, site_two=self.site)
+        self.parent.children.add(self.site)
+        url = reverse('connection-delete-view', kwargs={
+            'parent': self.parent.pk,
+            'type': 'associate',
+            'pk': self.site.pk})
+        response = self.client.post(url)
+        self.assertEquals(response.status_code, 302)
+        self.assertTrue(self.site not in self.parent.associates())

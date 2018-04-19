@@ -7,6 +7,7 @@ from django.contrib.auth.views import (
     password_change_done, password_reset, password_reset_done,
     password_reset_confirm,
     password_reset_complete)
+from django.urls.conf import path
 from django.views.generic import TemplateView
 from django.views.static import serve
 from rest_framework import routers
@@ -112,6 +113,9 @@ urlpatterns = [
     url(r'^add/connection/(?P<parent>\d+)/$',
         views.ConnectionCreateView.as_view(),
         name='connection-add-view'),
+    path(r'delete/connection/<int:parent>/<slug:type>/<int:pk>/',
+         views.ConnectionDeleteView.as_view(),
+         name='connection-delete-view'),
 
     url(r'^gallery/(?P<parent>\d+)/$',
         views.LearningSiteGalleryView.as_view(),
