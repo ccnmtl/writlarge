@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Remove Connection{% endblock %}
+
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">Remove Connection</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="pb-2 text-center">
+    <h2>
+        {{parent.title}}
+    </h2>
+    <h4 class="text-muted">Remove Connection</h4>
+</div>
+
+<div class="row mb-5 text-center">
+    <div class="col-md-12 order-md-1">
+        <form action="" method="post">{% csrf_token %}
+            <div class="mb-3">
+                <span>Are you sure you want to remove the connection between <strong>{{parent.title}}</strong> and <strong>{{object.title}}</strong>?</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mb-2">Remove</button>
+            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-gallery-view' parent.id %}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
