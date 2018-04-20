@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}{% if object %}Edit{% else %}Add{% endif %} Footnote{% endblock %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Reference{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
             <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
-            <li class="breadcrumb-item">{% if object %}Edit{% else %}Add{% endif %} Footnote</li>
+            <li class="breadcrumb-item">{% if object %}Edit{% else %}Add{% endif %} Reference</li>
         </ol>
     </nav>
 {% endblock %}
@@ -16,7 +16,7 @@
     <h2>
         {{parent.title}}
     </h2>
-    <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Footnote</h4>
+    <h4 class="text-muted">{% if object %}Edit{% else %}Add{% endif %} Reference</h4>
 </div>
 
 <div class="row">

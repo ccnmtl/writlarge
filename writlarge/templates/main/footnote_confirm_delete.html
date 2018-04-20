@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
-{% block title %}Delete Footnote{% endblock %}
+{% block title %}Delete Reference{% endblock %}
 
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
             <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
-            <li class="breadcrumb-item">Delete Footnote</li>
+            <li class="breadcrumb-item">Delete Reference</li>
         </ol>
     </nav>
 {% endblock %}
@@ -16,14 +16,14 @@
     <h2>
         {{parent.title}}
     </h2>
-    <h4 class="text-muted">Delete Footnote</h4>
+    <h4 class="text-muted">Delete Reference</h4>
 </div>
 
 <div class="row mb-5 text-center">
     <div class="col-md-12 order-md-1">
         <form action="" method="post">{% csrf_token %}
             <div class="mb-3">
-                <div>Are you sure you want to delete this footnote?</div>
+                <div>Are you sure you want to delete this reference?</div>
 
                 <div class="card my-3">
                   <div class="card-body">
