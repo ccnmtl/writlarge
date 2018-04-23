@@ -212,7 +212,7 @@ var GoogleMapVue = {
                 const position = new google.maps.LatLng(
                     site.place[0].latitude, site.place[0].longitude);
                 const icon = site.category.length > 0 ?
-                        site.category[0].group : 'other';
+                    site.category[0].group : 'other';
                 const marker = new google.maps.Marker({
                     position: position,
                     map: this.map,
