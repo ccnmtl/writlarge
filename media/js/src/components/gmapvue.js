@@ -48,7 +48,8 @@ var GoogleMapVue = {
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
-                map: this.map
+                map: this.map,
+                icon: WritLarge.staticUrl + 'png/pin-other.png'
             });
 
             this.reverseGeocode(this.newPin);
@@ -205,13 +206,17 @@ var GoogleMapVue = {
     },
     updated: function() {
         this.bounds = new google.maps.LatLngBounds();
+
         this.places.forEach((site) => {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
                     site.place[0].latitude, site.place[0].longitude);
+                const icon = site.category.length > 0 ?
+                    site.category[0].group : 'other';
                 const marker = new google.maps.Marker({
                     position: position,
-                    map: this.map
+                    map: this.map,
+                    icon: WritLarge.staticUrl + 'png/pin-' + icon + '.png'
                 });
                 site.marker = marker;
                 google.maps.event.addListener(marker, 'click', (ev) => {
@@ -223,6 +228,7 @@ var GoogleMapVue = {
                 }
             }
         });
+
         this.initial = false;
     }
 };
