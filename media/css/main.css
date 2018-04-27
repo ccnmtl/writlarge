@@ -4,9 +4,11 @@ h1.display-1, a.navbar-brand {font-weight: 700;}
 nav a {font-weight: 500;}
 
 
-html {
+html, body {
     position: relative;
     height: 100%;
+    width: 100%;
+    margin: 0;
 }
 
 
@@ -84,23 +86,32 @@ footer li+li {
 }
 
 /* Map View */
+.map-view footer {
+    display: none;
+}
+
+.map-space {
+    position: absolute;
+    top: 3.5rem;
+    bottom: 0;
+    width: 100%; 
+}
+
 .map-view .google-map {
     position: absolute;
-    width: 100%;
+    top: 0;
     left: 0;
-    height: 95vh;
+    bottom: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 100%; 
+    height: 100%; 
 }
 
 .map-view #map-container ul {
     display: none;
-}
-
-.map-view .new-pin {
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #ced4da;
-    border-top-width: 4px;
-    width: 350px;
 }
 
 .map-view .address-bar {
@@ -119,6 +130,31 @@ footer li+li {
     right: 85px;
 }
 
+/* .map-view .new-pin {
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-top-width: 4px;
+    width: 350px;
+} */
+
+.map-view .pin-place-detail {
+    position: absolute;
+    width: 90vw;
+    bottom: 0;
+    left: 5vw;
+    right: 5vw; 
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    z-index: 1050;
+}
 
 /* Detail View */
 #edit-detail-container .google-map,
@@ -288,4 +324,28 @@ input[type=number] {
     width: 50px;
     display: inline;
     text-align: right;
+}
+
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .map-view .pin-place-detail {
+        width: 22rem;
+        top: 4.5rem;
+        left: 0.625rem;
+        right: 0;
+        bottom: auto;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
 }
