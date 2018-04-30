@@ -342,6 +342,10 @@ class LearningSite(models.Model):
         a.append(self.id)
         return a
 
+    def group(self):
+        category = self.category.first()
+        return category.group if category else 'other'
+
 
 class LearningSiteRelationship(models.Model):
     site_one = models.ForeignKey(

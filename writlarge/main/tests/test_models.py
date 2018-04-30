@@ -209,3 +209,10 @@ class LearningSiteTest(TestCase):
         self.assertEquals(len(ids), 2)
         self.assertTrue(child.id in ids)
         self.assertTrue(parent.id in ids)
+
+    def test_group(self):
+        site = LearningSite.objects.create(title='test site')
+        self.assertEquals(site.group(), 'other')
+
+        site = LearningSiteFactory()
+        self.assertEquals(site.group(), 'school')

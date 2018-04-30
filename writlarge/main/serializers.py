@@ -80,21 +80,21 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
             family.append({
                 'id': site.id,
                 'title': site.title,
-                'group': site.category.first().group,
+                'group': site.group(),
                 'relationship': 'descendant'
             })
         for site in obj.antecedents():
             family.append({
                 'id': site.id,
                 'title': site.title,
-                'group': site.category.first().group,
+                'group': site.group(),
                 'relationship': 'antecedent'
             })
         for site in obj.associates():
             family.append({
                 'id': site.id,
                 'title': site.title,
-                'group': site.category.first().group,
+                'group': site.group(),
                 'relationship': 'associate'
             })
         return family
