@@ -5,6 +5,7 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "main/client/minimal_map_template.html" %}
+    {% include "main/client/family_network.html" %}
 {% endblock %}
 
 {% block js %}
@@ -36,7 +37,7 @@
         {% endif %}
     </div>
 
-    <div class="mb-5 text-center">
+    <div class="mb-3 text-center">
         {% for d in object.digital_object.all|slice:":5" %}
         <div class="site-thumbnails">
             <img src="{{d.get_url}}" alt="{{d.description}}" />
@@ -54,57 +55,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 order-md-2 mb-4">
-            <h4 class="mb-3 text-muted">Places</h4>
-            <div class="w-100 text-center">
-                <div id="map-container">
-                    <google-mini-map
-                        latitude="{{object.place.first.latitude}}"
-                        longitude="{{object.place.first.longitude}}" />
-                </div>
-                <ul class="list-group">
-                {% for place in object.place.all %}
-                    <li class="list-group-item">
-                        {% if is_editor %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% if forloop.counter > 1 %}
-                                <a class="float-right text-secondary ml-4"
-                                    href="{% url 'place-delete-view' object.id place.id %}">
-                                    <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
-                                </a>
-                                {% endif %}
-                                <a class="float-right text-secondary" href="{% url 'place-edit-view' object.id place.id %}">
-                                    <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
-                                </a>
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="row no-gutters text-left">
-                            <div class="col">
-                                <div>{{place.title}}</div>
-                                <div class="small text-muted">
-                                {% with start_date=place.start_date end_date=place.end_date %}
-                                {% if start_date %}
-                                    {{start_date}} - {% if not end_date or end_date.is_unknown %}present{% else %}{{end_date}}{% endif %}
-                                {% else %}{% if end_date %}
-                                    ? - {{end_date}}
-                                {% endif %}{% endif %}
-                                {% endwith %}
-                                </div>
-                            </div>
-                        </div>
-                     </li>
-                {% endfor %}
-                </ul>
-                {% if is_editor %}
-                <a href="{% url 'place-add-view' object.id %}" class="btn btn-light btn-block mt-2">
-                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Place
-                </a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="col-md-8 order-md-1">
+        <div class="col-md-8">
             <h4 class="mb-3 text-muted">Details</h4>
             <dl class="row">
                 <dt class="col-sm-3">
@@ -180,12 +131,70 @@
                     </dd>
                 {% endif %}
             </dl>
-            {% if is_editor %}
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="w-100 text-center">
+                <div id="map-container">
+                    <google-mini-map
+                        latitude="{{object.place.first.latitude}}"
+                        longitude="{{object.place.first.longitude}}" />
+                </div>
+                <ul class="list-group">
+                {% for place in object.place.all %}
+                    <li class="list-group-item">
+                        {% if is_editor %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if forloop.counter > 1 %}
+                                <a class="float-right text-secondary ml-4"
+                                    href="{% url 'place-delete-view' object.id place.id %}">
+                                    <small><i class="fa fa-trash" aria-hidden="true"></i> Delete</small>
+                                </a>
+                                {% endif %}
+                                <a class="float-right text-secondary" href="{% url 'place-edit-view' object.id place.id %}">
+                                    <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row no-gutters text-left">
+                            <div class="col">
+                                <div>{{place.title}}</div>
+                                <div class="small text-muted">
+                                {% with start_date=place.start_date end_date=place.end_date %}
+                                {% if start_date %}
+                                    {{start_date}} - {% if not end_date or end_date.is_unknown %}present{% else %}{{end_date}}{% endif %}
+                                {% else %}{% if end_date %}
+                                    ? - {{end_date}}
+                                {% endif %}{% endif %}
+                                {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                     </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 mb-4">
+                {% if is_editor %}
                 <a href="{% url 'site-update-view' object.id %}" class="btn btn-light btn-block mt-2">
                     <i class="fa fa-pencil text-secondary form-check-input" aria-hidden="true"></i> Edit Details
                 </a>
             {% endif %}
-
+        </div>
+        <div class="col-md-4 order-md-2 mb-4">
+                {% if is_editor %}
+                <a href="{% url 'place-add-view' object.id %}" class="btn btn-light btn-block mt-2">
+                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Place
+                </a>
+                {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             {% if object.has_connections or is_editor %}
             <h4 class="mb-3 mt-5 text-muted">Connections</h4>
             <div class="w-100 text-center">
