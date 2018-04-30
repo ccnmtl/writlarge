@@ -116,15 +116,37 @@ footer li+li {
 
 .map-view .address-bar {
     position: absolute;
-    z-index: 2000;
-    margin-left: 10px;
-    margin-top: 10px;
-    width: 350px;
+    top: 0.625rem;
+    left: 1vw;
+    height: 3.125rem;
+    width: 98vw;
+    padding: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    z-index: 1000;
+}
+
+.map-view .address-bar .input-group>.form-control {
+    border: none;
+}
+
+.map-view .address-bar .btn:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .map-view .overlay-picker {
     position: absolute;
-    z-index: 2000;
+    z-index: 1000;
     margin-top: 10px;
     width: 75px;
     right: 85px;
@@ -329,21 +351,49 @@ input[type=number] {
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
+    .map-view .address-bar {
+        left: 0.625rem;
+        width: 25rem;
+    }
+    .place-thumbnail {
+        float: right;
+        display: block;
+        width: 5.7rem;
+        height: 3rem;
+        background-color: #efefef;
+        overflow: hidden;
+    }
+    .place-thumbnail img {
+        width: 100%;
+        border: 1px solid #ddd;
+    }
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
     .map-view .pin-place-detail {
-        width: 22rem;
+        border-top: 1px solid #ddd;
+        width: 25rem;
         top: 4.5rem;
         left: 0.625rem;
         right: 0;
         bottom: auto;
     }
+    .place-thumbnail {
+        float: none;
+        width: 100%;
+        height: 10.5rem;
+        background-color: #efefef;
+        overflow: hidden;
+    }
+    .place-thumbnail img {
+        width: 100%;
+        border: 1px solid #ddd;
+    } 
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
