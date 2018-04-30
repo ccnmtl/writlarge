@@ -72,12 +72,39 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     digital_object = DigitalObjectSerializer(read_only=True, many=True)
     place = PlaceSerializer(many=True)
     tags = StringListField(read_only=True)
+    family = serializers.SerializerMethodField(read_only=True)
+
+    def get_family(self, obj):
+        family = []
+        for site in obj.descendants():
+            family.append({
+                'id': site.id,
+                'title': site.title,
+                'group': site.category.first().group,
+                'relationship': 'descendant'
+            })
+        for site in obj.antecedents():
+            family.append({
+                'id': site.id,
+                'title': site.title,
+                'group': site.category.first().group,
+                'relationship': 'antecedent'
+            })
+        for site in obj.associates():
+            family.append({
+                'id': site.id,
+                'title': site.title,
+                'group': site.category.first().group,
+                'relationship': 'associate'
+            })
+        return family
 
     class Meta:
         model = LearningSite
         fields = ('id', 'title', 'place', 'notes', 'category',
                   'digital_object', 'verified', 'verified_modified_at',
-                  'empty', 'tags', 'created_at', 'modified_at')
+                  'empty', 'tags', 'created_at', 'modified_at',
+                  'family')
 
     def create(self, validated_data):
         place_data = validated_data.pop('place')

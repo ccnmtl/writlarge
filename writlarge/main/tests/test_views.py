@@ -7,6 +7,7 @@ from django.urls.base import reverse
 
 from writlarge.main.forms import ConnectionForm
 from writlarge.main.models import ArchivalCollection, LearningSite
+from writlarge.main.serializers import LearningSiteSerializer
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory, FootnoteFactory,
@@ -124,6 +125,25 @@ class ApiViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
         self.site.refresh_from_db()
         self.assertEquals(self.site.title, 'Foo')
+
+    def test_family(self):
+        parent = LearningSiteFactory()
+        child = LearningSiteFactory()
+        sib = LearningSiteFactory()
+        sib2 = LearningSiteFactory()
+
+        parent.children.add(child)
+        LearningSiteRelationshipFactory(site_one=parent, site_two=sib)
+        LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
+
+        family = LearningSiteSerializer().get_family(parent)
+        self.assertEquals(len(family), 3)
+        self.assertEquals(family[0]['id'], child.id)
+        self.assertEquals(family[0]['relationship'], 'descendant')
+        self.assertEquals(family[1]['id'], sib.id)
+        self.assertEquals(family[1]['relationship'], 'associate')
+        self.assertEquals(family[2]['id'], sib2.id)
+        self.assertEquals(family[2]['relationship'], 'associate')
 
 
 class TestLearningSiteUpdateView(TestCase):
@@ -598,8 +618,7 @@ class ConnectionCreateViewTest(TestCase):
         view.form_valid(frm)
 
         self.assertTrue(len(self.parent.associates()), 1)
-        self.assertEquals(self.parent.associates()[0],
-                          (site.id, site.title))
+        self.assertEquals(self.parent.associates()[0], site)
 
     def test_form_valid_descendants(self):
         site = LearningSiteFactory()

@@ -174,13 +174,11 @@ class LearningSiteTest(TestCase):
 
         qs = r.site_one.associates()
         self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs[0][0], r.site_two.id)
-        self.assertEquals(qs[0][1], r.site_two.title)
+        self.assertEquals(qs[0], r.site_two)
 
         qs = r.site_two.associates()
         self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs[0][0], r.site_one.id)
-        self.assertEquals(qs[0][1], r.site_one.title)
+        self.assertEquals(qs[0], r.site_one)
 
     def test_empty(self):
         site = LearningSiteFactory()

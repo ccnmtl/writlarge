@@ -324,10 +324,11 @@ class LearningSite(models.Model):
 
     def associates(self):
         lst = LearningSiteRelationship.objects.filter(
-            site_one=self).values_list('site_two__id', 'site_two__title')
+            site_one=self).values_list('site_two__id', flat=True)
         lst2 = LearningSiteRelationship.objects.filter(
-            site_two=self).values_list('site_one__id', 'site_one__title')
-        return lst.union(lst2)
+            site_two=self).values_list('site_one__id', flat=True)
+        ids = lst.union(lst2)
+        return LearningSite.objects.filter(id__in=ids)
 
     def has_connections(self):
         return (self.children.all().exists() or
@@ -336,10 +337,7 @@ class LearningSite(models.Model):
 
     def connections(self):
         a = list(self.children.values_list('id', flat=True))
-
-        qs = self.associates()
-        a.extend([r[0] for r in qs])
-
+        a.extend([site.id for site in self.associates()])
         a.extend([site.id for site in self.antecedents()])
         a.append(self.id)
         return a
