@@ -1,0 +1,19 @@
+{% verbatim %}
+<script type="text/x-template" id="family-network">
+    <div class="immediate-family-network">
+        <div v-if="site.title" class="row">
+            <div class="col-md-6">
+                <h6 class="float-left">ASCENDANT ENTITITIES</h6>
+            </div>
+            <div class="col-md-6">
+                <h6 class="float-right">DESCENDANT ENTITITIES</h6>
+            </div>
+        </div>
+        <div v-else>
+            Loading
+        </div>
+
+        <svg class="w-100" :id="networkName"></svg>
+    </div>
+</script>
+{% endverbatim %}
