@@ -13,7 +13,7 @@ requirejs.config({
     paths: {
         'bootstrap': 'lib/bootstrap/js/bootstrap.bundle.min',
         'domReady': 'lib/require/domReady',
-        'jquery': 'lib/jquery-3.2.1.min',
+        'jquery': 'lib/jquery-3.3.1.min',
         'edtfVue': 'src/components/extendeddatevue',
         'googleMaps': mapsPath,
         'Vue': vuePath,
