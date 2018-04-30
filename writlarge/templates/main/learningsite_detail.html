@@ -216,11 +216,11 @@
                     <li class="list-group-item">
                         {% if is_editor %}
                         <a class="float-right text-secondary"
-                            href="{% url 'connection-delete-view' object.id 'associate' site.0 %}">
+                            href="{% url 'connection-delete-view' object.id 'associate' site.id %}">
                             <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
                         </a>
                         {% endif %}
-                        <i class="fa fa-arrows-h text-secondary" aria-hidden="true"></i> <a href="{% url 'site-detail-view' site.0 %}">{{site.1}}</a>
+                        <i class="fa fa-arrows-h text-secondary" aria-hidden="true"></i> <a href="{% url 'site-detail-view' site.id %}">{{site.title}}</a>
                     </li>
                 {% endfor %}
 
