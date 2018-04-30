@@ -56,6 +56,7 @@ class LearningSiteCategoryFactory(factory.DjangoModelFactory):
         model = LearningSiteCategory
 
     name = factory.Sequence(lambda n: "category%03d" % n)
+    group = 'school'
 
 
 class PlaceFactory(factory.DjangoModelFactory):
