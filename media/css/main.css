@@ -361,6 +361,7 @@ input[type=number] {
         width: 5.7rem;
         height: 3rem;
         overflow: hidden;
+        margin-top: -2rem;
     }
     .place-thumbnail .thumbnail-bg {
         width: 100%;
@@ -389,10 +390,6 @@ input[type=number] {
         background-color: #efefef;
         overflow: hidden;
     }
-    .place-thumbnail img {
-        width: 100%;
-        border: 1px solid #ddd;
-    } 
 }
 
 /* Large devices (desktops, 992px and up) */
