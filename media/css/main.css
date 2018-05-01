@@ -360,7 +360,6 @@ input[type=number] {
         display: block;
         width: 5.7rem;
         height: 3rem;
-        /**/
         overflow: hidden;
     }
     .place-thumbnail .thumbnail-bg {
@@ -369,7 +368,6 @@ input[type=number] {
         border: 1px solid #ddd;
         background-repeat: no-repeat;
         background-size: cover;
-        background-color: #efefef;
         background-position: center;
     }
 }
