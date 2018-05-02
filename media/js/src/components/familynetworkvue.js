@@ -23,7 +23,7 @@ var FamilyNetworkVue = {
             if (node.relationship === 'self' ||
                     node.relationship === 'associate') {
                 return center;
-            } else if (node.relationship == 'antecedent') {
+            } else if (node.relationship === 'antecedent') {
                 return center / 4;
             } else {
                 return center + center / 2;
