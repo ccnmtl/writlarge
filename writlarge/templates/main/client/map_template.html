@@ -54,6 +54,10 @@
         </div>
         <div v-if="selectedPlace" class="pin-place-detail">
             <h5>{{selectedPlace.title}}</h5>
+            <div v-if="selectedPlace.digital_object.length">
+                <img v-if="selectedPlace.digital_object[0].file" src="{{selectedPlace.digital_object[0].file}}" />
+                <img v-else src="{{selectedPlace.digital_object[0].source_url}}" />
+            </div>
             <div v-if="selectedPlace.empty && readonly === 'false'">
                 <p>Can you add more detail to this location?</p>
                 <div class="row">

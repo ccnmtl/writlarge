@@ -1,13 +1,7 @@
 {% verbatim %}
 <script type="text/x-template" id="family-network">
     <div class="immediate-family-network">
-        <div v-if="site.title" class="row">
-            <div class="col-md-6">
-                <h6 class="float-left">ASCENDANT ENTITITIES</h6>
-            </div>
-            <div class="col-md-6">
-                <h6 class="float-right">DESCENDANT ENTITITIES</h6>
-            </div>
+        <div v-if="site && site.title" class="row">
         </div>
         <div v-else>
             Loading
