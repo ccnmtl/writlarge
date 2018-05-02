@@ -33,7 +33,10 @@
         </div>
         <div class="google-map" :id="mapName"></div>
         <div v-if="newPin" class="pin-place-detail">
-            <h5>Location Selected</h5>
+           <div class="pin-place-header d-flex justify-content-between">
+                <h5>Location Selected</h5>
+                <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="clearNewPin"><span aria-hidden="true">×</span></button>
+            </div>
             <p>{{address}}</p>
             <form>
                 <div class="form-group">
@@ -53,14 +56,17 @@
             </form>
         </div>
         <div v-if="selectedPlace" class="pin-place-detail">
-            <h5>{{selectedPlace.title}}</h5>
-            <div v-if="selectedPlace.digital_object.length" class="place-thumbnail clearfix">
+           <div class="pin-place-header d-flex justify-content-between">
+                <h5>{{selectedPlace.title}}</h5>
+                <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="deselectPlace"><span aria-hidden="true">×</span></button>
+            </div>
+            <div v-if="selectedPlace.digital_object.length" class="pin-place-thumbnail clearfix">
                 <div v-if="selectedPlace.digital_object[0].file" class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].file + ')' }"></div>
                 <div v-else class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].source_url + ')' }"></div>
             </div>
-            <div v-if="selectedPlace.empty && readonly === 'false'">
-                <p>Can you add more detail to this location?</p>
-                <div class="row">
+            <div class="pin-place-content mt-2" v-if="selectedPlace.empty && readonly === 'false'">
+                <p class="my-0">Can you add more detail to this location?</p>
+                <div class="row mt-4 mt-md-3">
                     <div class="col">
                         <button class="w-100 btn btn-sm btn-secondary" v-on:click.stop.prevent="deselectPlace">
                             Later
@@ -74,18 +80,17 @@
                     </div>
                 </div>
             </div>
-            <div v-else>
-                <div v-for="c in selectedPlace.category">{{c.name}}</div>
-                <div class="mb-2">
-                    <small>
-                        {{selectedPlace.tags}}
-                    </small>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <button class="w-100 btn btn-sm btn-secondary"
-                            v-on:click.stop.prevent="deselectPlace">Close</button>
-                    </div>
+            <div v-else class="pin-place-content mt-2">
+                <dl class="pin-detail-tags d-flex flex-row mb-0">
+                  <dt class="mr-1 mb-0" v-if="selectedPlace.category.length > 1">Categories:</dt>
+                  <dt class="mr-1 mb-0" v-else>Category:</dt>
+                  <dd class="mb-0" v-for="c in selectedPlace.category">{{ c.name }}</dd>
+                </dl>
+                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedPlace.tags">
+                  <dt class="mr-1">Tags:</dt>
+                  <dd class="mb-0">{{selectedPlace.tags}}</dd>
+                </dl>
+                <div class="row mt-4 mt-md-3">
                     <div class="col">
                         <a :href="'/view/' + selectedPlace.id + '/'"
                             class="w-100 btn btn-sm btn-secondary">

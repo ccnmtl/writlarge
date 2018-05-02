@@ -152,14 +152,6 @@ footer li+li {
     right: 85px;
 }
 
-/* .map-view .new-pin {
-    padding: 15px;
-    background-color: white;
-    border: 1px solid #ced4da;
-    border-top-width: 4px;
-    width: 350px;
-} */
-
 .map-view .pin-place-detail {
     position: absolute;
     width: 90vw;
@@ -176,6 +168,21 @@ footer li+li {
     -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     z-index: 1050;
+}
+
+.pin-place-header .close {
+    padding: 0.5rem;
+    margin: -0.8rem -0.5rem 0 0;
+    font-weight: normal;
+    font-size: 1.8rem;
+}
+
+.pin-place-thumbnail {
+    display: none;
+}
+
+.pin-detail-tags dd+dd::before {
+    content: ', ';
 }
 
 /* Detail View */
@@ -355,15 +362,14 @@ input[type=number] {
         left: 0.625rem;
         width: 25rem;
     }
-    .place-thumbnail {
+    .pin-place-thumbnail {
         float: right;
         display: block;
         width: 5.7rem;
         height: 3rem;
         overflow: hidden;
-        margin-top: -2rem;
     }
-    .place-thumbnail .thumbnail-bg {
+    .pin-place-thumbnail .thumbnail-bg {
         width: 100%;
         height: 100%;
         border: 1px solid #ddd;
@@ -383,7 +389,9 @@ input[type=number] {
         right: 0;
         bottom: auto;
     }
-    .place-thumbnail {
+    .pin-place-header {
+    }
+    .pin-place-thumbnail {
         float: none;
         width: 100%;
         height: 10.5rem;
