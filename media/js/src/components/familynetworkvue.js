@@ -38,7 +38,7 @@ var FamilyNetworkVue = {
                 const max = this.width;
                 const min = 0;
                 return Math.random() * (max - min) + min;
-            } else if (node.relationship == 'antecedent') {
+            } else if (node.relationship === 'antecedent') {
                 return center / 4;
             } else {
                 return center + center / 2;
@@ -46,7 +46,7 @@ var FamilyNetworkVue = {
         },
         getYPosition: function(node, height) {
             if (node.relationship === 'self') {
-                return this.height / 2;
+                return this.height / 3;
             } else if (node.relationship === 'associate') {
                 const min = this.height / 2;
                 const max = this.height;
