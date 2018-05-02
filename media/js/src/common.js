@@ -19,6 +19,7 @@ requirejs.config({
         'Vue': vuePath,
         'mapVue': 'src/components/gmapvue',
         'miniMapVue': 'src/components/gmapminivue',
+        'familyNetworkVue': 'src/components/familynetworkvue',
         'utils': 'src/utils'
     },
     shim: {

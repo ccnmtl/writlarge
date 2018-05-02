@@ -399,3 +399,15 @@ input[type=number] {
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
 }
+
+/* Connection visualization */
+.node {
+    fill: #ccc;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: #777;
+    stroke-width: 2px;
+}
