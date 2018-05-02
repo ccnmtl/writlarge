@@ -3,7 +3,7 @@
 /* exported GoogleMiniMapVue */
 
 var GoogleMiniMapVue = {
-    props: ['latitude', 'longitude'],
+    props: ['latitude', 'longitude', 'icon'],
     template: '#google-mini-map-template',
     data: function() {
         return {
@@ -26,7 +26,8 @@ var GoogleMiniMapVue = {
             parseFloat(this.latitude), parseFloat(this.longitude));
         this.marker = new google.maps.Marker({
             position: position,
-            map: this.map
+            map: this.map,
+            icon: WritLarge.staticUrl + 'png/pin-' + this.icon + '.png'
         });
 
         let bounds = new google.maps.LatLngBounds();
