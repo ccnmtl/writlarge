@@ -1,13 +1,9 @@
 {% verbatim %}
 <script type="text/x-template" id="family-network">
     <div class="immediate-family-network">
-        <div v-if="site && site.title" class="row">
+        <div v-if="this.nodes.length > 1" class="row">
+            <svg class="w-100" :id="networkName"></svg>
         </div>
-        <div v-else>
-            Loading
-        </div>
-
-        <svg class="w-100" :id="networkName"></svg>
     </div>
 </script>
 {% endverbatim %}
