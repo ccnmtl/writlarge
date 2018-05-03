@@ -21,7 +21,7 @@
 
 <div class="row mb-5 text-center">
     <div class="col-md-12 order-md-1">
-        <p class="lead mt-3">Are you sure you want to remove <strong>{{collection.title}}</strong> from {{parent.title}}'s archival resources?</p>
+        <p class="lead mt-3">Are you sure you want to remove <strong>{{collection.collection_title}}</strong> from {{parent.title}}'s archival resources?</p>
         <form action="." method="post">{% csrf_token %}
             <input class="btn btn-primary btn-block mb-2" type="submit" value="Remove" />
             <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>

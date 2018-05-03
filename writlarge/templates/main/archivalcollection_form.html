@@ -5,9 +5,13 @@
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "main/client/edtf_template.html" %}
+    {% include "main/client/pick_location_template.html" %}
 {% endblock %}
 
 {% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
     <script
         data-main="{{STATIC_URL}}js/src/editDetail.js"
         src="{{STATIC_URL}}js/lib/require/require.js"></script>
@@ -33,8 +37,10 @@
 <div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
         <form action="." method="post" v-on:submit="onSubmit">{% csrf_token %}
-            {% bootstrap_field form.repository %}
-            {% bootstrap_field form.title %}
+            <input type="hidden" name="repository" value="{{object.repository.id}}" />
+
+            <div class="clearfix"></div>
+            {% bootstrap_field form.collection_title %}
             {% bootstrap_field form.description %}
             {% bootstrap_field form.finding_aid_url %}
             {% bootstrap_field form.linear_feet %}
@@ -61,6 +67,24 @@
                         {% endif %}
                     {% endfor %}
                     {% if form.inclusive_end.errors %}initial-errors="1"{% endif %}/>
+            </div>
+
+            <div class="form-group">
+                <label for="id_repository_title">Repository Title</label>
+                <input type="text" name="repository_title" placeholder="Repository Title"
+                    id="id_repository_title" required="required" class="form-control"
+                    value="{{object.repository.title}}">
+            </div>
+
+            <div class="form-group">
+                <label>Repository Location</label>
+                <small class="text-muted">Search by address and select a location, or click the map to drop a marker.</small>
+                <div>
+                    <google-map readonly="false" showplaces="false"
+                        latitude="{{object.repository.place.latitude}}"
+                        longitude="{{object.repository.place.longitude}}" 
+                        title="{{object.repository.place.title}}" icon="archive" />
+                </div>
             </div>
 
             <hr class="mb-4">

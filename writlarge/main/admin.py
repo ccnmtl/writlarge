@@ -66,7 +66,7 @@ class ArchivalRepositoryAdmin(admin.ModelAdmin):
 
 @admin.register(ArchivalCollection)
 class ArchivalCollectionAdmin(admin.ModelAdmin):
-    list_display = ("title", "description", "repository",
+    list_display = ("collection_title", "description", "repository",
                     "created_at", "modified_at")
 
 

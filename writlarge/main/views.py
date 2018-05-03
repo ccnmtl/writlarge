@@ -12,7 +12,8 @@ from django.views.generic.list import ListView
 from rest_framework import viewsets
 
 from writlarge.main.forms import (
-    ArchivalCollectionForm, ConnectionForm,
+    ArchivalCollectionCreateForm, ArchivalCollectionUpdateForm,
+    ConnectionForm,
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
@@ -210,7 +211,7 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
                                    LearningSiteParamMixin,
                                    CreateView):
     model = ArchivalCollection
-    form_class = ArchivalCollectionForm
+    form_class = ArchivalCollectionCreateForm
     template_name = 'main/archivalcollection_create.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -223,7 +224,8 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
 
         messages.add_message(
             self.request, messages.INFO,
-            '{} added as an archival resource.'.format(self.object.title)
+            '{} added as an archival resource.'.format(
+                self.object.collection_title)
         )
         return reverse('site-detail-view', args=[self.parent.id])
 
@@ -232,12 +234,12 @@ class ArchivalCollectionUpdateView(LoggedInEditorMixin,
                                    LearningSiteParamMixin,
                                    UpdateView):
     model = ArchivalCollection
-    form_class = ArchivalCollectionForm
+    form_class = ArchivalCollectionUpdateForm
 
     def get_success_url(self):
         messages.add_message(
             self.request, messages.INFO,
-            '{} has been updated.'.format(self.object.title)
+            '{} has been updated.'.format(self.object.collection_title)
         )
         return reverse('site-detail-view', args=[self.parent.id])
 
@@ -250,7 +252,7 @@ class ArchivalCollectionDeleteView(LoggedInEditorMixin,
     def get_success_url(self):
         messages.add_message(
             self.request, messages.INFO,
-            '{} has been deleted.'.format(self.object.title)
+            '{} has been deleted.'.format(self.object.collection_title)
         )
         return reverse('site-detail-view', args=[self.parent.id])
 
