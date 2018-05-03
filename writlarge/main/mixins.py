@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 
@@ -49,8 +48,11 @@ class JSONResponseMixin(object):
 class LearningSiteParamMixin(object):
 
     def dispatch(self, *args, **kwargs):
-        parent_id = self.kwargs.get('parent', None)
-        self.parent = get_object_or_404(LearningSite, pk=parent_id)
+        try:
+            parent_id = self.kwargs.get('parent', None)
+            self.parent = LearningSite.objects.get(pk=parent_id)
+        except LearningSite.DoesNotExist:
+            self.parent = None
 
         return super(LearningSiteParamMixin, self).dispatch(*args, **kwargs)
 

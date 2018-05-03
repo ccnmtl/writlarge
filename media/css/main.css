@@ -419,3 +419,8 @@ input[type=number] {
     stroke: #777;
     stroke-width: 2px;
 }
+
+img.site-icon {
+    width: 25px;
+    height: 25px;
+}

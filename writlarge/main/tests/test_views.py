@@ -66,6 +66,21 @@ class PasswordTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
 
+class DetailViewTests(TestCase):
+
+    def test_learning_site_detail(self):
+        site = LearningSiteFactory()
+        url = reverse('site-detail-view', kwargs={'pk': site.id})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_archival_collection_detail(self):
+        collection = ArchivalCollectionFactory()
+        url = reverse('collection-detail-view', kwargs={'pk': collection.id})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+
 class ApiViewTest(TestCase):
 
     def setUp(self):
