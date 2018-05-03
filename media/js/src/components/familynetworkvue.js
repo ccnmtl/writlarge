@@ -12,17 +12,32 @@ var FamilyNetworkVue = {
             iconSize: 24,
             patterns: {},
             nodes: [],
-            edges: []
+            edges: [],
+            width: 0,
+            height: 300
         };
     },
     methods: {
+        getLineStyle: function(node) {
+            if (node.relationship === 'associate') {
+                return ('3, 3');
+            } else {
+                return 'solid';
+            }
+        },
+        getRadius: function(node) {
+            return this.iconSize / 2;
+        },
         getNodeImage: function(group) {
             return WritLarge.staticUrl + 'png/pin-' + group + '.png';
         },
         getXPosition: function(node, center) {
-            if (node.relationship === 'self' ||
-                    node.relationship === 'associate') {
+            if (node.relationship === 'self') {
                 return center;
+            } else if (node.relationship === 'associate') {
+                const max = this.width;
+                const min = 0;
+                return Math.random() * (max - min) + min;
             } else if (node.relationship === 'antecedent') {
                 return center / 4;
             } else {
@@ -30,10 +45,38 @@ var FamilyNetworkVue = {
             }
         },
         getYPosition: function(node, height) {
-            if (node.relationship === 'associate') {
-                return height / 2 + height / 4;
+            if (node.relationship === 'self') {
+                return this.height / 3;
+            } else if (node.relationship === 'associate') {
+                const min = this.height / 2;
+                const max = this.height;
+                return Math.random() * (max - min) + min;
             } else {
-                return height / 2;
+                const min = this.height / 8;
+                const max = this.height - this.height / 4;
+                return Math.random() * (max - min) + min;
+            }
+        },
+        positionLabelX: function(node) {
+            if (node.relationship === 'self' ||
+                    node.relationship === 'associate') {
+                // roughly center
+                return -node.title.length * 7 / 2;
+            } else if (node.relationship === 'antecedent') {
+                return -node.title.length * 9;
+            } else if (node.relationship === 'descendant') {
+                return 15;
+            }
+        },
+        positionLabelY: function(node) {
+            if (node.relationship === 'self') {
+                return -20;
+            } else if (node.relationship === 'associate') {
+                return 25;
+            } else if (node.relationship === 'antecedent') {
+                return 5;
+            } else if (node.relationship === 'descendant') {
+                return 5;
             }
         },
         clearDiagram: function() {
@@ -60,35 +103,52 @@ var FamilyNetworkVue = {
                 }
             }
         },
+        boxForce: function() {
+            const radius = this.iconSize / 2;
+            for (var i = 0; i < this.nodes.length; ++i) {
+                const node = this.nodes[i];
+                node.x = Math.max(this.iconSize / 2,
+                    Math.min(this.width - radius, node.x));
+                node.y = Math.max(this.iconSize / 2,
+                    Math.min(this.height - radius, node.y));
+            }
+        },
         buildDiagram: function() {
+            if (this.nodes.length <= 1) {
+                return;
+            }
+
             const self = this;
             this.clearDiagram();
 
             const elt = document.getElementById(this.networkName);
-            const width = elt.clientWidth;
-            const center = width / 2;
-            const height = 200;
+            this.width = elt.clientWidth;
+            const center = this.width / 2;
 
             let svg = d3.select('svg');
-            svg.attr('width', width).attr('height', height);
+            svg.attr('width', this.width).attr('height', this.height);
 
             this.createPatterns(svg);
 
             const linkForce = d3
                 .forceLink()
                 .id(function(link) { return link.id; })
-                .strength(function(link) { return .1; });
+                .strength(function(link) { return .05; });
 
             this.simulation = d3
                 .forceSimulation(this.nodes)
                 .force('link', linkForce)
-                .force('charge', d3.forceManyBody().strength(-400))
-                .force('center', d3.forceCenter(center, height / 2))
+                .force('box_force', this.boxForce)
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(center, this.height / 2))
                 .force('y', d3.forceY().y(function(d) {
-                    return self.getYPosition(d, height);
+                    return self.getYPosition(d, this.height);
                 }))
                 .force('x', d3.forceX().x(function(d) {
                     return self.getXPosition(d, center);
+                }))
+                .force('collision', d3.forceCollide().radius(function(d) {
+                    return this.iconSize * 5;
                 }));
 
             const linkElements = svg.append('g')
@@ -97,14 +157,15 @@ var FamilyNetworkVue = {
                 .data(this.edges)
                 .enter().append('line')
                 .attr('stroke-width', 1)
-                .attr('stroke', 'rgba(50, 50, 50, 0.2)');
+                .attr('stroke', 'rgba(50, 50, 50, 0.5)')
+                .style('stroke-dasharray', this.getLineStyle);
 
             const nodeElements = svg.append('g')
                 .attr('class', 'nodes')
                 .selectAll('circle')
                 .data(this.nodes)
                 .enter().append('circle')
-                .attr('r', this.iconSize / 2)
+                .attr('r', this.getRadius)
                 .style('fill', function(node) {
                     return 'url(#' + node.group + ')';
                 });
@@ -116,9 +177,8 @@ var FamilyNetworkVue = {
                 .enter().append('text')
                 .text(function(node) { return node.title; })
                 .attr('font-size', 15)
-                .attr('dx', function(node) {
-                    return -node.title.length * 7 / 2; })
-                .attr('dy', -20);
+                .attr('dx', this.positionLabelX)
+                .attr('dy', this.positionLabelY);
 
             this.simulation.nodes(this.nodes).on('tick', function(node) {
                 nodeElements
@@ -154,7 +214,11 @@ var FamilyNetworkVue = {
                 }
 
                 if (node.relationship !== 'self') {
-                    this.edges.push({source: data.id, target: node.id });
+                    this.edges.push({
+                        source: data.id,
+                        target: node.id,
+                        relationship: node.relationship
+                    });
                 }
             }
             this.site = data;
