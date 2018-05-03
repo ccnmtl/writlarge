@@ -20,7 +20,13 @@
 {% block breadcrumb %}
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb pb-0">
-            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a></li>
+            <li class="breadcrumb-item">
+                {% if parent %}
+                    <a class="text-secondary" href="{% url 'site-detail-view' parent.id %}">{{parent.title}}</a>
+                {% else %}
+                    <a class="text-secondary" href="{% url 'collection-detail-view' object.id %}">{{object.collection_title}}</a>
+                {% endif %}
+            </li>
             <li class="breadcrumb-item">Edit Archival Collection</li>
         </ol>
     </nav>
@@ -29,7 +35,11 @@
 {% block content %}
 <div class="pb-2 text-center">
     <h2>
-        {{parent.title}}
+        {% if parent %}
+            {{parent.title}}
+        {% else %}
+            {{parent.collection_title}}
+        {% endif %}
     </h2>
     <h4 class="text-muted">Edit Archival Collection</h4>
 </div>
@@ -89,7 +99,12 @@
 
             <hr class="mb-4">
             <button type="submit" class="btn btn-primary btn-block mb-2">Save</button>
-            <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
+
+            {% if parent %}
+                <a class="btn btn-secondary btn-block mb-4" href="{% url 'site-detail-view' parent.id %}">Cancel</a>
+            {% else %}
+                <a class="btn btn-secondary btn-block mb-4" href="{% url 'collection-detail-view' object.id %}">Cancel</a>
+            {% endif %}
         </form>
     </div>
 </div>

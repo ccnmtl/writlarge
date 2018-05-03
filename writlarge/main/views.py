@@ -151,6 +151,10 @@ class LearningSiteGalleryView(LearningSiteParamMixin, ListView):
         return self.parent.digital_object.all()
 
 
+class ArchivalCollectionDetailView(DetailView):
+    model = ArchivalCollection
+
+
 class ArchivalCollectionLinkView(LoggedInEditorMixin,
                                  LearningSiteParamMixin,
                                  TemplateView):
@@ -241,7 +245,11 @@ class ArchivalCollectionUpdateView(LoggedInEditorMixin,
             self.request, messages.INFO,
             '{} has been updated.'.format(self.object.collection_title)
         )
-        return reverse('site-detail-view', args=[self.parent.id])
+        if self.parent:
+            return reverse('site-detail-view', args=[self.parent.id])
+        else:
+            return reverse('collection-detail-view',
+                           args=[self.object.id])
 
 
 class ArchivalCollectionDeleteView(LoggedInEditorMixin,

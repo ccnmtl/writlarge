@@ -236,9 +236,10 @@
                             <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
                         </div>
                         <div class="col-md-11 pl-3">
-                            <div>{{collection.collection_title}}</div>
-                            <div class="small">{{collection.repository.title}}</div>
-                            <div class="small">
+                            <div><a href="{% url 'collection-detail-view' collection.id %}">
+                                {{collection.collection_title}}</a>
+                            </div>
+                            <div>
                             {% with start=collection.inclusive_start end=collection.inclusive_end %}
                             {% if start %}
                                 {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
@@ -248,7 +249,8 @@
                             {% endif %}
                             {% endwith %}
                             </div>
-                            <div class="small">{{ collection.repository.place.title }}</div>
+                            <div>at {{collection.repository.title}}</div>
+                            <div>Related Sites <span class="badge badge-pill badge-secondary">{{collection.learning_sites.count}}</span></div>
                         </div>
                     </div>
                 </li>
