@@ -102,7 +102,7 @@ class ArchivalCollectionFactory(factory.DjangoModelFactory):
     class Meta:
         model = ArchivalCollection
 
-    title = factory.Sequence(lambda n: "collection%03d" % n)
+    collection_title = factory.Sequence(lambda n: "collection%03d" % n)
     repository = factory.SubFactory(ArchivalRepositoryFactory)
 
 

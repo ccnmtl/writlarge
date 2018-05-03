@@ -387,7 +387,7 @@ class ArchivalRepository(models.Model):
 
 
 class ArchivalCollection(models.Model):
-    title = models.TextField(verbose_name="Collection Title")
+    collection_title = models.TextField(verbose_name="Collection Title")
     repository = models.ForeignKey(ArchivalRepository,
                                    on_delete=models.CASCADE)
 
@@ -420,8 +420,8 @@ class ArchivalCollection(models.Model):
         related_name='collection_modified_by')
 
     class Meta:
-        ordering = ['title']
+        ordering = ['collection_title']
         verbose_name = "Archival Collection"
 
     def __str__(self):
-        return self.title
+        return self.collection_title

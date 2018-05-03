@@ -82,7 +82,7 @@
                         <label>Repository Location</label>
                         <small class="text-muted">Search by address and select a location, or click the map to drop a marker.</small>
                         <div>
-                            <google-map readonly="false" showplaces="false" />
+                            <google-map readonly="false" showplaces="false" icon="archive" />
                         </div>
                         <div class="clearfix"></div>
                         <button class="btn btn-primary btn-block mt-3 mb-2" v-on:click.stop.prevent="onCreateRepository">
@@ -97,7 +97,7 @@
             </div>
             <div v-if="collectionForm" class="create-collection-form mt-4">
                 <p class="lead"><span class="step">2</span> Add details about the archival collection</p>
-                {% bootstrap_field form.title %}
+                {% bootstrap_field form.collection_title %}
                 {% bootstrap_field form.description %}
                 {% bootstrap_field form.finding_aid_url %}
                 {% bootstrap_field form.linear_feet %}

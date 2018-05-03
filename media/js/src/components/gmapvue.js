@@ -2,7 +2,8 @@
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
-    props: ['readonly', 'showplaces', 'latitude', 'longitude', 'title'],
+    props: ['readonly', 'showplaces', 'latitude',
+        'longitude', 'title', 'icon'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -49,7 +50,7 @@ var GoogleMapVue = {
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
                 map: this.map,
-                icon: WritLarge.staticUrl + 'png/pin-other.png'
+                icon: WritLarge.staticUrl + 'png/pin-' + this.icon + '.png'
             });
 
             this.reverseGeocode(this.newPin);
@@ -198,7 +199,8 @@ var GoogleMapVue = {
                 this.latitude, this.longitude);
             const marker = new google.maps.Marker({
                 position: position,
-                map: this.map
+                map: this.map,
+                icon: WritLarge.staticUrl + 'png/pin-' + this.icon + '.png'
             });
             this.newPin = marker;
             this.address = this.title;

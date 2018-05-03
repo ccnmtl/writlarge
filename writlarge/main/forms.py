@@ -159,15 +159,15 @@ class LearningSiteForm(forms.ModelForm):
         return instance
 
 
-class ArchivalCollectionForm(forms.ModelForm):
+class ArchivalCollectionCreateForm(forms.ModelForm):
     class Meta:
         model = ArchivalCollection
 
-        fields = ['repository', 'title', 'description',
+        fields = ['repository', 'collection_title', 'description',
                   'finding_aid_url', 'linear_feet',
                   'inclusive_start', 'inclusive_end']
         widgets = {
-            'title': TextInput,
+            'collection_title': TextInput,
             'inclusive_start': HiddenInput,
             'inclusive_end': HiddenInput
         }
@@ -193,6 +193,21 @@ class ArchivalCollectionForm(forms.ModelForm):
         instance = forms.ModelForm.save(self, commit=commit)
         self.form_start.create_or_update(instance, 'inclusive_start')
         self.form_end.create_or_update(instance, 'inclusive_end')
+        return instance
+
+
+class ArchivalCollectionUpdateForm(ArchivalCollectionCreateForm):
+
+    def save(self, commit=True):
+        instance = ArchivalCollectionCreateForm.save(self, commit=commit)
+
+        instance.repository.title = self.data['repository_title']
+        instance.repository.save()
+
+        instance.repository.place.latlng = self.data['latlng']
+        instance.repository.place.title = self.data['title']
+        instance.repository.place.save()
+
         return instance
 
 

@@ -326,7 +326,8 @@ class TestArchivalCollectionCreateView(TestCase):
         self.assertEquals(response.status_code, 200)
 
         data = {
-            'title': 'New', 'description': '', 'finding_aid_url': '',
+            'collection_title': 'New', 'description': '',
+            'finding_aid_url': '',
             'repository': '{}'.format(self.repository.id),
             'linear_feet': '',
             'inclusive-start-millenium1': '2',
@@ -341,7 +342,7 @@ class TestArchivalCollectionCreateView(TestCase):
         response = self.client.post(self.url, data)
         self.assertEquals(response.status_code, 302)
 
-        collection = ArchivalCollection.objects.get(title='New')
+        collection = ArchivalCollection.objects.get(collection_title='New')
         self.assertTrue(collection.learning_sites.filter(
             title=self.site.title).exists())
         self.assertEquals(collection.inclusive_start.edtf_format, '2000')
@@ -378,7 +379,10 @@ class TestArchivalCollectionUpdateView(TestCase):
 
         data = {
             'repository': self.collection.repository.id,
-            'title': 'Updated', 'description': '', 'finding_aid_url': '',
+            'repository_title': 'foobarbaz',
+            'title': 'Bar', 'latlng': 'SRID=4326;POINT(1 1)',
+            'collection_title': 'Updated', 'description': '',
+            'finding_aid_url': '',
             'linear_feet': '',
             'inclusive-start-millenium1': '2',
             'inclusive-start-century1': '0',
@@ -393,9 +397,16 @@ class TestArchivalCollectionUpdateView(TestCase):
         self.assertEquals(response.status_code, 302)
 
         self.collection.refresh_from_db()
-        self.assertEquals(self.collection.title, 'Updated')
+        self.assertEquals(self.collection.collection_title, 'Updated')
         self.assertEquals(self.collection.inclusive_start.edtf_format, '2000')
         self.assertEquals(self.collection.inclusive_end.edtf_format, '2001')
+
+        self.collection.repository.refresh_from_db()
+        self.assertEquals(self.collection.repository.title, 'foobarbaz')
+        self.collection.repository.place.refresh_from_db()
+        self.assertEquals(self.collection.repository.place.title, 'Bar')
+        self.assertEquals(self.collection.repository.place.latitude(), 1.0)
+        self.assertEquals(self.collection.repository.place.longitude(), 1.0)
 
 
 class TestArchivalCollectionDeleteView(TestCase):

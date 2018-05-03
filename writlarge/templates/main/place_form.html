@@ -44,7 +44,7 @@
             {% endif %}
              <div class="mb-4">
                 <label>Location</label>
-                <google-map readonly="false" showplaces="false"
+                <google-map readonly="false" showplaces="false" icon="{{parent.category.first.group}}"
                     {% if object %}title="{{object.title}}" latitude="{{object.latitude}}" longitude="{{object.longitude}}"{% endif %} />
             </div>
 
