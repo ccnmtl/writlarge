@@ -409,10 +409,9 @@ input[type=number] {
 }
 
 /* Connection visualization */
-.node {
-    fill: #ccc;
-    stroke: #fff;
-    stroke-width: 2px;
+
+circle {
+    cursor: pointer;
 }
 
 .link {

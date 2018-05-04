@@ -168,6 +168,9 @@ var FamilyNetworkVue = {
                 .attr('r', this.getRadius)
                 .style('fill', function(node) {
                     return 'url(#' + node.group + ')';
+                })
+                .on("click", function (d) {
+                    location.href = '/view/' + d.id + '/';
                 });
 
             const textElements = svg.append('g')
