@@ -81,11 +81,16 @@
                 </div>
             </div>
             <div v-else class="pin-place-content mt-2">
-                <dl class="pin-detail-tags d-flex flex-row mb-0">
+                <dl class="pin-detail-tags d-flex flex-row mb-2">
                   <dt class="mr-1 mb-0" v-if="selectedPlace.category.length > 1">Categories:</dt>
                   <dt class="mr-1 mb-0" v-else>Category:</dt>
-                  <dd class="mb-0" v-for="c in selectedPlace.category">{{ c.name }}</dd>
+                  <dd class="mb-0">
+                    <template v-for="(c, index) in selectedPlace.category">
+                    {{ c.name }}<template v-if="index + 1 < selectedPlace.category.length">, </template>
+                    </template>
+                  </dd>
                 </dl>
+
                 <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedPlace.tags">
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">{{selectedPlace.tags}}</dd>
