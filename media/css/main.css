@@ -181,8 +181,8 @@ footer li+li {
     display: none;
 }
 
-.pin-detail-tags dd+dd::before {
-    content: ', ';
+.pin-detail-tags {
+    line-height: 1.3;
 }
 
 /* Detail View */
