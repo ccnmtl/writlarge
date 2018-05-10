@@ -31,15 +31,14 @@ h4 {
     font-weight: 300;
 }
 
-/* Cover Page */
-.cover-page {
-    color: white;
-}
-
 .cover-page main {
     padding-top: 125px;
-    width: 100vw;
-    height: 90vh;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    background-image: url("../img/nypl-cover-map.png");
+    background-position: center; 
+    color: white;
 }
 
 .cover-page p.lead {font-family: "adobe-garamond-pro",serif;}
