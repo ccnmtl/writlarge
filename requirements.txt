@@ -39,7 +39,7 @@ rdflib==4.2.2
 coverage==4.5.1
 pyasn1==0.4.2
 cryptography==2.2.2  # pyOpenSSL
-pyOpenSSL==17.5.0
+pyOpenSSL==18.0.0
 ndg-httpsclient==0.5.0
 urllib3==1.22  # requests
 chardet==3.0.4  # requests
@@ -48,7 +48,7 @@ certifi==2018.4.16  # requests
 requests==2.18.4
 logilab-common==1.4.1
 logilab-astng==0.24.3
-astroid==1.6.3
+astroid==1.6.4
 pylint==1.9.1
 six==1.11.0
 ipaddress==1.0.21  # faker
