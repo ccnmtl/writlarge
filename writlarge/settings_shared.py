@@ -13,7 +13,8 @@ locals().update(common(project=project, base=base))
 
 
 if platform.linux_distribution()[0] == 'Ubuntu' and \
-   platform.linux_distribution()[1] == '16.04':
+   (platform.linux_distribution()[1] == '16.04' or \
+    platform.linux_distribution()[1] == '18.04'):
     # 15.04 and later need this set, but it breaks
     # on trusty.
     # yeah, it's not really going to work on non-Ubuntu
