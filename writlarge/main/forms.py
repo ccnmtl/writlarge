@@ -228,7 +228,8 @@ class DigitalObjectForm(forms.ModelForm):
     def clean(self):
         cleaned_data = forms.ModelForm.clean(self)
 
-        if not cleaned_data['file'] and not cleaned_data['source_url']:
+        if (not cleaned_data.get('file') and
+                not cleaned_data.get('source_url')):
             self.add_error('source_url', '')
             self.add_error('file', '')
             self.add_error(
