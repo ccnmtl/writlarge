@@ -16,8 +16,7 @@ var GoogleMapVue = {
             newTitle: '',
             newType: '',
             selectedPlace: null,
-            year: 'Present',
-            initial: true
+            year: 'Present'
         };
     },
     computed: {
@@ -159,7 +158,7 @@ var GoogleMapVue = {
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
             clickableIcons: false,
-            zoom: 10,
+            zoom: 12,
             center: new google.maps.LatLng(40.778572, -73.970616),
             fullscreenControlOptions: {
                 position: google.maps.ControlPosition.RIGHT_BOTTOM,
@@ -207,8 +206,6 @@ var GoogleMapVue = {
         }
     },
     updated: function() {
-        this.bounds = new google.maps.LatLngBounds();
-
         this.places.forEach((site) => {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
@@ -225,12 +222,7 @@ var GoogleMapVue = {
                     this.clearNewPin();
                     this.selectedPlace = site;
                 });
-                if (this.initial) {
-                    this.map.fitBounds(this.bounds.extend(position));
-                }
             }
         });
-
-        this.initial = false;
     }
 };
