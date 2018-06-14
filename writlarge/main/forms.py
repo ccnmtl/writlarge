@@ -287,15 +287,6 @@ class PlaceForm(forms.ModelForm):
 
 
 class ConnectionForm(forms.Form):
-    CONNECTION_TYPES = [
-        ('', '---------'),
-        ('antecedent', 'Antecedent of this site'),
-        ('associate', 'Associated with this site'),
-        ('descendant', 'Descendant of this site')
-    ]
     site = forms.ModelChoiceField(
         label="Choose a Site of Teaching & Learning",
         queryset=LearningSite.objects.all())
-    connection_type = forms.ChoiceField(
-        label='How is this site connected?',
-        choices=CONNECTION_TYPES)

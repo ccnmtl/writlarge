@@ -76,20 +76,6 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_family(self, obj):
         family = []
-        for site in obj.descendants():
-            family.append({
-                'id': site.id,
-                'title': site.title,
-                'group': site.group(),
-                'relationship': 'descendant'
-            })
-        for site in obj.antecedents():
-            family.append({
-                'id': site.id,
-                'title': site.title,
-                'group': site.group(),
-                'relationship': 'antecedent'
-            })
         for site in obj.associates():
             family.append({
                 'id': site.id,

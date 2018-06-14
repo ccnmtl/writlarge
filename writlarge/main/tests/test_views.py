@@ -152,13 +152,11 @@ class ApiViewTest(TestCase):
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
         family = LearningSiteSerializer().get_family(parent)
-        self.assertEquals(len(family), 3)
-        self.assertEquals(family[0]['id'], child.id)
-        self.assertEquals(family[0]['relationship'], 'descendant')
-        self.assertEquals(family[1]['id'], sib.id)
+        self.assertEquals(len(family), 2)
+        self.assertEquals(family[0]['id'], sib.id)
+        self.assertEquals(family[0]['relationship'], 'associate')
+        self.assertEquals(family[1]['id'], sib2.id)
         self.assertEquals(family[1]['relationship'], 'associate')
-        self.assertEquals(family[2]['id'], sib2.id)
-        self.assertEquals(family[2]['relationship'], 'associate')
 
 
 class TestLearningSiteUpdateView(TestCase):
@@ -618,20 +616,6 @@ class ConnectionCreateViewTest(TestCase):
         self.assertEquals(frm.fields['site'].queryset.count(), 1)
         self.assertEquals(frm.fields['site'].queryset[0], self.site)
 
-    def test_form_valid_antecedents(self):
-        site = LearningSiteFactory()
-        frm = ConnectionForm()
-        frm.cleaned_data = {
-            'connection_type': 'antecedent',
-            'site': site
-        }
-        view = ConnectionCreateView()
-        view.parent = self.parent
-        view.form_valid(frm)
-
-        self.assertTrue(len(self.parent.antecedents()), 1)
-        self.assertEquals(self.parent.antecedents()[0], site)
-
     def test_form_valid_associates(self):
         site = LearningSiteFactory()
         frm = ConnectionForm()
@@ -645,20 +629,6 @@ class ConnectionCreateViewTest(TestCase):
 
         self.assertTrue(len(self.parent.associates()), 1)
         self.assertEquals(self.parent.associates()[0], site)
-
-    def test_form_valid_descendants(self):
-        site = LearningSiteFactory()
-        frm = ConnectionForm()
-        frm.cleaned_data = {
-            'connection_type': 'descendant',
-            'site': site
-        }
-        view = ConnectionCreateView()
-        view.parent = self.parent
-        view.form_valid(frm)
-
-        self.assertTrue(len(self.parent.descendants()), 1)
-        self.assertEquals(self.parent.descendants()[0], site)
 
 
 class ConnectionDeleteViewTest(TestCase):
