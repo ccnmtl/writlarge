@@ -169,8 +169,6 @@ var GoogleMapVue = {
         });
         this.map.mapTypes.set('styled_map', lightGrayStyle);
         this.map.setMapTypeId('styled_map');
-        this.map.data.loadGeoJson(
-            WritLarge.staticUrl + 'data/map.geojson');
 
         this.map.data.setStyle(function(feature) {
             var color = 'gray';
