@@ -98,7 +98,7 @@ class SingleObjectCreatorMixin(object):
 
     def dispatch(self, *args, **kwargs):
         if (not self.request.user == self.get_object().created_by and
-                not self.request.user.is_superuser):
+                not self.request.user.is_staff):
             return HttpResponseRedirect('/accounts/login/')
 
         return super(
