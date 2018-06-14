@@ -318,6 +318,7 @@ class ConnectionCreateView(LoggedInEditorMixin,
         frm = FormView.get_form(self, form_class=form_class)
 
         ids = self.parent.connections()
+        ids.append(self.parent.id)
         frm.fields['site'].queryset = \
             LearningSite.objects.exclude(id__in=ids)
         return frm
