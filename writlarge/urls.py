@@ -24,7 +24,7 @@ if hasattr(settings, 'CAS_BASE'):
 
 
 router = routers.DefaultRouter()
-router.register(r'site', views.LearningSiteViewSet)
+router.register(r'site', views.LearningSiteViewSet, base_name='site')
 router.register(r'repository', views.ArchivalRepositoryViewSet)
 router.register(r'place', views.PlaceViewSet)
 

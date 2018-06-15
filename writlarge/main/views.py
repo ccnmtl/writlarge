@@ -369,8 +369,13 @@ class ArchivalRepositoryViewSet(viewsets.ModelViewSet):
 
 
 class LearningSiteViewSet(viewsets.ModelViewSet):
-    queryset = LearningSite.objects.all().order_by('-modified_at')
     serializer_class = LearningSiteSerializer
+
+    def get_queryset(self):
+        return LearningSite.objects.all().select_related(
+            'created_by', 'modified_by').prefetch_related(
+            'place', 'category', 'digital_object', 'children',
+            'site_one', 'site_two', 'tags').order_by('-modified_at')
 
 
 class PlaceViewSet(viewsets.ModelViewSet):
