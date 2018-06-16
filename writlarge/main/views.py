@@ -342,18 +342,12 @@ class ConnectionDeleteView(LoggedInEditorMixin, LearningSiteParamMixin,
     def delete(self, request, *args, **kwargs):
         success_url = reverse('site-detail-view', args=[self.parent.id])
 
-        connection_type = kwargs.pop('type')
         site = self.get_object()
 
-        if connection_type == 'antecedent':
-            site.children.remove(self.parent)
-        elif connection_type == 'descendant':
-            self.parent.children.remove(site)
-        elif connection_type == 'associate':
-            lsr = LearningSiteRelationship.objects.filter(
-                Q(site_one=self.parent, site_two=site) |
-                Q(site_one=site, site_two=self.parent))
-            lsr.delete()
+        lsr = LearningSiteRelationship.objects.filter(
+            Q(site_one=self.parent, site_two=site) |
+            Q(site_one=site, site_two=self.parent))
+        lsr.delete()
 
         return HttpResponseRedirect(success_url)
 
@@ -374,7 +368,7 @@ class LearningSiteViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return LearningSite.objects.all().select_related(
             'created_by', 'modified_by').prefetch_related(
-            'place', 'category', 'digital_object', 'children',
+            'place', 'category', 'digital_object',
             'site_one', 'site_two', 'tags').order_by('-modified_at')
 
 
