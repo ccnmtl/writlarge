@@ -143,11 +143,9 @@ class ApiViewTest(TestCase):
 
     def test_family(self):
         parent = LearningSiteFactory()
-        child = LearningSiteFactory()
         sib = LearningSiteFactory()
         sib2 = LearningSiteFactory()
 
-        parent.children.add(child)
         LearningSiteRelationshipFactory(site_one=parent, site_two=sib)
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
@@ -641,30 +639,9 @@ class ConnectionDeleteViewTest(TestCase):
         editor.groups.add(GroupFactory(name='Editor'))
         self.client.login(username=editor.username, password='test')
 
-    def test_remove_antecdent(self):
-        self.site.children.add(self.parent)
-        url = reverse('connection-delete-view', kwargs={
-            'parent': self.parent.pk,
-            'type': 'antecedent',
-            'pk': self.site.pk})
-        response = self.client.post(url)
-        self.assertEquals(response.status_code, 302)
-        self.assertTrue(self.site not in self.parent.antecedents())
-
-    def test_remove_descendant(self):
-        self.parent.children.add(self.site)
-        url = reverse('connection-delete-view', kwargs={
-            'parent': self.parent.pk,
-            'type': 'descendant',
-            'pk': self.site.pk})
-        response = self.client.post(url)
-        self.assertEquals(response.status_code, 302)
-        self.assertTrue(self.site not in self.parent.descendants())
-
     def test_remove_associate(self):
         LearningSiteRelationshipFactory(
             site_one=self.parent, site_two=self.site)
-        self.parent.children.add(self.site)
         url = reverse('connection-delete-view', kwargs={
             'parent': self.parent.pk,
             'type': 'associate',

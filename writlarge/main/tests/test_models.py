@@ -146,23 +146,6 @@ class PlaceTest(TestCase):
 
 class LearningSiteTest(TestCase):
 
-    def test_parent_child_relationships(self):
-        parent = LearningSiteFactory()
-        child = LearningSiteFactory()
-
-        parent.children.add(child)
-
-        self.assertTrue(parent.has_connections())
-        self.assertTrue(child.has_connections())
-
-        lst = child.antecedents()
-        self.assertEquals(len(lst), 1)
-        self.assertEquals(lst[0], parent)
-
-        lst = parent.descendants()
-        self.assertEquals(len(lst), 1)
-        self.assertEquals(lst[0], child)
-
     def test_empty_relationships(self):
         site = LearningSiteFactory()
         self.assertFalse(site.has_connections())
@@ -189,26 +172,17 @@ class LearningSiteTest(TestCase):
 
     def test_connections(self):
         parent = LearningSiteFactory()
-        child = LearningSiteFactory()
         sib = LearningSiteFactory()
         sib2 = LearningSiteFactory()
 
-        parent.children.add(child)
         LearningSiteRelationshipFactory(site_one=parent, site_two=sib)
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
         ids = parent.connections()
-        self.assertEquals(len(ids), 4)
+        self.assertEquals(len(ids), 2)
 
-        self.assertTrue(parent.id in ids)
-        self.assertTrue(child.id in ids)
         self.assertTrue(sib.id in ids)
         self.assertTrue(sib2.id in ids)
-
-        ids = child.connections()
-        self.assertEquals(len(ids), 2)
-        self.assertTrue(child.id in ids)
-        self.assertTrue(parent.id in ids)
 
     def test_group(self):
         site = LearningSite.objects.create(title='test site')

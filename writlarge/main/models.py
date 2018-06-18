@@ -268,8 +268,6 @@ class LearningSite(models.Model):
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_defunct')
 
-    children = models.ManyToManyField('self', symmetrical=False, blank=True)
-
     notes = models.TextField(null=True, blank=True)
     tags = TaggableManager(blank=True)
 
@@ -312,16 +310,6 @@ class LearningSite(models.Model):
 
         return date.min
 
-    def descendants(self):
-        lst = list(self.children.all())
-        lst.sort(key=lambda obj: obj.sort_date())
-        return lst
-
-    def antecedents(self):
-        lst = list(LearningSite.objects.filter(children=self))
-        lst.sort(key=lambda obj: obj.sort_date())
-        return lst
-
     def associates(self):
         lst = LearningSiteRelationship.objects.filter(
             site_one=self).values_list('site_two__id', flat=True)
@@ -331,16 +319,10 @@ class LearningSite(models.Model):
         return LearningSite.objects.filter(id__in=ids)
 
     def has_connections(self):
-        return (self.children.all().exists() or
-                self.associates().exists() or
-                LearningSite.objects.filter(children=self).exists())
+        return self.associates().exists()
 
     def connections(self):
-        a = list(self.children.values_list('id', flat=True))
-        a.extend([site.id for site in self.associates()])
-        a.extend([site.id for site in self.antecedents()])
-        a.append(self.id)
-        return a
+        return [site.id for site in self.associates()]
 
     def group(self):
         category = self.category.first()
