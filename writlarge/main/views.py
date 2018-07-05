@@ -265,6 +265,54 @@ class ArchivalCollectionDeleteView(LoggedInEditorMixin,
         return reverse('site-detail-view', args=[self.parent.id])
 
 
+class ArchivalCollectionListView(ListView):
+
+    model = ArchivalCollection
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super(
+            ArchivalCollectionListView, self).get_context_data(**kwargs)
+
+        query = self.request.GET.get('q', '')
+        context['query'] = query
+
+        repo = self.request.GET.get('rid', '')
+        if repo:
+            try:
+                context['selected_repository'] = \
+                    ArchivalRepository.objects.get(id=repo)
+            except ArchivalRepository.DoesNotExist:
+                pass
+
+        base = reverse('archival-collections')
+        context['base_url'] = \
+            u'{}?q={}&rid={}&page='.format(base, query, repo)
+
+        ids = self.get_queryset().values_list('id', flat=True)
+        context['repositories'] = ArchivalRepository.objects.filter(
+            archivalcollection__id__in=ids).distinct()
+
+        return context
+
+    def filter(self, qs):
+        q = self.request.GET.get('q', '')
+        if len(q) > 0:
+            qs = qs.filter(Q(collection_title__icontains=q) |
+                           Q(repository__title__icontains=q))
+
+        repo = self.request.GET.get('rid', '')
+        if len(repo) > 0:
+            qs = qs.filter(repository__id=repo)
+
+        return qs
+
+    def get_queryset(self):
+        qs = super(ArchivalCollectionListView, self).get_queryset()
+        qs = self.filter(qs)
+        return qs
+
+
 class FootnoteCreateView(LoggedInEditorMixin,
                          LearningSiteParamMixin,
                          CreateView):

@@ -16,8 +16,17 @@
         src="{{STATIC_URL}}js/lib/require/require.js"></script>
 {% endblock %}
 
+{% block breadcrumb %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb pb-0">
+            <li class="breadcrumb-item"><a class="text-secondary" href="{% url 'archival-collections' %}">Archives</a></li>
+            <li class="breadcrumb-item">{{object.collection_title}}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
 {% block content %}
-<div id="detail-container archival-collection" data-id="{{object.id}}" class="mb-5">
+<div id="detail-container" data-id="{{object.id}}" class="mb-5">
     <div class="pt-5 pb-2 text-center">
         <h2>
             <i class="fa fa-archive" aria-hidden="true"></i> {{object.collection_title}}
@@ -31,74 +40,13 @@
     <div class="row">
         <div class="col-md-8">
             <h4 class="mb-3 text-muted">Details</h4>
-            {% if object.description %}
-                <p>{{object.description}}</p>
-                {% if object.finding_aid_url %}
-                    <a class="text-secondary d-block ml-4 text-center" href="{{object.finding_aid_url}}">
-                        <i class="fa fa-search text-secondary form-check-input" aria-hidden="true"></i>
-                            Visit the Finding Aid Url
-                    </a>
-                {% endif %}
-            {% endif %}
 
-            <h4 class="mb-3 mt-5 text-muted">Related Sites</h4>
-            {% for site in object.learning_sites.all %}
-                {% if forloop.counter0|divisibleby:2 %}
-                    <div class="row mb-1">
-                {% endif %}
-                <div class="col-md-6">
-                    <a href="{% url 'site-detail-view' site.id %}"><img class="site-icon" src="{{STATIC_URL}}png/pin-{{site.category.first.group}}.png" /> {{site}}</a>
-                </div>
-                {% if not forloop.counter0|divisibleby:2 %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-            <h4 class="mb-3 mt-5 text-muted">Related Collections</h4>
-            <p>Other collections at <strong>{{object.repository.title}}</strong></p>
-
-            <ul class="list-group">
-            {% for collection in object.repository.archivalcollection_set.all %}
-                <li class="list-group-item mb-2 border-left-0 border-right-0 border-top-0">
-                    <div class="row no-gutters">
-                        <div class="col-md-1 text-secondary">
-                            <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
-                        </div>
-                        <div class="col-md-11 pl-3">
-                            <div><a href="{% url 'collection-detail-view' collection.id %}">
-                                {{collection.collection_title}}</a>
-                            </div>
-                            <div>
-                            {% with start=collection.inclusive_start end=collection.inclusive_end %}
-                            {% if start %}
-                                {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
-                            {% else %}{% if end %}
-                                ? - {{end}}
-                            {% endif %}
-                            {% endif %}
-                            {% endwith %}
-                            </div>
-                            <div>Related Sites <span class="badge badge-pill badge-secondary">{{collection.learning_sites.count}}</span></div>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-       </div>
-       <div class="col-md-4">
-            {% if is_editor %}
-                <div class="mb-4">
-                <a class="float-right text-secondary mr-4" href="{% url 'collection-edit-view' object.id %}">
-                    <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
-                </a>
-                </div>
-            {% endif %}
-            <div class="clearfix"></div>
             <dl class="row ml-3">
                 {% if object.inclusive_start or object.inclusive_end %}
-                    <dt class="col-sm-7">
+                    <dt class="col-sm-6">
                         Inclusive Dates
                     </dt>
-                    <dd class="col-sm-5">
+                    <dd class="col-sm-6">
                         {% with inclusive_start=object.inclusive_start inclusive_end=object.inclusive_end %}
                         {% if inclusive_start %}
                             {{inclusive_start}} - {% if inclusive_end %}{{inclusive_end}}{% else %}present{% endif %}
@@ -125,6 +73,66 @@
                     </dd>
                 {% endif %}
             </dl>
+
+            {% if object.description %}
+                <p>{{object.description}}</p>
+            {% endif %}
+
+            {% if object.learning_sites.count > 0 %}
+                <h4 class="mb-3 mt-5 text-muted">Sites of Teaching &amp; Learning</h4>
+                <p>These sites of teaching &amp; learning mention the {{object.collection_title}}</p>
+                {% for site in object.learning_sites.all %}
+                    <div class="mb-1">
+                        <a href="{% url 'site-detail-view' site.id %}">
+                            <img class="site-icon" src="{{STATIC_URL}}png/pin-{{site.category.first.group}}.png" />
+                            {{site}}
+                        </a>
+                    </div>
+                {% endfor %}
+           {% endif %}
+
+           {% if object.repository.archivalcollection_set.count > 0 %}
+                <h4 class="mb-3 mt-5 text-muted">Repository</h4>
+                <p>Other collections at <strong>{{object.repository.title}}</strong>. <a href="{% url 'archival-collections' %}">View all collections</a></p>
+
+                <ul class="list-group">
+                {% for collection in object.repository.archivalcollection_set.all %}
+                    <li class="list-group-item mb-2 border-left-0 border-right-0 border-top-0">
+                        <div class="row no-gutters">
+                            <div class="col-md-1 text-secondary">
+                                <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
+                            </div>
+                            <div class="col-md-11 pl-3">
+                                <div><a href="{% url 'collection-detail-view' collection.id %}">
+                                    {{collection.collection_title}}</a>
+                                </div>
+                                <div>
+                                {% with start=collection.inclusive_start end=collection.inclusive_end %}
+                                {% if start %}
+                                    {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
+                                {% else %}{% if end %}
+                                    ? - {{end}}
+                                {% endif %}
+                                {% endif %}
+                                {% endwith %}
+                                </div>
+                                <div>Sites of Teaching &amp; Learning <span class="badge badge-pill badge-secondary">{{collection.learning_sites.count}}</span></div>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {% if is_editor %}
+                <div class="mb-4">
+                <a class="float-right text-secondary mr-4" href="{% url 'collection-edit-view' object.id %}">
+                    <small><i class="fa fa-pencil" aria-hidden="true"></i> Edit</small>
+                </a>
+                </div>
+            {% endif %}
+            <div class="clearfix"></div>
+            <h4 class="mb-3 text-muted">Location</h4>
             <div id="map-container" class="ml-3">
                 <google-mini-map
                     latitude="{{object.repository.place.latitude}}"
@@ -137,13 +145,7 @@
                     <div>{{object.repository.place.title}}</div>
                 </li>
             </ul>
-       </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            
+        </div>
     </div>
 </div>
 {% endblock %}
-
-    

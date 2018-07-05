@@ -50,7 +50,6 @@
    <!-- Adobe Typekit for (Futura and Garamond) -->
     <link rel="stylesheet" href="https://use.typekit.net/jye4muh.css">
 
-
     {% compress css %}
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
     {% endcompress %}
@@ -84,6 +83,9 @@
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="{% url 'search-view' %}">Search</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'archival-collections' %}">Archives</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/glossary">Glossary</a>
