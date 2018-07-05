@@ -81,7 +81,7 @@
                 </div>
             </div>
             <div v-else class="pin-place-content mt-2">
-                <dl class="pin-detail-tags d-flex flex-row mb-2">
+                <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedPlace.category.length > 0">
                   <dt class="mr-1 mb-0" v-if="selectedPlace.category.length > 1">Categories:</dt>
                   <dt class="mr-1 mb-0" v-else>Category:</dt>
                   <dd class="mb-0">
