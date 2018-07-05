@@ -79,6 +79,7 @@ INSTALLED_APPS += [  # noqa
     'lti_provider',
     'edtf',
     'debug_toolbar',
+    'contactus'
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -142,3 +143,5 @@ WIND_AFFIL_HANDLERS = [
     'djangowind.auth.StaffMapper',
     'djangowind.auth.SuperuserMapper'
 ]
+
+CONTACT_US_EMAIL = 'ctl-writlarge@columbia.edu'
