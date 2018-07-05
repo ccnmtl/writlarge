@@ -420,7 +420,33 @@ circle {
     stroke-width: 2px;
 }
 
-img.site-icon {
-    width: 25px;
-    height: 25px;
+.site-icon {
+    width: 25px !important;
+    height: 25px !important;
+}
+
+/* Archival Collections */
+.search-card {
+    border-color: #ced4da;
+}
+
+.search-card .card-header {
+    padding: .375rem .75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: left;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+
+.search-card .card-body {
+    padding: 1rem;
+}
+
+a.search-repository-title {
+    color: #212529;
 }

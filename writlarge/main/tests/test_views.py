@@ -452,6 +452,59 @@ class TestArchivalCollectionDeleteView(TestCase):
         self.assertEquals(self.site.archivalcollection_set.count(), 0)
 
 
+class TestArchivalCollectionListView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory(username='editor')
+        self.coll1 = ArchivalCollectionFactory(collection_title='alpha')
+        self.coll2 = ArchivalCollectionFactory(collection_title='beta')
+
+    def test_search_by_title(self):
+        url = "{}?q=beta&rid=".format(reverse('archival-collections'))
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 1)
+        self.assertEquals(
+            response.context['page_obj'].object_list[0], self.coll2)
+
+        self.assertEquals(response.context['query'], 'beta')
+        self.assertEquals(
+            response.context['base_url'], '/collections/?q=beta&rid=&page=')
+        self.assertEquals(response.context['repositories'].count(), 1)
+        self.assertTrue(
+            self.coll2.repository in response.context['repositories'])
+
+    def test_search_by_repository(self):
+        url = "{}?q=&rid={}".format(reverse('archival-collections'),
+                                    self.coll1.repository.id)
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 1)
+        self.assertEquals(
+            response.context['page_obj'].object_list[0], self.coll1)
+
+        self.assertEquals(response.context['query'], '')
+        self.assertEquals(response.context['repositories'].count(), 1)
+        self.assertTrue(
+            self.coll1.repository in response.context['repositories'])
+
+    def test_empty_search(self):
+        url = reverse('archival-collections')
+
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['page_obj'].object_list), 2)
+        self.assertTrue(
+            self.coll1 in response.context['page_obj'].object_list)
+        self.assertTrue(
+            self.coll2 in response.context['page_obj'].object_list)
+        self.assertTrue(
+            self.coll1.repository in response.context['repositories'])
+        self.assertTrue(
+            self.coll2.repository in response.context['repositories'])
+
+
 class TestFootnoteViews(TestCase):
 
     def setUp(self):

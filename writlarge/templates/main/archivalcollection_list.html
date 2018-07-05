@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}{{object.title}}{% endblock %}
+
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/minimal_map_template.html" %}
+{% endblock %}
+
+{% block content %}
+<div id="detail-container archival-collection" data-id="{{object.id}}" class="mb-5">
+    <div class="pt-5 pb-2 text-center">
+        <h2>
+            <i class="fa fa-archive" aria-hidden="true"></i> Archives
+        </h2>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-4">
+            <form method="get" action=".">
+                <div class="input-group mt-1">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Search</span>
+                  </div>
+                    <input type="text" class="form-control" name="q"
+                        placeholder="by title" value="{{query}}" />
+                    {% if query %}
+                    <span class="input-group-btn">
+                        <a class="btn btn-light btn-clear-search" href="{% url 'archival-collections' %}?rid={{selected_repository.id}}">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary btn-search-text" type="submit">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <div class="card w-100 mt-4 search-card">
+                <div class="card-header">
+                    Search by Archival Repository
+                </div>
+                <div class="card-body">
+                    {% for repo in repositories %}
+                        <div class="mb-2">
+                        <div>
+                            {% if selected_repository.id == repo.id %}
+                                <strong>
+                                <a class="search-repository-title"
+                                    href="{% url 'archival-collections' %}?q={{query}}">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i> {{repo.title}}
+                                </a>
+                                </strong>
+                            {% else %}
+                                <a class="search-repository-title"
+                                    href="{% url 'archival-collections' %}?q={{query}}&rid={{repo.id}}">
+                                    {{repo.title}}
+                                </a>
+                            {% endif %}
+                        </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+         <div class="col-md-8">
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    {% include 'main/pagination.html' %}
+                </div>
+            </div>
+
+            <ul class="list-group mt-4">
+                {% for object in object_list %}
+                    <li class="list-group-item">
+                        <a href="{% url 'collection-detail-view' object.id %}">
+                            {{object.collection_title}}</a>
+                        <div>
+                        {% with start=object.inclusive_start end=object.inclusive_end %}
+                        {% if start %}
+                            {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
+                        {% else %}{% if end %}
+                            ? - {{end}}
+                        {% endif %}
+                        {% endif %}
+                        {% endwith %}
+                        </div>
+                        <div>Sites of Teaching & Learning <span class="badge badge-pill badge-secondary">{{object.learning_sites.count}}</span></div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Sorry, no collections found.</li>
+                {% endfor %}
+            </ul>
+
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    {% include 'main/pagination.html' %}
+                </div>
+            </div>
+
+         </div>
+    </div>
+</div>
+{% endblock %}
+
+    

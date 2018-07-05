@@ -95,6 +95,8 @@ urlpatterns = [
     url(r'^view/collection/(?P<pk>\d+)/$',
         views.ArchivalCollectionDetailView.as_view(),
         name='collection-detail-view'),
+    url(r'^collections/$', views.ArchivalCollectionListView.as_view(),
+        name='archival-collections'),
 
     url(r'^add/footnote/(?P<parent>\d+)/$',
         views.FootnoteCreateView.as_view(),
