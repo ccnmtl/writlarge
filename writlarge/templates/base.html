@@ -100,6 +100,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/about/">About</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contactus' %}">Contact</a>
+                    </li>
                         {% if request.user.is_anonymous %}
                             <li class="nav-item">
                                 <a class="nav-link" href="/accounts/login/?next=/">Log In</a>
