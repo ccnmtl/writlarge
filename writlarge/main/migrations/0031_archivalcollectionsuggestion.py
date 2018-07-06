@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0029_remove_learningsite_children'),
+        ('main', '0030_auto_20180705_1535'),
     ]
 
     operations = [
