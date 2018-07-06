@@ -3,14 +3,12 @@ from datetime import date
 from django import forms
 from django.forms.widgets import (
     TextInput, CheckboxSelectMultiple, HiddenInput)
-import requests
 
-from writlarge import settings
 from writlarge.main.models import (
     ExtendedDate, LearningSite, DigitalObject, ArchivalCollection, Place,
     ArchivalCollectionSuggestion)
 from writlarge.main.utils import (
-    filter_fields, get_client_ip, verify_recaptcha)
+    filter_fields, verify_recaptcha)
 
 
 class ExtendedDateForm(forms.Form):

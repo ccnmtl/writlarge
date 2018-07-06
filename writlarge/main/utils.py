@@ -209,7 +209,7 @@ def get_client_ip(request):
 
 def verify_recaptcha(request):
 
-    if not settings.GOOGLE_RECAPTCHA_SITE_KEY:
+    if not hasattr(settings, 'GOOGLE_RECAPTCHA_SITE_KEY'):
         return True  # this site is not configured
 
     recaptcha = request.POST.get('g-recaptcha-response', None)

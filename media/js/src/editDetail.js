@@ -2,7 +2,8 @@
 
 requirejs(['./common'], function() {
     const a = ['jquery', 'utils', 'bootstrap', 'Vue',
-               'edtfVue', 'mapVue', 'recaptcha'];
+        'edtfVue', 'mapVue', 'recaptcha'];
+
     requirejs(a, function($, utils, bootstrap, Vue, edtfVue) {
 
         $.ajaxSetup({
