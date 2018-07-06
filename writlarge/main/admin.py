@@ -1,14 +1,13 @@
 # pylint: disable-msg=R0904
 from django.contrib import admin
-from django.forms.widgets import MultiWidget, TextInput
-
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
+from django.forms.widgets import MultiWidget, TextInput
 
 from writlarge.main.models import (
     LearningSite, ArchivalRepository, ArchivalCollection, DigitalObject,
     LearningSiteCategory, ArchivalRecordFormat, Place, ExtendedDate,
-    Audience, InstructionalLevel)
+    Audience, InstructionalLevel, ArchivalCollectionSuggestion)
 
 
 class LatLongWidget(MultiWidget):
@@ -75,3 +74,4 @@ admin.site.register(InstructionalLevel)
 admin.site.register(DigitalObject)
 admin.site.register(ArchivalRecordFormat)
 admin.site.register(ExtendedDate)
+admin.site.register(ArchivalCollectionSuggestion)

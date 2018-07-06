@@ -98,6 +98,13 @@ urlpatterns = [
     url(r'^collections/$', views.ArchivalCollectionListView.as_view(),
         name='archival-collections'),
 
+    url(r'^suggest/collection/$',
+        views.ArchivalCollectionSuggestView.as_view(),
+        name='collection-suggest-view'),
+    url(r'^suggest/collection/success/$',
+        views.ArchivalCollectionSuggestSuccessView.as_view(),
+        name='collection-suggest-success-view'),
+
     url(r'^add/footnote/(?P<parent>\d+)/$',
         views.FootnoteCreateView.as_view(),
         name='footnote-create-view'),

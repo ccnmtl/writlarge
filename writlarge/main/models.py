@@ -407,3 +407,37 @@ class ArchivalCollection(models.Model):
 
     def __str__(self):
         return self.collection_title
+
+
+class ArchivalCollectionSuggestion(models.Model):
+    person = models.TextField(verbose_name="Your Name")
+    person_title = models.TextField(verbose_name="Your Title")
+    email = models.EmailField(verbose_name="Your Email Address")
+
+    repository_title = models.TextField()
+    collection_title = models.TextField()
+
+    latlng = PointField()
+    title = models.TextField()
+
+    description = models.TextField(null=True, blank=True)
+    finding_aid_url = models.URLField(null=True, blank=True)
+    linear_feet = models.FloatField(null=True, blank=True)
+    record_format = models.ManyToManyField(ArchivalRecordFormat, blank=True)
+
+    inclusive_start = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='suggestion_start')
+    inclusive_end = models.OneToOneField(
+        ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
+        related_name='suggestion_end')
+
+    archival_collection = models.ForeignKey(
+        ArchivalCollection, null=True, blank=True,
+        on_delete=models.SET_NULL)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['repository_title', 'collection_title']

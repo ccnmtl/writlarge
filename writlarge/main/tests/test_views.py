@@ -6,7 +6,8 @@ from django.test.utils import override_settings
 from django.urls.base import reverse
 
 from writlarge.main.forms import ConnectionForm
-from writlarge.main.models import ArchivalCollection, LearningSite
+from writlarge.main.models import (
+    ArchivalCollection, LearningSite, ArchivalCollectionSuggestion)
 from writlarge.main.serializers import LearningSiteSerializer
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
@@ -503,6 +504,46 @@ class TestArchivalCollectionListView(TestCase):
             self.coll1.repository in response.context['repositories'])
         self.assertTrue(
             self.coll2.repository in response.context['repositories'])
+
+
+class TestArchivalCollectionSuggestionView(TestCase):
+
+    def setUp(self):
+        self.url = reverse('collection-suggest-view')
+
+    def test_submit(self):
+        # incomplete data
+        response = self.client.get(self.url)
+        self.assertEquals(response.status_code, 200)
+
+        data = {
+            'person': 'Elizabeth B. Drewry',
+            'person_title': 'Director of the Roosevelt Library',
+            'email': 'foo@foo.com',
+            'repository_title': 'Repository',
+            'collection_title': 'Collection',
+            'description': '',
+            'finding_aid_url': '',
+            'linear_feet': '',
+            'title': 'Bar', 'latlng': 'SRID=4326;POINT(1 1)',
+            'inclusive-start-millenium1': '2',
+            'inclusive-start-century1': '0',
+            'inclusive-start-decade1': '0',
+            'inclusive-start-year1': '0',
+            'inclusive-end-millenium1': '2',
+            'inclusive-end-century1': '0',
+            'inclusive-end-decade1': '0',
+            'inclusive-end-year1': '1',
+        }
+        response = self.client.post(self.url, data)
+        self.assertEquals(response.status_code, 302)
+
+        collection = ArchivalCollectionSuggestion.objects.get(
+            collection_title='Collection')
+        self.assertEquals(collection.inclusive_start.edtf_format, '2000')
+        self.assertEquals(collection.inclusive_end.edtf_format, '2001')
+        self.assertEquals(collection.title, 'Bar')
+        self.assertEquals(collection.latlng, 'SRID=4326;POINT(1 1)')
 
 
 class TestFootnoteViews(TestCase):
