@@ -224,3 +224,4 @@ def verify_recaptcha(request):
     }
     the_json = requests.post(url, data, verify=True).json()
     return the_json.get('success', False)
+
