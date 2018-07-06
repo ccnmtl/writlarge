@@ -9,10 +9,17 @@
 
 {% block content %}
 <div id="detail-container archival-collection" data-id="{{object.id}}" class="mb-5">
-    <div class="pt-5 pb-2 text-center">
-        <h2>
-            <i class="fa fa-archive" aria-hidden="true"></i> Archives
-        </h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="float-right pt-3">
+                <a href="{% url 'collection-suggest-view' %}">Suggest a Collection</a></h5>
+
+            <div class="pt-5 pb-2 text-center">
+                <h2>
+                    <i class="fa fa-archive" aria-hidden="true"></i> Archives
+                </h2>
+            </div>
+        </div>
     </div>
     <hr />
 

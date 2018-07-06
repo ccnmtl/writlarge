@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block title %}Create Archival Collection{% endblock %}
+{% block bodyclass %}archivalcollection-create{% endblock %}
+
+{% block client_templates %}
+    <meta name="csrf-token" content="{{csrf_token}}">
+    {% include "main/client/edtf_template.html" %}
+    {% include "main/client/pick_location_template.html" %}
+{% endblock %}
+
+
+{% block js %}
+    <script type="text/javascript"
+        src="//maps.google.com/maps/api/js?key={{settings.GOOGLE_MAP_API}}&libraries=places"></script>
+
+    <script data-main="{{STATIC_URL}}js/src/editDetail.js"
+        src="{{STATIC_URL}}js/lib/require/require.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="pb-2 pt-3 text-center">
+    <h2>
+        Suggest Archival Collection
+    </h2>
+</div>
+<hr />
+
+<div id="edit-detail-container" class="row">
+    <div class="col-md-12 order-md-1">
+        <form action="." method="post" novalidate v-on:submit="onSubmit">{% csrf_token %}
+            <p class="lead mt-3"><span class="step">1</span> Tell us about yourself</p>
+            {% bootstrap_field form.person_title show_label=False %}
+            {% bootstrap_field form.person show_label=False %}
+            {% bootstrap_field form.email show_label=False %}
+
+            <p class="lead mt-4"><span class="step">2</span> Where is the archival collection held?</p>
+            {% if form.latlng.errors %}
+                <div class="text-danger">
+                    Search by address and select a location, or click the map to drop a marker.
+                </div>
+            {% endif %}
+             <div class="mb-4">
+                <p class="text-muted">Search by address and select a location, or click the map to drop a marker.</p>
+                <google-map readonly="false" showplaces="false" icon="archive" />
+            </div>
+
+            <div class="mt-4">
+                <p class="lead"><span class="step">3</span> Add details about the archival collection.</p>
+                {% bootstrap_field form.repository_title show_label=False %}
+                {% bootstrap_field form.collection_title show_label=False %}
+                {% bootstrap_field form.description show_label=False %}
+                {% bootstrap_field form.finding_aid_url show_label=False %}
+                {% bootstrap_field form.linear_feet show_label=False %}
+            </div>
+
+            <div class="mt-4">
+                <p class="lead"><span class="step">4</span> Specify the collection's inclusive start and end dates</p>
+
+                {% bootstrap_field form.inclusive_start %}
+                <div class="form-group">
+                    <label for="id_inclusive_start">Inclusive Start Date</label>
+                    <edtf id="edtf-inclusive-start" name="inclusive-start"
+                        {% for key, value in object.inclusive_start.to_dict.items %}
+                            {% if value %}
+                                {{key}}="{{value}}" initial-{{key}}="{{value}}"
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.inclusive_start.errors %}initial-errors="1"{% endif %} />
+                </div>
+
+                {% bootstrap_field form.inclusive_end %}
+                <div class="form-group">
+                    <label for="id_inclusive_end">Inclusive End Date</label>
+                    <edtf id="edtf-inclusive-end" name="inclusive-end"
+                        {% for key, value in object.inclusive_end.to_dict.items %}
+                            {% if value %}
+                                {{key}}="{{value}}" initial-{{key}}="{{value}}"
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.inclusive_end.errors %}initial-errors="1"{% endif %}/>
+                </div>
+            </div>
+
+            <div>
+                <hr class="mb-4">
+                <button type="submit" class="btn btn-primary btn-block mb-2">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

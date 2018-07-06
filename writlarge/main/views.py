@@ -13,7 +13,7 @@ from rest_framework import viewsets
 
 from writlarge.main.forms import (
     ArchivalCollectionCreateForm, ArchivalCollectionUpdateForm,
-    ConnectionForm,
+    ArchivalCollectionSuggestionForm, ConnectionForm,
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
@@ -21,7 +21,8 @@ from writlarge.main.mixins import (
     SingleObjectCreatorMixin)
 from writlarge.main.models import (
     LearningSite, LearningSiteRelationship, ArchivalRepository, Place,
-    DigitalObject, ArchivalCollection, Footnote)
+    DigitalObject, ArchivalCollection, Footnote,
+    ArchivalCollectionSuggestion)
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
 
@@ -232,6 +233,25 @@ class ArchivalCollectionCreateView(LoggedInEditorMixin,
                 self.object.collection_title)
         )
         return reverse('site-detail-view', args=[self.parent.id])
+
+
+class ArchivalCollectionSuggestView(CreateView):
+    model = ArchivalCollectionSuggestion
+    form_class = ArchivalCollectionSuggestionForm
+    template_name = 'main/archivalcollection_suggest.html'
+    success_url = ''
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = CreateView.get_context_data(self, *args, **kwargs)
+        ctx['initial_repositories'] = ArchivalRepository.objects.all()
+        return ctx
+
+    def get_success_url(self):
+        return reverse('collection-suggest-success-view')
+
+
+class ArchivalCollectionSuggestSuccessView(TemplateView):
+    template_name = 'main/archivalcollection_suggest_success.html'
 
 
 class ArchivalCollectionUpdateView(LoggedInEditorMixin,
