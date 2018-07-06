@@ -386,9 +386,6 @@ class ArchivalCollection(models.Model):
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='collection_end')
 
-    inclusive_start_date = models.DateField(null=True)
-    inclusive_end_date = models.DateField(null=True)
-
     notes = models.TextField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
