@@ -2,9 +2,12 @@ from datetime import date
 import re
 
 from edtf import parse_edtf
+from edtf.parser.edtf_exceptions import EDTFParseException
 from edtf.parser.parser_classes import (
     EARLIEST, PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY)
-from edtf.parser.edtf_exceptions import EDTFParseException
+import requests
+
+from writlarge import settings
 
 
 def filter_fields(request_data, prefix):
@@ -193,3 +196,31 @@ class ExtendedDateWrapper(object):
             'month{}'.format(ordinal): self.get_month(),
             'day{}'.format(ordinal): self.get_day()
         }
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def verify_recaptcha(request):
+
+    if not settings.GOOGLE_RECAPTCHA_SITE_KEY:
+        return True  # this site is not configured
+
+    recaptcha = request.POST.get('g-recaptcha-response', None)
+    if not recaptcha:
+        return False
+
+    url = settings.GOOGLE_VERIFY_RECAPTCHA_URL
+    data = {
+        'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+        'response': recaptcha,
+        'remote_ip': get_client_ip(request)
+    }
+    the_json = requests.post(url, data, verify=True).json()
+    return the_json.get('success', False)

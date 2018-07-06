@@ -16,6 +16,7 @@ requirejs.config({
         'jquery': 'lib/jquery-3.3.1.min',
         'edtfVue': 'src/components/extendeddatevue',
         'googleMaps': mapsPath,
+        'recaptcha': 'https://www.google.com/recaptcha/api',
         'Vue': vuePath,
         'mapVue': 'src/components/gmapvue',
         'miniMapVue': 'src/components/gmapminivue',

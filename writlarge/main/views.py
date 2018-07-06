@@ -29,7 +29,7 @@ from writlarge.main.serializers import (
 
 # returns important setting information for all web pages.
 def django_settings(request):
-    whitelist = ['GOOGLE_MAP_API']
+    whitelist = ['GOOGLE_MAP_API', 'GOOGLE_RECAPTCHA_SITE_KEY']
     return {
         'is_editor': (request.user.groups and
                       request.user.groups.filter(name='Editor').exists()),
@@ -240,6 +240,11 @@ class ArchivalCollectionSuggestView(CreateView):
     form_class = ArchivalCollectionSuggestionForm
     template_name = 'main/archivalcollection_suggest.html'
     success_url = ''
+
+    def get_form_kwargs(self):
+        kw = super(ArchivalCollectionSuggestView, self).get_form_kwargs()
+        kw['request'] = self.request
+        return kw
 
     def get_context_data(self, *args, **kwargs):
         ctx = CreateView.get_context_data(self, *args, **kwargs)
