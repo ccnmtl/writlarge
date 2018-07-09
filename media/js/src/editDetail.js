@@ -1,7 +1,9 @@
 /* global ExtendedDateVue:true, csrfSafeMethod:true, GoogleMapVue:true */
 
 requirejs(['./common'], function() {
-    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'edtfVue', 'mapVue'];
+    const a = ['jquery', 'utils', 'bootstrap', 'Vue',
+        'edtfVue', 'mapVue', 'recaptcha'];
+
     requirejs(a, function($, utils, bootstrap, Vue, edtfVue) {
 
         $.ajaxSetup({

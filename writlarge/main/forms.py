@@ -7,7 +7,8 @@ from django.forms.widgets import (
 from writlarge.main.models import (
     ExtendedDate, LearningSite, DigitalObject, ArchivalCollection, Place,
     ArchivalCollectionSuggestion)
-from writlarge.main.utils import filter_fields
+from writlarge.main.utils import (
+    filter_fields, verify_recaptcha)
 
 
 class ExtendedDateForm(forms.Form):
@@ -316,6 +317,11 @@ class ArchivalCollectionSuggestionForm(forms.ModelForm):
             'latlng': HiddenInput
         }
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(ArchivalCollectionSuggestionForm, self).__init__(
+            *args, **kwargs)
+
     def clean(self):
         cleaned_data = forms.ModelForm.clean(self)
 
@@ -330,6 +336,10 @@ class ArchivalCollectionSuggestionForm(forms.ModelForm):
         if not self.form_end.is_valid():
             self._errors['inclusive-end'] = \
                 self.form_end.get_error_messages()
+
+        if not verify_recaptcha(self.request):
+            self._errors['__all__'] = self.error_class([
+                'Please verify you are not a robot'])
 
         return cleaned_data
 

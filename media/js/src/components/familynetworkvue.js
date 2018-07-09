@@ -160,6 +160,7 @@ var FamilyNetworkVue = {
                 .attr('stroke', 'rgba(50, 50, 50, 0.5)')
                 .style('stroke-dasharray', this.getLineStyle);
 
+            /* eslint-disable scanjs-rules/assign_to_href */
             const nodeElements = svg.append('g')
                 .attr('class', 'nodes')
                 .selectAll('circle')
@@ -170,9 +171,9 @@ var FamilyNetworkVue = {
                     return 'url(#' + node.group + ')';
                 })
                 .on('click', function(d) {
-                    // eslint-disable-next-link scanjs-rules/assign_to_href
                     location.href = '/view/' + d.id + '/';
                 });
+            /* eslint-enable scanjs-rules/assign_to_href */
 
             const textElements = svg.append('g')
                 .attr('class', 'texts')
