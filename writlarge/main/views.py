@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -253,6 +254,21 @@ class ArchivalCollectionSuggestView(CreateView):
 
     def get_success_url(self):
         return reverse('collection-suggest-success-view')
+
+    def form_valid(self, form):
+        result = CreateView.form_valid(self, form)
+
+        url = 'https://{}/admin/main/archivalcollectionsuggestion/{}/'.format(
+            self.request.get_host(), form.instance.id)
+        msg = '''
+            An archival collection was suggested. See details here: {}
+        '''.format(url)
+
+        # Send an email to the team
+        send_mail('Archival Collection Suggested',
+                  msg, settings.SERVER_EMAIL, (settings.CONTACT_US_EMAIL,))
+
+        return result
 
 
 class ArchivalCollectionSuggestSuccessView(TemplateView):
