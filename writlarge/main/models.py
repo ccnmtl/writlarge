@@ -415,7 +415,7 @@ class ArchivalCollectionSuggestion(models.Model):
     collection_title = models.TextField()
 
     latlng = PointField()
-    title = models.TextField()
+    title = models.TextField(verbose_name="Address")
 
     description = models.TextField(null=True, blank=True)
     finding_aid_url = models.URLField(null=True, blank=True)
@@ -438,3 +438,52 @@ class ArchivalCollectionSuggestion(models.Model):
 
     class Meta:
         ordering = ['repository_title', 'collection_title']
+
+    def get_or_create_repository(self):
+        try:
+            repo = ArchivalRepository.objects.get(
+                title=self.repository_title)
+        except ArchivalRepository.DoesNotExist:
+            (place, created) = Place.objects.get_or_create(
+                title=self.title,
+                latlng=self.latlng,
+                start_date=None, end_date=None)
+            repo = ArchivalRepository.objects.create(
+                place=place, title=self.repository_title)
+        return repo
+
+    def get_or_create_collection(self, repo):
+        try:
+            collection = ArchivalCollection.objects.get(
+                collection_title=self.collection_title, repository=repo)
+        except ArchivalCollection.DoesNotExist:
+            collection = ArchivalCollection.objects.create(
+                repository=repo, collection_title=self.collection_title,
+                description=self.description,
+                finding_aid_url=self.finding_aid_url,
+                linear_feet=self.linear_feet,
+                inclusive_start=self.inclusive_start,
+                inclusive_end=self.inclusive_end)
+
+        return collection
+
+    def add_notes(self, collection):
+        notes = 'Suggested by {}, {}'.format(self.person, self.person_title)
+        if collection.notes:
+            collection.notes = collection.notes + ' ' + notes
+        else:
+            collection.notes = notes
+        collection.save()
+
+    def convert_to_archival_collection(self):
+        if self.archival_collection is not None:
+            return self.archival_collection
+
+        repo = self.get_or_create_repository()
+        collection = self.get_or_create_collection(repo)
+        self.add_notes(collection)
+
+        self.archival_collection = collection
+        self.save()
+
+        return collection
