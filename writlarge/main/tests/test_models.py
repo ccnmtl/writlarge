@@ -3,7 +3,8 @@ from django.test import TestCase
 from writlarge.main.models import Place, ExtendedDate, LearningSite
 from writlarge.main.tests.factories import (
     ExtendedDateFactory, LearningSiteFactory,
-    LearningSiteRelationshipFactory)
+    LearningSiteRelationshipFactory, ArchivalCollectionSuggestionFactory,
+    ArchivalRepositoryFactory, ArchivalCollectionFactory)
 
 
 class ExtendedDateTest(TestCase):
@@ -190,3 +191,55 @@ class LearningSiteTest(TestCase):
 
         site = LearningSiteFactory()
         self.assertEquals(site.group(), 'school')
+
+
+class ArchivalCollectionSuggestionTest(TestCase):
+
+    def test_get_or_create_repository1(self):
+        s = ArchivalCollectionSuggestionFactory()
+        repo = s.get_or_create_repository()
+
+        self.assertEquals(s.repository_title, repo.title)
+        self.assertEquals(s.title, repo.place.title)
+        self.assertEquals(s.latlng, repo.place.latlng)
+
+    def test_get_or_create_repository2(self):
+        repo = ArchivalRepositoryFactory()
+
+        s = ArchivalCollectionSuggestionFactory(
+            repository_title=repo.title,
+            latlng=repo.place.latlng, title=repo.place.title)
+        self.assertEquals(s.get_or_create_repository(), repo)
+
+    def test_convert1(self):
+        s = ArchivalCollectionSuggestionFactory()
+        coll = s.convert_to_archival_collection()
+
+        self.assertEquals(s.collection_title, coll.collection_title)
+        self.assertEquals(s.repository_title, coll.repository.title)
+        self.assertEquals(s.description, coll.description)
+        self.assertEquals(
+            coll.notes,
+            ('Suggested by Elizabeth B. Drewry, '
+             'Director of the Roosevelt Library'))
+        self.assertEquals(s.finding_aid_url, coll.finding_aid_url)
+        self.assertEquals(s.linear_feet, coll.linear_feet)
+        self.assertEquals(s.inclusive_start, coll.inclusive_start)
+        self.assertEquals(s.inclusive_end, coll.inclusive_end)
+
+        s.refresh_from_db()
+        self.assertEquals(s.archival_collection, coll)
+
+    def test_convert2(self):
+        coll = ArchivalCollectionFactory()
+
+        s = ArchivalCollectionSuggestionFactory(
+            collection_title=coll.collection_title,
+            repository_title=coll.repository.title,
+            latlng=coll.repository.place.latlng,
+            title=coll.repository.place.title)
+
+        self.assertEquals(coll, s.convert_to_archival_collection())
+
+        s.refresh_from_db()
+        self.assertEquals(s.archival_collection, coll)

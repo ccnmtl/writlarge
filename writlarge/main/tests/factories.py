@@ -7,7 +7,8 @@ from factory.fuzzy import BaseFuzzyAttribute
 
 from writlarge.main.models import (
     LearningSiteCategory, LearningSite, LearningSiteRelationship,
-    ExtendedDate, ArchivalRepository, Place, ArchivalCollection, Footnote)
+    ExtendedDate, ArchivalRepository, Place, ArchivalCollection, Footnote,
+    ArchivalCollectionSuggestion)
 
 
 class FuzzyPoint(BaseFuzzyAttribute):
@@ -104,6 +105,28 @@ class ArchivalCollectionFactory(factory.DjangoModelFactory):
 
     collection_title = factory.Sequence(lambda n: "collection%03d" % n)
     repository = factory.SubFactory(ArchivalRepositoryFactory)
+
+
+class ArchivalCollectionSuggestionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = ArchivalCollectionSuggestion
+
+    repository_title = factory.Sequence(lambda n: "repository%03d" % n)
+    collection_title = factory.Sequence(lambda n: "collection%03d" % n)
+
+    person = 'Elizabeth B. Drewry'
+    person_title = 'Director of the Roosevelt Library'
+    email = 'edrewry@rooseveltlibrary.org'
+
+    latlng = FuzzyPoint()
+    title = 'Hyde Park, NY'
+
+    description = 'Sample description'
+    finding_aid_url = 'https://fdrlibrary.org/finding-aids'
+    linear_feet = 3
+
+    inclusive_start = factory.SubFactory(ExtendedDateFactory)
+    inclusive_end = factory.SubFactory(ExtendedDateFactory)
 
 
 class FootnoteFactory(factory.DjangoModelFactory):
