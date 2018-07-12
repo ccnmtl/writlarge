@@ -94,7 +94,7 @@ class ArchivalCollectionSuggestionAdmin(admin.ModelAdmin):
                                kwargs={'pk': coll.id})
                 msgs.append(created.format(link, obj.collection_title))
 
-        self.message_user(request, mark_safe('<br />'.join(msgs)))
+        self.message_user(request, mark_safe('<br />'.join(msgs)))  # nosec
 
     convert_suggested_collection.short_description = \
         "Convert to ArchivalCollection"
