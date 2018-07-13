@@ -34,6 +34,19 @@ var GoogleMapVue = {
         isReadOnly: function() {
             return this.readonly === 'true';
         },
+        siteIconUrl: function(site) {
+            const icon = site.category.length > 0 ?
+                site.category[0].group : 'other';
+            return WritLarge.staticUrl + 'png/pin-' + icon + '.png';
+        },
+        clearSelectedPlace: function() {
+            if (!this.selectedPlace) {
+                return;
+            }
+            const url = this.siteIconUrl(this.selectedPlace);
+            this.selectedPlace.marker.setIcon(url);
+            this.selectedPlace = null;
+        },
         clearNewPin: function(event) {
             if (this.newPin) {
                 this.newPin.setMap(null);
@@ -44,12 +57,11 @@ var GoogleMapVue = {
         },
         dropPin: function(event) {
             this.clearNewPin();
-            this.selectedPlace = null;
+            this.clearSelectedPlace();
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
-                map: this.map,
-                icon: WritLarge.staticUrl + 'png/pin-' + this.icon + '.png'
+                map: this.map
             });
 
             this.reverseGeocode(this.newPin);
@@ -78,9 +90,6 @@ var GoogleMapVue = {
                 this.newPin = null;
                 this.newTitle = '';
             });
-        },
-        deselectPlace: function(event) {
-            this.selectedPlace = null;
         },
         getAddress: function(event) {
             return this.address;
@@ -208,17 +217,19 @@ var GoogleMapVue = {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
                     site.place[0].latitude, site.place[0].longitude);
-                const icon = site.category.length > 0 ?
-                    site.category[0].group : 'other';
                 const marker = new google.maps.Marker({
                     position: position,
                     map: this.map,
-                    icon: WritLarge.staticUrl + 'png/pin-' + icon + '.png'
+                    icon: this.siteIconUrl(site)
                 });
                 site.marker = marker;
-                google.maps.event.addListener(marker, 'click', (ev) => {
+                google.maps.event.addListener(marker, 'click', (e) => {
                     this.clearNewPin();
+                    this.clearSelectedPlace();
                     this.selectedPlace = site;
+
+                    // set to default red icon
+                    marker.setIcon();
                 });
             }
         });
