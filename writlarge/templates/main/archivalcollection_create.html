@@ -50,7 +50,7 @@
 
 <div id="archival-collection-create" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post" novalidate v-on:submit="onSubmit">{% csrf_token %}
+        <form action="." method="post" novalidate v-on:keydown.enter.prevent  v-on:submit="onSubmit">{% csrf_token %}
             <p class="lead mt-3"><span class="step">1</span> Where is the archival collection held?</p>
             <div class="row">
                 <div class="col-md-12">
@@ -82,7 +82,7 @@
                         <label>Repository Location</label>
                         <small class="text-muted">Search by address or click the map to drop a marker.</small>
                         <div>
-                            <google-map readonly="false" showplaces="false" icon="archive" />
+                            <google-map readonly="false" showplaces="false" icon="archive" autodrop="true" />
                         </div>
                         <div class="clearfix"></div>
                         <button class="btn btn-primary btn-block mt-3 mb-2" v-on:click.stop.prevent="onCreateRepository">

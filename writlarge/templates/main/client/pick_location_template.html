@@ -9,7 +9,8 @@
                     class="form-control form-control w-25"
                     placeholder="Address"
                     name="address" autocomplete='street-address'
-                    aria-label="Enter an address" aria-describedby="basic-addon2">
+                    aria-label="Enter an address" aria-describedby="basic-addon2"
+                    v-on:keyup.enter.prevent="geocode">
                 <div class="input-group-append">
                     <button class="btn btn-secondary" type="button"
                         v-on:click="geocode"><i class="fa fa-search"></i></button>

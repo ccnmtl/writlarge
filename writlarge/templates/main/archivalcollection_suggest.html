@@ -29,21 +29,24 @@
 
 <div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post" novalidate v-on:submit="onSubmit">{% csrf_token %}
+        <form action="." method="post" novalidate v-on:keydown.enter.prevent v-on:submit="onSubmit">{% csrf_token %}
             <p class="lead mt-3"><span class="step">1</span> Tell us about yourself</p>
             {% bootstrap_field form.person_title show_label=False %}
             {% bootstrap_field form.person show_label=False %}
             {% bootstrap_field form.email show_label=False %}
 
             <p class="lead mt-4"><span class="step">2</span> Where is the archival collection held?</p>
-            {% if form.latlng.errors %}
-                <div class="text-danger">
-                    Search by address and select a location, or click the map to drop a marker.
-                </div>
-            {% endif %}
              <div class="mb-4">
-                <p class="text-muted">Search by address and select a location, or click the map to drop a marker.</p>
-                <google-map readonly="false" showplaces="false" icon="archive" />
+                <p class="{% if form.latlng.errors %}text-danger{% else %}text-muted{% endif %}">
+                    Search by address or click the map to drop a marker.
+                </p>
+                <google-map readonly="false" showplaces="false" icon="archive" autodrop="true"
+                    {% if form.data.title %}
+                        title="{{form.data.title}}"
+                        latitude="{{form.cleaned_data.latlng.coords.1}}"
+                        longitude="{{form.cleaned_data.latlng.coords.0}}"
+                    {% endif %}
+                    />
             </div>
 
             <div class="mt-4">
