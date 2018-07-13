@@ -32,7 +32,7 @@
             <i class="fa fa-archive" aria-hidden="true"></i> {{object.collection_title}}
         </h2>
         <h4 class="text-muted">
-            {{object.repository.title}}
+            <a href="{% url 'archival-collections' %}?q=&rid={{object.repository.id}}">{{object.repository.title}}</a>
         </h4>
     </div>
     <hr />
@@ -90,38 +90,6 @@
                     </div>
                 {% endfor %}
            {% endif %}
-
-           {% if object.repository.archivalcollection_set.count > 0 %}
-                <h4 class="mb-3 mt-5 text-muted">Repository</h4>
-                <p>Other collections at <strong>{{object.repository.title}}</strong>. <a href="{% url 'archival-collections' %}">View all collections</a></p>
-
-                <ul class="list-group">
-                {% for collection in object.repository.archivalcollection_set.all %}
-                    <li class="list-group-item mb-2 border-left-0 border-right-0 border-top-0">
-                        <div class="row no-gutters">
-                            <div class="col-md-1 text-secondary">
-                                <h1><i class="fa fa-archive" aria-hidden="true"></i></h1>
-                            </div>
-                            <div class="col-md-11 pl-3">
-                                <div><a href="{% url 'collection-detail-view' collection.id %}">
-                                    {{collection.collection_title}}</a>
-                                </div>
-                                <div>
-                                {% with start=collection.inclusive_start end=collection.inclusive_end %}
-                                {% if start %}
-                                    {{start}} - {% if end %}{{end}}{% else %}present{% endif %}
-                                {% else %}{% if end %}
-                                    ? - {{end}}
-                                {% endif %}
-                                {% endif %}
-                                {% endwith %}
-                                </div>
-                                <div>Sites of Teaching &amp; Learning <span class="badge badge-pill badge-secondary">{{collection.learning_sites.count}}</span></div>
-                            </div>
-                        </div>
-                    </li>
-                {% endfor %}
-            {% endif %}
         </div>
         <div class="col-md-4">
             {% if is_editor %}
