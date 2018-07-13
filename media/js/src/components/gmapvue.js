@@ -3,7 +3,7 @@
 
 var GoogleMapVue = {
     props: ['readonly', 'showplaces', 'latitude',
-        'longitude', 'title', 'icon'],
+        'longitude', 'title', 'icon', 'autodrop'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -104,6 +104,16 @@ var GoogleMapVue = {
                     this.bounds.extend(position);
                     this.bounds = enlargeBounds(this.bounds);
                     this.map.fitBounds(this.bounds);
+
+                    if (this.autodrop === 'true') {
+                        const marker = new google.maps.Marker({
+                            position: position,
+                            map: this.map,
+                            icon: WritLarge.staticUrl +
+                                'png/pin-' + this.icon + '.png'
+                        });
+                        this.newPin = marker;
+                    }
                 }
             });
         },

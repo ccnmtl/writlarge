@@ -35,7 +35,7 @@
 
 <div id="edit-detail-container" class="row">
     <div class="col-md-12 order-md-1">
-        <form action="." method="post" enctype="multipart/form-data" v-on:submit="onSubmit" onkeypress="return event.keyCode != 13;">
+        <form action="." method="post" enctype="multipart/form-data" v-on:keydown.enter.prevent v-on:submit="onSubmit" onkeypress="return event.keyCode != 13;">
             {% csrf_token %}
             {% if form.title.errors or form.latlng.errors %}
                 <div class="text-danger">
@@ -44,7 +44,7 @@
             {% endif %}
              <div class="mb-4">
                 <label>Location</label>
-                <google-map readonly="false" showplaces="false" icon="{{parent.category.first.group}}"
+                <google-map readonly="false" showplaces="false" icon="{{parent.category.first.group}}" autodrop="true"
                     {% if object %}title="{{object.title}}" latitude="{{object.latitude}}" longitude="{{object.longitude}}"{% endif %} />
             </div>
 
