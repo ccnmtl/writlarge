@@ -39,6 +39,13 @@ var GoogleMapVue = {
                 site.category[0].group : 'other';
             return WritLarge.staticUrl + 'png/pin-' + icon + '.png';
         },
+        setPlaceOpacity: function(opacity) {
+            this.places.forEach((site) => {
+                if (site.marker) {
+                    site.marker.setOpacity(opacity);
+                }
+            });
+        },
         clearSelectedPlace: function() {
             if (!this.selectedPlace) {
                 return;
@@ -46,18 +53,32 @@ var GoogleMapVue = {
             const url = this.siteIconUrl(this.selectedPlace);
             this.selectedPlace.marker.setIcon(url);
             this.selectedPlace = null;
+            this.setPlaceOpacity(1);
+        },
+        selectPlace: function(site) {
+            // turn down opacity for all other site markers
+            this.setPlaceOpacity(0.5);
+
+            site.marker.setIcon();
+            site.marker.setOpacity(1);
+            this.selectedPlace = site;
         },
         clearNewPin: function(event) {
-            if (this.newPin) {
-                this.newPin.setMap(null);
-                this.newPin = null;
-                this.address = '';
-                this.newTitle = '';
+            if (!this.newPin) {
+                return;
             }
+
+            this.newPin.setMap(null);
+            this.newPin = null;
+            this.address = '';
+            this.newTitle = '';
+
+            this.setPlaceOpacity(1);
         },
         dropPin: function(event) {
             this.clearNewPin();
             this.clearSelectedPlace();
+            this.setPlaceOpacity(0.5);
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -86,7 +107,7 @@ var GoogleMapVue = {
             $.post(params, (response) => {
                 response.marker = this.newPin;
                 this.places.push(response);
-                this.selectedPlace = response;
+                this.selectPlace(response);
                 this.newPin = null;
                 this.newTitle = '';
             });
@@ -236,10 +257,7 @@ var GoogleMapVue = {
                 google.maps.event.addListener(marker, 'click', (e) => {
                     this.clearNewPin();
                     this.clearSelectedPlace();
-                    this.selectedPlace = site;
-
-                    // set to default red icon
-                    marker.setIcon();
+                    this.selectPlace(site);
                 });
             }
         });
