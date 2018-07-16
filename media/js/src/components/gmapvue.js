@@ -16,8 +16,7 @@ var GoogleMapVue = {
             newTitle: '',
             newType: '',
             selectedPlace: null,
-            year: 'Present',
-            nyc: null
+            year: 'Present'
         };
     },
     computed: {
