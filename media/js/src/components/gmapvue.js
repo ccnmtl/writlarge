@@ -53,14 +53,9 @@ var GoogleMapVue = {
             const url = this.siteIconUrl(this.selectedPlace);
             this.selectedPlace.marker.setIcon(url);
             this.selectedPlace = null;
-            this.setPlaceOpacity(1);
         },
         selectPlace: function(site) {
-            // turn down opacity for all other site markers
-            this.setPlaceOpacity(0.5);
-
             site.marker.setIcon();
-            site.marker.setOpacity(1);
             this.selectedPlace = site;
         },
         clearNewPin: function(event) {
@@ -72,13 +67,10 @@ var GoogleMapVue = {
             this.newPin = null;
             this.address = '';
             this.newTitle = '';
-
-            this.setPlaceOpacity(1);
         },
         dropPin: function(event) {
             this.clearNewPin();
             this.clearSelectedPlace();
-            this.setPlaceOpacity(0.5);
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -120,7 +112,7 @@ var GoogleMapVue = {
         },
         geocode: function(event) {
             this.clearNewPin();
-            this.selectedPlace = null;
+            this.clearSelectedPlace();
 
             this.geocoder.geocode({
                 address: this.address,
