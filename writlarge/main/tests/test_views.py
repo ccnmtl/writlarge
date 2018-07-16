@@ -741,6 +741,6 @@ class LearningSiteViewSetTest(TestCase):
         url = "/api/site/?q=Alpha"
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 1)
         self.assertEquals(the_json[0]['id'], site1.id)
