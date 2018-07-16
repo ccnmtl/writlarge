@@ -16,7 +16,8 @@ var GoogleMapVue = {
             newTitle: '',
             newType: '',
             selectedPlace: null,
-            year: 'Present'
+            year: 'Present',
+            nyc: null
         };
     },
     computed: {
@@ -114,9 +115,11 @@ var GoogleMapVue = {
             this.clearNewPin();
             this.clearSelectedPlace();
 
-            this.geocoder.geocode({
-                address: this.address,
-            }, (responses) => {
+            const request = {
+                query: this.address,
+                fields: ['formatted_address', 'geometry', 'types']
+            };
+            this.placesService.findPlaceFromQuery(request, (responses) => {
                 if (responses && responses.length > 0) {
                     this.address = responses[0].formatted_address;
                     const position = responses[0].geometry.location;
@@ -185,8 +188,6 @@ var GoogleMapVue = {
     mounted: function() {
         const elt = document.getElementById(this.mapName);
 
-        this.geocoder = new google.maps.Geocoder();
-
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
             clickableIcons: false,
@@ -223,6 +224,11 @@ var GoogleMapVue = {
             });
         }
 
+        // initialize geocoder & places services
+        this.geocoder = new google.maps.Geocoder();
+        this.placesService = new google.maps.places.PlacesService(this.map);
+
+        // set initial marker if specified
         if (this.latitude && this.longitude) {
             const position = new google.maps.LatLng(
                 this.latitude, this.longitude);
