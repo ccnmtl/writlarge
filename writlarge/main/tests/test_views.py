@@ -669,17 +669,6 @@ class SearchViewTest(TestCase):
         self.assertEquals(
             response.context['base_url'], '/search/?q=bar&page=')
 
-    def test_search_by_creator(self):
-        url = "{}?q={}".format(reverse('search-view'), self.user.username)
-
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 1)
-        self.assertEquals(
-            response.context['page_obj'].object_list[0], self.site1)
-
-        self.assertEquals(response.context['query'], self.user.username)
-
     def test_empty_search(self):
         url = reverse('search-view')
 
@@ -743,3 +732,15 @@ class ConnectionDeleteViewTest(TestCase):
         response = self.client.post(url)
         self.assertEquals(response.status_code, 302)
         self.assertTrue(self.site not in self.parent.associates())
+
+
+class LearningSiteViewSetTest(TestCase):
+
+    def test_get(self):
+        site1 = LearningSiteFactory(title='Site Alpha')
+        url = "/api/site/?q=Alpha"
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+        the_json = loads(response.content)
+        self.assertEquals(len(the_json), 1)
+        self.assertEquals(the_json[0]['id'], site1.id)
