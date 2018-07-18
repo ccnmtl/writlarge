@@ -18,7 +18,7 @@ from writlarge.main.forms import (
     ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
 from writlarge.main.mixins import (
     LearningSiteParamMixin, LearningSiteRelatedMixin,
-    LoggedInEditorMixin, JSONResponseMixin,
+    LoggedInEditorMixin, JSONResponseMixin, LearningSiteSearchMixin,
     SingleObjectCreatorMixin)
 from writlarge.main.models import (
     LearningSite, LearningSiteRelationship, ArchivalRepository, Place,
@@ -46,7 +46,7 @@ class MapView(TemplateView):
     template_name = "main/map.html"
 
 
-class SearchView(ListView):
+class SearchView(LearningSiteSearchMixin, ListView):
     model = LearningSite
     template_name = "main/search.html"
     paginate_by = 15
@@ -62,20 +62,9 @@ class SearchView(ListView):
 
         return context
 
-    def filter(self, qs):
-        q = self.request.GET.get('q', '')
-        if len(q) < 1:
-            return qs
-
-        return qs.filter(Q(title__icontains=q) |
-                         Q(created_by__first_name__icontains=q) |
-                         Q(created_by__last_name__icontains=q) |
-                         Q(created_by__username__icontains=q))
-
     def get_queryset(self):
         qs = super(SearchView, self).get_queryset()
-        qs = self.filter(qs)
-        return qs
+        return self.filter(qs)
 
 
 class PlaceCreateView(LoggedInEditorMixin,
@@ -451,14 +440,12 @@ class ArchivalRepositoryViewSet(viewsets.ModelViewSet):
     serializer_class = ArchivalRepositorySerializer
 
 
-class LearningSiteViewSet(viewsets.ModelViewSet):
+class LearningSiteViewSet(LearningSiteSearchMixin, viewsets.ModelViewSet):
     serializer_class = LearningSiteSerializer
 
     def get_queryset(self):
-        return LearningSite.objects.all().select_related(
-            'created_by', 'modified_by').prefetch_related(
-            'place', 'category', 'digital_object',
-            'site_one', 'site_two', 'tags').order_by('-modified_at')
+        qs = LearningSite.objects.all()
+        return self.filter(qs)
 
 
 class PlaceViewSet(viewsets.ModelViewSet):
