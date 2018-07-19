@@ -7,10 +7,14 @@
                     class="form-control form-control w-25"
                     placeholder="Search place or location"
                     aria-label="Search place or location" aria-describedby="basic-addon2"
-                    v-on:keydown.enter.prevent="geocode">
+                    v-on:keydown.enter.prevent="search">
                 <div class="input-group-append">
                     <button class="btn btn-light" type="button"
-                        v-on:click="geocode"><i class="fa fa-search"></i></button>
+                        v-on:click="search"><i class="fa fa-search"></i>
+                    </button>
+                    <a v-if:"address" class="btn btn-light btn-clear-search" href="{% url 'map-view' %}">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -33,7 +37,12 @@
             </div>
         </div>
         <div class="google-map" :id="mapName"></div>
-        <div v-if="newPin" class="pin-place-detail">
+        <div v-if="searchResults" class="pin-place-detail">
+            <div v-if="searchResults.length === 0">
+                <h5>No Sites of Teaching &amp; Learning Found</h5>
+            </div>
+        </div>
+        <div v-else-if="newPin" class="pin-place-detail">
            <div class="pin-place-header d-flex justify-content-between">
                 <h5>Location Selected</h5>
                 <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="clearNewPin"><span aria-hidden="true">×</span></button>
@@ -56,7 +65,7 @@
                 </div>
             </form>
         </div>
-        <div v-if="selectedPlace" class="pin-place-detail">
+        <div v-else-if="selectedPlace" class="pin-place-detail">
            <div class="pin-place-header d-flex justify-content-between">
                 <h5>{{selectedPlace.title}}</h5>
                 <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="clearSelectedPlace"><span aria-hidden="true">×</span></button>

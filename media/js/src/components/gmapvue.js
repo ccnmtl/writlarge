@@ -16,7 +16,8 @@ var GoogleMapVue = {
             newTitle: '',
             newType: '',
             selectedPlace: null,
-            year: 'Present'
+            year: 'Present',
+            searchResults: null
         };
     },
     computed: {
@@ -46,6 +47,9 @@ var GoogleMapVue = {
                 }
             });
         },
+        clearSearch: function() {
+            this.searchResult = null;
+        },
         clearSelectedPlace: function() {
             if (!this.selectedPlace) {
                 return;
@@ -71,6 +75,7 @@ var GoogleMapVue = {
         dropPin: function(event) {
             this.clearNewPin();
             this.clearSelectedPlace();
+            this.clearSearch();
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -110,9 +115,10 @@ var GoogleMapVue = {
         getPlace: function(event) {
             return this.selectedPlace || this.newPin;
         },
-        geocode: function(event) {
+        search: function(event) {
             this.clearNewPin();
             this.clearSelectedPlace();
+            this.clearSearch();
 
             const request = {
                 query: this.address,
@@ -120,26 +126,41 @@ var GoogleMapVue = {
             };
             this.placesService.findPlaceFromQuery(request, (responses) => {
                 if (responses && responses.length > 0) {
-                    this.address = responses[0].formatted_address;
-                    const position = responses[0].geometry.location;
-
-                    // zoom in on the location, but not too far
-                    this.bounds = new google.maps.LatLngBounds();
-                    this.bounds.extend(position);
-                    this.bounds = enlargeBounds(this.bounds);
-                    this.map.fitBounds(this.bounds);
-
-                    if (this.autodrop === 'true') {
-                        const marker = new google.maps.Marker({
-                            position: position,
-                            map: this.map,
-                            icon: WritLarge.staticUrl +
-                                'png/pin-' + this.icon + '.png'
-                        });
-                        this.newPin = marker;
-                    }
+                    return this.geocodeSearchResults(responses);
                 }
+
+                const url = WritLarge.baseUrl + 'api/site/?q=' + this.address;
+                jQuery.getJSON(url, (data) => {
+                    if (data.length > 0) {
+                        return this.siteSearchResults(data);
+                    } else {
+                        this.searchResults = [];
+                    }
+                });
             });
+        },
+        geocodeSearchResults: function(responses) {
+            this.address = responses[0].formatted_address;
+            const position = responses[0].geometry.location;
+
+            // zoom in on the location, but not too far
+            this.bounds = new google.maps.LatLngBounds();
+            this.bounds.extend(position);
+            this.bounds = enlargeBounds(this.bounds);
+            this.map.fitBounds(this.bounds);
+
+            if (this.autodrop === 'true') {
+                const marker = new google.maps.Marker({
+                    position: position,
+                    map: this.map,
+                    icon: WritLarge.staticUrl +
+                        'png/pin-' + this.icon + '.png'
+                });
+                this.newPin = marker;
+            }
+        },
+        siteSearchResults: function(data) {
+            console.log('searchResult');
         },
         reverseGeocode: function(marker) {
             this.geocoder.geocode({
@@ -254,6 +275,8 @@ var GoogleMapVue = {
                 google.maps.event.addListener(marker, 'click', (e) => {
                     this.clearNewPin();
                     this.clearSelectedPlace();
+                    this.clearSearch();
+
                     this.selectPlace(site);
                 });
             }
