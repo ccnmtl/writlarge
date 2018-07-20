@@ -1,16 +1,16 @@
 {% verbatim %}
 <script type="text/x-template" id="google-map-template">
     <div>
-        <input type="hidden" name="title" v-model="address">
+        <input type="hidden" name="title" v-model="searchTerm">
         <input type="hidden" name="latlng" geom_type="POINT" v-model="latlng">
-        <div class="address-bar">
+        <div class="search-bar">
             <div class="input-group">
-                <input type="text" v-model="address"
+                <input type="text" v-model="searchTerm"
                     class="form-control form-control w-25"
                     placeholder="Address"
-                    name="address" autocomplete='street-address'
+                    name="searchTerm" autocomplete='street-address'
                     aria-label="Enter an address" aria-describedby="basic-addon2"
-                    v-on:keyup.enter.prevent="geocode">
+                    v-on:keyup.enter.stop.prevent="geocode">
                 <div class="input-group-append">
                     <button class="btn btn-secondary" type="button"
                         v-on:click="geocode"><i class="fa fa-search"></i></button>

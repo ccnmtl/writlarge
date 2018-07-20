@@ -111,7 +111,7 @@ footer li+li {
     height: 100%; 
 }
 
-.map-view .address-bar {
+.map-view .search-bar {
     position: absolute;
     top: 0.625rem;
     left: 1vw;
@@ -129,11 +129,11 @@ footer li+li {
     z-index: 1000;
 }
 
-.map-view .address-bar .input-group>.form-control {
+.map-view .search-bar .input-group>.form-control {
     border: none;
 }
 
-.map-view .address-bar .btn:focus {
+.map-view .search-bar .btn:focus {
     color: #495057;
     background-color: #fff;
     border-color: #80bdff;
@@ -369,7 +369,7 @@ input[type=number] {
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-    .map-view .address-bar {
+    .map-view .search-bar {
         left: 0.625rem;
         width: 25rem;
     }
