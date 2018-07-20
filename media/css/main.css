@@ -111,10 +111,6 @@ footer li+li {
     height: 100%; 
 }
 
-.map-view #map-container ul {
-    display: none;
-}
-
 .map-view .address-bar {
     position: absolute;
     top: 0.625rem;
@@ -153,6 +149,15 @@ footer li+li {
     right: 85px;
 }
 
+.map-view .pin-place-detail .list-group {
+    border: 0;
+}
+
+.map-view .pin-place-detail .list-group-item {
+    border-left: 0;
+    border-right: 0;
+}
+
 .map-view .pin-place-detail {
     position: absolute;
     width: 90vw;
@@ -169,6 +174,11 @@ footer li+li {
     -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     z-index: 1050;
+}
+
+.map-view .search-results {
+    font-size: .8em;
+    padding: 0;
 }
 
 .pin-place-header .close {

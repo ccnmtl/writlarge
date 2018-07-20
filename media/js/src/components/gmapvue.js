@@ -1,4 +1,5 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
+/* global Promise */
 /* exported GoogleMapVue */
 
 var GoogleMapVue = {
@@ -40,28 +41,6 @@ var GoogleMapVue = {
                 site.category[0].group : 'other';
             return WritLarge.staticUrl + 'png/pin-' + icon + '.png';
         },
-        setPlaceOpacity: function(opacity) {
-            this.places.forEach((site) => {
-                if (site.marker) {
-                    site.marker.setOpacity(opacity);
-                }
-            });
-        },
-        clearSearch: function() {
-            this.searchResult = null;
-        },
-        clearSelectedPlace: function() {
-            if (!this.selectedPlace) {
-                return;
-            }
-            const url = this.siteIconUrl(this.selectedPlace);
-            this.selectedPlace.marker.setIcon(url);
-            this.selectedPlace = null;
-        },
-        selectPlace: function(site) {
-            site.marker.setIcon();
-            this.selectedPlace = site;
-        },
         clearNewPin: function(event) {
             if (!this.newPin) {
                 return;
@@ -72,10 +51,49 @@ var GoogleMapVue = {
             this.address = '';
             this.newTitle = '';
         },
-        dropPin: function(event) {
+        clearSearch: function() {
+            this.searchResults = null;
+            this.address = null;
+            this.setPlacesOpacity(1);
+        },
+        clearSelectedPlace: function() {
+            if (!this.selectedPlace) {
+                return;
+            }
+            const url = this.siteIconUrl(this.selectedPlace);
+            this.selectedPlace.marker.setIcon(url);
+            this.selectedPlace = null;
+        },
+        clearAll: function() {
             this.clearNewPin();
-            this.clearSelectedPlace();
             this.clearSearch();
+            this.clearSelectedPlace();
+        },
+        setPlacesOpacity: function(opacity) {
+            this.places.forEach((site) => {
+                if (site.marker) {
+                    site.marker.setOpacity(opacity);
+                }
+            });
+        },
+        selectPlace: function(site) {
+            const OPTIMAL_ZOOM = 15;
+            this.clearAll();
+
+            site.marker.setIcon(); // show pointy red icon
+            this.selectedPlace = site;
+            this.address = this.selectedPlace.title;
+
+            let bounds = this.map.getBounds();
+            if (!bounds.contains(site.marker.getPosition()) ||
+                    this.map.getZoom() < OPTIMAL_ZOOM) {
+                // zoom in on the location, but not too close
+                this.map.setZoom(OPTIMAL_ZOOM);
+                this.map.panTo(site.marker.position);
+            }
+        },
+        dropPin: function(event) {
+            this.clearAll();
 
             this.newPin = new google.maps.Marker({
                 position: event.latLng,
@@ -101,12 +119,18 @@ var GoogleMapVue = {
                 data: JSON.stringify(data)
             };
 
-            $.post(params, (response) => {
-                response.marker = this.newPin;
-                this.places.push(response);
-                this.selectPlace(response);
+            $.post(params, (site) => {
+                site.marker = this.newPin;
                 this.newPin = null;
                 this.newTitle = '';
+
+                site.iconUrl = this.siteIconUrl(site);
+                google.maps.event.addListener(site.marker, 'click', (e) => {
+                    this.selectPlace(site);
+                });
+
+                this.places.push(site);
+                this.selectPlace(site);
             });
         },
         getAddress: function(event) {
@@ -115,33 +139,83 @@ var GoogleMapVue = {
         getPlace: function(event) {
             return this.selectedPlace || this.newPin;
         },
-        search: function(event) {
-            this.clearNewPin();
-            this.clearSelectedPlace();
-            this.clearSearch();
-
+        searchForSite: function() {
+            const url = WritLarge.baseUrl + 'api/site/?q=' + this.address;
+            return $.getJSON(url);
+        },
+        searchForAddress: function() {
+            const service = this.geocoder;
             const request = {
                 query: this.address,
                 fields: ['formatted_address', 'geometry', 'types']
             };
-            this.placesService.findPlaceFromQuery(request, (responses) => {
-                if (responses && responses.length > 0) {
-                    return this.geocodeSearchResults(responses);
-                }
 
-                const url = WritLarge.baseUrl + 'api/site/?q=' + this.address;
-                jQuery.getJSON(url, (data) => {
-                    if (data.length > 0) {
-                        return this.siteSearchResults(data);
-                    } else {
-                        this.searchResults = [];
-                    }
+            return new Promise(function(resolve, reject) {
+                service.findPlaceFromQuery(request, function(results) {
+                    resolve(results);
                 });
             });
         },
-        geocodeSearchResults: function(responses) {
-            this.address = responses[0].formatted_address;
-            const position = responses[0].geometry.location;
+        geocode: function(event) {
+            this.clearNewPin();
+            this.clearSelectedPlace();
+
+            $.when(this.searchForAddress())
+                .done((addresses) => {
+                    if (addresses) {
+                        this.geocodeResults(addresses);
+                    }
+            });
+        },
+        search: function(event) {
+            this.clearNewPin();
+            this.clearSelectedPlace();
+            this.searchResults = null;
+            this.setPlacesOpacity(1);
+
+            // Kick off a places search & a geocode search
+            $.when(this.searchForSite(), this.searchForAddress())
+                .done((places, addresses) => {
+                    if (places[0].length === 1) {
+                        this.singlePlaceResult(places[0][0]);
+                    } else if (places[0].length > 1) {
+                        this.placeResults(places[0]);
+                    } else if (addresses) {
+                        this.geocodeResults(addresses);
+                    } else {
+                        this.setPlacesOpacity(0.25);
+                        this.searchResults = [];
+                    }
+                });
+        },
+        singlePlaceResult: function(result) {
+            this.places.forEach((site) => {
+                if (result.id === site.id) {
+                    this.selectPlace(site);
+                }
+            });
+        },
+        placeResults: function(results) {
+            this.bounds = new google.maps.LatLngBounds();
+            this.searchResults = [];
+            this.places.forEach((site) => {
+                let opacity = 1;
+                if (!results.find(function(obj) {
+                    return obj.id === site.id;
+                })) {
+                    opacity = 0.25;
+                } else {
+                    this.searchResults.push(site);
+                    this.bounds.extend(site.marker.position);
+                    this.bounds = enlargeBounds(this.bounds);
+                }
+                site.marker.setOpacity(opacity);
+            });
+            this.map.fitBounds(this.bounds);
+        },
+        geocodeResults: function(results) {
+            this.address = results[0].formatted_address;
+            const position = results[0].geometry.location;
 
             // zoom in on the location, but not too far
             this.bounds = new google.maps.LatLngBounds();
@@ -159,11 +233,8 @@ var GoogleMapVue = {
                 this.newPin = marker;
             }
         },
-        siteSearchResults: function(data) {
-            console.log('searchResult');
-        },
         reverseGeocode: function(marker) {
-            this.geocoder.geocode({
+            this.reverseGeocoder.geocode({
                 latLng: marker.getPosition(),
             }, (responses) => {
                 if (responses && responses.length > 0) {
@@ -174,7 +245,7 @@ var GoogleMapVue = {
             });
         },
         changeOverlay: function(event) {
-            const id = jQuery(event.currentTarget).data('id');
+            const id = $(event.currentTarget).data('id');
             if (this.map.overlayMapTypes.getLength() > 0) {
                 this.map.overlayMapTypes.pop();
             }
@@ -194,13 +265,13 @@ var GoogleMapVue = {
                 name: 'NYPL Overlay'
             });
             this.map.overlayMapTypes.insertAt(0, overlay);
-            this.year = jQuery(event.currentTarget).html();
+            this.year = $(event.currentTarget).html();
         }
     },
     created: function() {
         if (this.showplaces === 'true') {
             const url = WritLarge.baseUrl + 'api/site/';
-            jQuery.getJSON(url, (data) => {
+            $.getJSON(url, (data) => {
                 this.places = data;
             });
         }
@@ -245,8 +316,8 @@ var GoogleMapVue = {
         }
 
         // initialize geocoder & places services
-        this.geocoder = new google.maps.Geocoder();
-        this.placesService = new google.maps.places.PlacesService(this.map);
+        this.reverseGeocoder = new google.maps.Geocoder();
+        this.geocoder = new google.maps.places.PlacesService(this.map);
 
         // set initial marker if specified
         if (this.latitude && this.longitude) {
@@ -272,11 +343,8 @@ var GoogleMapVue = {
                     icon: this.siteIconUrl(site)
                 });
                 site.marker = marker;
+                site.iconUrl = this.siteIconUrl(site);
                 google.maps.event.addListener(marker, 'click', (e) => {
-                    this.clearNewPin();
-                    this.clearSelectedPlace();
-                    this.clearSearch();
-
                     this.selectPlace(site);
                 });
             }
