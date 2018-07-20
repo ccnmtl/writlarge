@@ -51,7 +51,7 @@ class SearchView(LearningSiteSearchMixin, ListView):
     template_name = "main/search.html"
     paginate_by = 15
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):
         context = super(SearchView, self).get_context_data(**kwargs)
 
         query = self.request.GET.get('q', '')

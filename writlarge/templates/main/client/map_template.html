@@ -5,12 +5,17 @@
             <div class="input-group">
                 <input type="text" v-model="address"
                     class="form-control form-control w-25"
-                    placeholder="Search place or location"
-                    aria-label="Search place or location" aria-describedby="basic-addon2"
-                    v-on:keydown.enter.prevent="geocode">
+                    placeholder="Search place or address"
+                    aria-label="Search place or address" aria-describedby="basic-addon2"
+                    v-on:keydown.enter.prevent="search">
                 <div class="input-group-append">
                     <button class="btn btn-light" type="button"
-                        v-on:click="geocode"><i class="fa fa-search"></i></button>
+                        v-on:click="search"><i class="fa fa-search"></i>
+                    </button>
+                    <button v-if="address" class="btn btn-light btn-clear-search text-muted" type="button"
+                        v-on:click.prevent="clearAll">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -33,34 +38,8 @@
             </div>
         </div>
         <div class="google-map" :id="mapName"></div>
-        <div v-if="newPin" class="pin-place-detail">
-           <div class="pin-place-header d-flex justify-content-between">
-                <h5>Location Selected</h5>
-                <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="clearNewPin"><span aria-hidden="true">×</span></button>
-            </div>
-            <p>{{address}}</p>
-            <form>
-                <div class="form-group">
-                    <label for="title">Give this location a name:</label>
-                    <input v-model="newTitle" class="form-control form-control-sm" type="text">
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <button class="w-100 btn btn-sm btn-secondary"
-                            v-on:click.stop.prevent="clearNewPin">Cancel</button>
-                    </div>
-                    <div class="col">
-                        <button class="w-100 btn btn-sm btn-secondary"
-                            v-on:click.stop.prevent="savePin">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
         <div v-if="selectedPlace" class="pin-place-detail">
-           <div class="pin-place-header d-flex justify-content-between">
-                <h5>{{selectedPlace.title}}</h5>
-                <button type="button" class="close align-self-baseline" aria-label="Close" v-on:click.stop.prevent="clearSelectedPlace"><span aria-hidden="true">×</span></button>
-            </div>
+            <h5>{{selectedPlace.title}}</h5>
             <div v-if="selectedPlace.digital_object.length" class="pin-place-thumbnail clearfix">
                 <div v-if="selectedPlace.digital_object[0].file" class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].file + ')' }"></div>
                 <div v-else class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].source_url + ')' }"></div>
@@ -106,7 +85,56 @@
                 </div>
             </div>
         </div>
-        <ul><li v-for="place in places">{{place.title}}</li></ul>
+        <div v-else-if="searchResults" class="pin-place-detail search-results">
+            <div v-if="searchResults.length === 0">
+                <h5 class="pt-3 pr-3 pl-3 pb-2">No Sites of Teaching &amp; Learning Found</h5>
+            </div>
+            <div v-else>
+                <ul class="list-group">
+                    <li v-for="site in searchResults" class="list-group-item">
+                        <h6>
+                            <img :src="site.iconUrl" :alt="site.title"/> {{site.title}}
+                            <a class="float-right" target="_blank" :href="'/view/' + site.id + '/'"><i class="fa fa-share" aria-hidden="true"></i></a>
+                        </h6>
+
+                        <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="site.category.length > 0">
+                            <dt class="mr-1 mb-0" v-if="site.category.length > 1">Categories:</dt>
+                            <dt class="mr-1 mb-0" v-else>Category:</dt>
+                            <dd class="mb-0">
+                                <template v-for="(c, index) in site.category">
+                                    {{ c.name }}<template v-if="index + 1 < site.category.length">, </template>
+                                </template>
+                            </dd>
+                        </dl>
+
+                        <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="site.tags">
+                            <dt class="mr-1">Tags:</dt>
+                            <dd class="mb-0">{{site.tags}}</dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div v-else-if="newPin" class="pin-place-detail">
+            <p>{{address}}</p>
+            <form>
+                <div class="form-group">
+                    <label for="title">Give this location a name:</label>
+                    <input v-model="newTitle" class="form-control form-control-sm" type="text">
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button class="w-100 btn btn-sm btn-secondary"
+                            v-on:click.stop.prevent="clearNewPin">Cancel</button>
+                    </div>
+                    <div class="col">
+                        <button class="w-100 btn btn-sm btn-secondary"
+                            v-on:click.stop.prevent="savePin">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <ul style="display: none"><li v-for="place in places">{{place.title}}</li></ul>
     </div>
 </script>
 {% endverbatim %}
