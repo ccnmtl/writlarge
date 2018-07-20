@@ -2,21 +2,21 @@
 /* global Promise */
 /* exported GoogleMapVue */
 
-var GoogleMapVue = {
-    props: ['readonly', 'showplaces', 'latitude',
+const GoogleMapVue = {
+    props: ['readonly', 'showsites', 'latitude',
         'longitude', 'title', 'icon', 'autodrop'],
     template: '#google-map-template',
     data: function() {
         return {
             mapName: 'the-map',
-            places: [],
+            sites: [],
             map: null,
             bounds: null,
-            address: '',
+            searchTerm: '',
             newPin: null,
             newTitle: '',
             newType: '',
-            selectedPlace: null,
+            selectedSite: null,
             year: 'Present',
             searchResults: null
         };
@@ -48,48 +48,52 @@ var GoogleMapVue = {
 
             this.newPin.setMap(null);
             this.newPin = null;
-            this.address = '';
+            this.searchTerm = '';
             this.newTitle = '';
         },
         clearSearch: function() {
             this.searchResults = null;
-            this.address = null;
-            this.setPlacesOpacity(1);
+            this.searchTerm = null;
+            this.setMarkerOpacity(1);
         },
-        clearSelectedPlace: function() {
-            if (!this.selectedPlace) {
+        clearSelectedSite: function() {
+            if (!this.selectedSite) {
                 return;
             }
-            const url = this.siteIconUrl(this.selectedPlace);
-            this.selectedPlace.marker.setIcon(url);
-            this.selectedPlace = null;
+            const url = this.siteIconUrl(this.selectedSite);
+            this.selectedSite.marker.setIcon(url);
+            this.selectedSite = null;
         },
         clearAll: function() {
             this.clearNewPin();
             this.clearSearch();
-            this.clearSelectedPlace();
+            this.clearSelectedSite();
         },
-        setPlacesOpacity: function(opacity) {
-            this.places.forEach((site) => {
+        setMarkerOpacity: function(opacity) {
+            this.sites.forEach((site) => {
                 if (site.marker) {
                     site.marker.setOpacity(opacity);
                 }
             });
         },
-        selectPlace: function(site) {
-            const OPTIMAL_ZOOM = 15;
+        selectSite: function(site) {
             this.clearAll();
 
             site.marker.setIcon(); // show pointy red icon
-            this.selectedPlace = site;
-            this.address = this.selectedPlace.title;
+            this.selectedSite = site;
+            this.searchTerm = this.selectedSite.title;
+
+            this.showMarker(site.marker);
+        },
+        showMarker: function(marker) {
+            const OPTIMAL_ZOOM = 15;
 
             let bounds = this.map.getBounds();
-            if (!bounds.contains(site.marker.getPosition()) ||
+            if (!bounds.contains(marker.getPosition()) ||
                     this.map.getZoom() < OPTIMAL_ZOOM) {
                 // zoom in on the location, but not too close
                 this.map.setZoom(OPTIMAL_ZOOM);
-                this.map.panTo(site.marker.position);
+                this.map.panTo(marker.position);
             }
         },
         dropPin: function(event) {
@@ -107,7 +111,7 @@ var GoogleMapVue = {
                 'title': this.newTitle,
                 'latlng': this.newPin.position.toJSON(), // to be deprecated
                 'place': [{
-                    'title': this.address,
+                    'title': this.searchTerm,
                     'latlng': this.newPin.position.toJSON()
                 }]
             };
@@ -126,27 +130,27 @@ var GoogleMapVue = {
 
                 site.iconUrl = this.siteIconUrl(site);
                 google.maps.event.addListener(site.marker, 'click', (e) => {
-                    this.selectPlace(site);
+                    this.selectSite(site);
                 });
 
-                this.places.push(site);
-                this.selectPlace(site);
+                this.sites.push(site);
+                this.selectSite(site);
             });
         },
         getAddress: function(event) {
-            return this.address;
+            return this.searchTerm;
         },
-        getPlace: function(event) {
-            return this.selectedPlace || this.newPin;
+        getSelectedSite: function(event) {
+            return this.selectedSite || this.newPin;
         },
         searchForSite: function() {
-            const url = WritLarge.baseUrl + 'api/site/?q=' + this.address;
+            const url = WritLarge.baseUrl + 'api/site/?q=' + this.searchTerm;
             return $.getJSON(url);
         },
         searchForAddress: function() {
             const service = this.geocoder;
             const request = {
-                query: this.address,
+                query: this.searchTerm,
                 fields: ['formatted_address', 'geometry', 'types']
             };
 
@@ -158,7 +162,7 @@ var GoogleMapVue = {
         },
         geocode: function(event) {
             this.clearNewPin();
-            this.clearSelectedPlace();
+            this.clearSelectedSite();
 
             $.when(this.searchForAddress())
                 .done((addresses) => {
@@ -169,36 +173,36 @@ var GoogleMapVue = {
         },
         search: function(event) {
             this.clearNewPin();
-            this.clearSelectedPlace();
+            this.clearSelectedSite();
             this.searchResults = null;
-            this.setPlacesOpacity(1);
+            this.setMarkerOpacity(1);
 
-            // Kick off a places search & a geocode search
+            // Kick off a sites search & a geocode search
             $.when(this.searchForSite(), this.searchForAddress())
-                .done((places, addresses) => {
-                    if (places[0].length === 1) {
-                        this.singlePlaceResult(places[0][0]);
-                    } else if (places[0].length > 1) {
-                        this.placeResults(places[0]);
+                .done((sites, addresses) => {
+                    if (sites[0].length === 1) {
+                        this.singleSiteResult(sites[0][0]);
+                    } else if (sites[0].length > 1) {
+                        this.siteResults(sites[0]);
                     } else if (addresses) {
                         this.geocodeResults(addresses);
                     } else {
-                        this.setPlacesOpacity(0.25);
+                        this.setMarkerOpacity(0.25);
                         this.searchResults = [];
                     }
                 });
         },
-        singlePlaceResult: function(result) {
-            this.places.forEach((site) => {
+        singleSiteResult: function(result) {
+            this.sites.forEach((site) => {
                 if (result.id === site.id) {
-                    this.selectPlace(site);
+                    this.selectSite(site);
                 }
             });
         },
-        placeResults: function(results) {
+        siteResults: function(results) {
             this.bounds = new google.maps.LatLngBounds();
             this.searchResults = [];
-            this.places.forEach((site) => {
+            this.sites.forEach((site) => {
                 let opacity = 1;
                 if (!results.find(function(obj) {
                     return obj.id === site.id;
@@ -214,7 +218,7 @@ var GoogleMapVue = {
             this.map.fitBounds(this.bounds);
         },
         geocodeResults: function(results) {
-            this.address = results[0].formatted_address;
+            this.searchTerm = results[0].formatted_address;
             const position = results[0].geometry.location;
 
             // zoom in on the location, but not too far
@@ -238,9 +242,9 @@ var GoogleMapVue = {
                 latLng: marker.getPosition(),
             }, (responses) => {
                 if (responses && responses.length > 0) {
-                    this.address = responses[0].formatted_address;
+                    this.searchTerm = responses[0].formatted_address;
                 } else {
-                    this.address = '';
+                    this.searchTerm = '';
                 }
             });
         },
@@ -269,10 +273,10 @@ var GoogleMapVue = {
         }
     },
     created: function() {
-        if (this.showplaces === 'true') {
+        if (this.showsites === 'true') {
             const url = WritLarge.baseUrl + 'api/site/';
             $.getJSON(url, (data) => {
-                this.places = data;
+                this.sites = data;
             });
         }
     },
@@ -315,25 +319,31 @@ var GoogleMapVue = {
             });
         }
 
-        // initialize geocoder & places services
+        // initialize geocoder & Google's places services
         this.reverseGeocoder = new google.maps.Geocoder();
         this.geocoder = new google.maps.places.PlacesService(this.map);
 
-        // set initial marker if specified
+        // set initial address marker if specified in properties
         if (this.latitude && this.longitude) {
-            const position = new google.maps.LatLng(
-                this.latitude, this.longitude);
-            const marker = new google.maps.Marker({
-                position: position,
-                map: this.map,
-                icon: WritLarge.staticUrl + 'png/pin-' + this.icon + '.png'
+            const listener = this.map.addListener('idle', (ev) => {
+                const position = new google.maps.LatLng(
+                    this.latitude, this.longitude);
+                const marker = new google.maps.Marker({
+                    position: position,
+                    map: this.map,
+                    icon: WritLarge.staticUrl + 'png/pin-' +
+                        this.icon + '.png'
+                });
+                this.newPin = marker;
+                this.searchTerm = this.title;
+                this.showMarker(marker);
+
+                google.maps.event.removeListener(listener);
             });
-            this.newPin = marker;
-            this.address = this.title;
         }
     },
     updated: function() {
-        this.places.forEach((site) => {
+        this.sites.forEach((site) => {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
                     site.place[0].latitude, site.place[0].longitude);
@@ -345,7 +355,7 @@ var GoogleMapVue = {
                 site.marker = marker;
                 site.iconUrl = this.siteIconUrl(site);
                 google.maps.event.addListener(marker, 'click', (e) => {
-                    this.selectPlace(site);
+                    this.selectSite(site);
                 });
             }
         });

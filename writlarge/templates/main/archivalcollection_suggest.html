@@ -40,7 +40,7 @@
                 <p class="{% if form.latlng.errors %}text-danger{% else %}text-muted{% endif %}">
                     Search by address or click the map to drop a marker.
                 </p>
-                <google-map readonly="false" showplaces="false" icon="archive" autodrop="true"
+                <google-map readonly="false" showsites="false" icon="archive" autodrop="true"
                     {% if form.data.title %}
                         title="{{form.data.title}}"
                         latitude="{{form.cleaned_data.latlng.coords.1}}"

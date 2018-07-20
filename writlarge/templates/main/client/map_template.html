@@ -1,18 +1,18 @@
 {% verbatim %}
 <script type="text/x-template" id="google-map-template">
     <div>
-        <div class="address-bar">
+        <div class="search-bar">
             <div class="input-group">
-                <input type="text" v-model="address"
+                <input type="text" v-model="searchTerm"
                     class="form-control form-control w-25"
-                    placeholder="Search place or address"
-                    aria-label="Search place or address" aria-describedby="basic-addon2"
+                    placeholder="Search by name or address"
+                    aria-label="Search by name or address" aria-describedby="basic-addon2"
                     v-on:keydown.enter.prevent="search">
                 <div class="input-group-append">
                     <button class="btn btn-light" type="button"
                         v-on:click="search"><i class="fa fa-search"></i>
                     </button>
-                    <button v-if="address" class="btn btn-light btn-clear-search text-muted" type="button"
+                    <button v-if="searchTerm" class="btn btn-light btn-clear-search text-muted" type="button"
                         v-on:click.prevent="clearAll">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
@@ -38,22 +38,22 @@
             </div>
         </div>
         <div class="google-map" :id="mapName"></div>
-        <div v-if="selectedPlace" class="pin-place-detail">
-            <h5>{{selectedPlace.title}}</h5>
-            <div v-if="selectedPlace.digital_object.length" class="pin-place-thumbnail clearfix">
-                <div v-if="selectedPlace.digital_object[0].file" class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].file + ')' }"></div>
-                <div v-else class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedPlace.digital_object[0].source_url + ')' }"></div>
+        <div v-if="selectedSite" class="pin-place-detail">
+            <h5>{{selectedSite.title}}</h5>
+            <div v-if="selectedSite.digital_object.length" class="pin-place-thumbnail clearfix">
+                <div v-if="selectedSite.digital_object[0].file" class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedSite.digital_object[0].file + ')' }"></div>
+                <div v-else class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedSite.digital_object[0].source_url + ')' }"></div>
             </div>
-            <div class="pin-place-content mt-2" v-if="selectedPlace.empty && readonly === 'false'">
+            <div class="pin-place-content mt-2" v-if="selectedSite.empty && readonly === 'false'">
                 <p class="my-0">Can you add more detail to this location?</p>
                 <div class="row mt-4 mt-md-3">
                     <div class="col">
-                        <button class="w-100 btn btn-sm btn-secondary" v-on:click.stop.prevent="clearSelectedPlace">
+                        <button class="w-100 btn btn-sm btn-secondary" v-on:click.stop.prevent="clearSelectedSite">
                             Later
                         </button>
                     </div>
                     <div class="col">
-                        <a :href="'/edit/' + selectedPlace.id + '/'"
+                        <a :href="'/edit/' + selectedSite.id + '/'"
                             class="w-100 btn btn-sm btn-secondary">
                             Add Details
                         </a>
@@ -61,23 +61,23 @@
                 </div>
             </div>
             <div v-else class="pin-place-content mt-2">
-                <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedPlace.category.length > 0">
-                  <dt class="mr-1 mb-0" v-if="selectedPlace.category.length > 1">Categories:</dt>
+                <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.category.length > 0">
+                  <dt class="mr-1 mb-0" v-if="selectedSite.category.length > 1">Categories:</dt>
                   <dt class="mr-1 mb-0" v-else>Category:</dt>
                   <dd class="mb-0">
-                    <template v-for="(c, index) in selectedPlace.category">
-                    {{ c.name }}<template v-if="index + 1 < selectedPlace.category.length">, </template>
+                    <template v-for="(c, index) in selectedSite.category">
+                    {{ c.name }}<template v-if="index + 1 < selectedSite.category.length">, </template>
                     </template>
                   </dd>
                 </dl>
 
-                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedPlace.tags">
+                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.tags">
                   <dt class="mr-1">Tags:</dt>
-                  <dd class="mb-0">{{selectedPlace.tags}}</dd>
+                  <dd class="mb-0">{{selectedSite.tags}}</dd>
                 </dl>
                 <div class="row mt-4 mt-md-3">
                     <div class="col">
-                        <a :href="'/view/' + selectedPlace.id + '/'"
+                        <a :href="'/view/' + selectedSite.id + '/'"
                             class="w-100 btn btn-sm btn-secondary">
                             Details
                         </a>
@@ -116,7 +116,7 @@
             </div>
         </div>
         <div v-else-if="newPin" class="pin-place-detail">
-            <p>{{address}}</p>
+            <p>{{searchTerm}}</p>
             <form>
                 <div class="form-group">
                     <label for="title">Give this location a name:</label>
@@ -134,7 +134,7 @@
                 </div>
             </form>
         </div>
-        <ul style="display: none"><li v-for="place in places">{{place.title}}</li></ul>
+        <ul style="display: none"><li v-for="site in sites">{{site.id}}</li></ul>
     </div>
 </script>
 {% endverbatim %}
