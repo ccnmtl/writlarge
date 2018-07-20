@@ -165,7 +165,7 @@ var GoogleMapVue = {
                     if (addresses) {
                         this.geocodeResults(addresses);
                     }
-            });
+                });
         },
         search: function(event) {
             this.clearNewPin();
