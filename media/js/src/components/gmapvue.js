@@ -38,11 +38,13 @@ const GoogleMapVue = {
             return this.selectedSite || this.newPin;
         },
         getSiteById: function(siteId) {
+            let result;
             this.sites.forEach((site) => {
                 if (site.id === siteId) {
-                    return site;
+                    result = site;
                 }
             });
+            return result;
         },
         isReadOnly: function() {
             return this.readonly === 'true';
