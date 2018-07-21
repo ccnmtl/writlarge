@@ -8,17 +8,15 @@ const GoogleMapVue = {
     template: '#google-map-template',
     data: function() {
         return {
-            mapName: 'the-map',
-            sites: [],
             map: null,
-            bounds: null,
-            searchTerm: '',
+            mapName: 'the-map',
             newPin: null,
             newTitle: '',
-            newType: '',
             selectedSite: null,
-            year: 'Present',
-            searchResults: null
+            sites: [],
+            searchTerm: '',
+            searchResults: null,
+            year: 'Present'
         };
     },
     computed: {
@@ -33,13 +31,47 @@ const GoogleMapVue = {
         }
     },
     methods: {
+        getSearchTerm: function() {
+            return this.searchTerm;
+        },
+        getSelectedSite: function() {
+            return this.selectedSite || this.newPin;
+        },
+        getSiteById: function(siteId) {
+            this.sites.forEach((site) => {
+                if (site.id === siteId) {
+                    return site;
+                }
+            });
+        },
         isReadOnly: function() {
             return this.readonly === 'true';
+        },
+        isSearching: function() {
+            return this.searchResults && this.searchResults.length > 0;
         },
         siteIconUrl: function(site) {
             const icon = site.category.length > 0 ?
                 site.category[0].group : 'other';
             return WritLarge.staticUrl + 'png/pin-' + icon + '.png';
+        },
+        markerOpacity: function(opacity) {
+            this.sites.forEach((site) => {
+                if (site.marker) {
+                    site.marker.setOpacity(opacity);
+                }
+            });
+        },
+        markerShow: function(marker) {
+            const OPTIMAL_ZOOM = 15;
+
+            let bounds = this.map.getBounds();
+            if (!bounds.contains(marker.getPosition()) ||
+                    this.map.getZoom() < OPTIMAL_ZOOM) {
+                // zoom in on the location, but not too close
+                this.map.setZoom(OPTIMAL_ZOOM);
+                this.map.panTo(marker.position);
+            }
         },
         clearNewPin: function(event) {
             if (!this.newPin) {
@@ -54,12 +86,13 @@ const GoogleMapVue = {
         clearSearch: function() {
             this.searchResults = null;
             this.searchTerm = null;
-            this.setMarkerOpacity(1);
+            this.markerOpacity(1);
         },
         clearSelectedSite: function() {
             if (!this.selectedSite) {
                 return;
             }
+            // reset the icon to the site's category
             const url = this.siteIconUrl(this.selectedSite);
             this.selectedSite.marker.setIcon(url);
             this.selectedSite = null;
@@ -69,31 +102,20 @@ const GoogleMapVue = {
             this.clearSearch();
             this.clearSelectedSite();
         },
-        setMarkerOpacity: function(opacity) {
-            this.sites.forEach((site) => {
-                if (site.marker) {
-                    site.marker.setOpacity(opacity);
-                }
-            });
-        },
         selectSite: function(site) {
-            this.clearAll();
+            if (site.marker.getOpacity() < 1) {
+                return; // dimmed sites aren't clickable
+            }
+
+            this.clearNewPin();
+            this.clearSelectedSite();
 
             site.marker.setIcon(); // show pointy red icon
             this.selectedSite = site;
-            this.searchTerm = this.selectedSite.title;
+            this.markerShow(site.marker);
 
-            this.showMarker(site.marker);
-        },
-        showMarker: function(marker) {
-            const OPTIMAL_ZOOM = 15;
-
-            let bounds = this.map.getBounds();
-            if (!bounds.contains(marker.getPosition()) ||
-                    this.map.getZoom() < OPTIMAL_ZOOM) {
-                // zoom in on the location, but not too close
-                this.map.setZoom(OPTIMAL_ZOOM);
-                this.map.panTo(marker.position);
+            if (!this.isSearching()) {
+                this.searchTerm = this.selectedSite.title;
             }
         },
         dropPin: function(event) {
@@ -137,12 +159,6 @@ const GoogleMapVue = {
                 this.selectSite(site);
             });
         },
-        getAddress: function(event) {
-            return this.searchTerm;
-        },
-        getSelectedSite: function(event) {
-            return this.selectedSite || this.newPin;
-        },
         searchForSite: function() {
             const url = WritLarge.baseUrl + 'api/site/?q=' + this.searchTerm;
             return $.getJSON(url);
@@ -175,32 +191,30 @@ const GoogleMapVue = {
             this.clearNewPin();
             this.clearSelectedSite();
             this.searchResults = null;
-            this.setMarkerOpacity(1);
+            this.markerOpacity(1);
 
             // Kick off a sites search & a geocode search
             $.when(this.searchForSite(), this.searchForAddress())
                 .done((sites, addresses) => {
                     if (sites[0].length === 1) {
-                        this.singleSiteResult(sites[0][0]);
+                        // single site found
+                        const site = this.getSiteById(sites[0][0].id);
+                        this.selectSite(site);
                     } else if (sites[0].length > 1) {
+                        // multiple sites found
                         this.siteResults(sites[0]);
                     } else if (addresses) {
+                        // no sites found, try to display geocode result
                         this.geocodeResults(addresses);
                     } else {
-                        this.setMarkerOpacity(0.25);
+                        // no results at all
+                        this.markerOpacity(0.25);
                         this.searchResults = [];
                     }
                 });
         },
-        singleSiteResult: function(result) {
-            this.sites.forEach((site) => {
-                if (result.id === site.id) {
-                    this.selectSite(site);
-                }
-            });
-        },
         siteResults: function(results) {
-            this.bounds = new google.maps.LatLngBounds();
+            let bounds = new google.maps.LatLngBounds();
             this.searchResults = [];
             this.sites.forEach((site) => {
                 let opacity = 1;
@@ -210,22 +224,22 @@ const GoogleMapVue = {
                     opacity = 0.25;
                 } else {
                     this.searchResults.push(site);
-                    this.bounds.extend(site.marker.position);
-                    this.bounds = enlargeBounds(this.bounds);
+                    bounds.extend(site.marker.position);
+                    bounds = enlargeBounds(bounds);
                 }
                 site.marker.setOpacity(opacity);
             });
-            this.map.fitBounds(this.bounds);
+            this.map.fitBounds(bounds);
         },
         geocodeResults: function(results) {
             this.searchTerm = results[0].formatted_address;
             const position = results[0].geometry.location;
 
             // zoom in on the location, but not too far
-            this.bounds = new google.maps.LatLngBounds();
-            this.bounds.extend(position);
-            this.bounds = enlargeBounds(this.bounds);
-            this.map.fitBounds(this.bounds);
+            let bounds = new google.maps.LatLngBounds();
+            bounds.extend(position);
+            bounds = enlargeBounds(bounds);
+            this.map.fitBounds(bounds);
 
             if (this.autodrop === 'true') {
                 const marker = new google.maps.Marker({
@@ -270,6 +284,13 @@ const GoogleMapVue = {
             });
             this.map.overlayMapTypes.insertAt(0, overlay);
             this.year = $(event.currentTarget).html();
+        },
+        searchDetail: function(siteId) {
+            const site = this.getSiteById(siteId);
+            this.selectSite(site);
+        },
+        searchList: function(event) {
+            this.clearSelectedSite();
         }
     },
     created: function() {
@@ -336,7 +357,7 @@ const GoogleMapVue = {
                 });
                 this.newPin = marker;
                 this.searchTerm = this.title;
-                this.showMarker(marker);
+                this.markerShow(marker);
 
                 google.maps.event.removeListener(listener);
             });
