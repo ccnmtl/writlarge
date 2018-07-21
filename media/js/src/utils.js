@@ -1,5 +1,7 @@
 /* global google: true */
 /* exported csrfSafeMethod, enlargeBounds, lightGrayStyle */
+/* exported getVisibleContentHeight */
+
 
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
@@ -204,3 +206,25 @@ const lightGrayStyle = new google.maps.StyledMapType([
         ]
     }
 ]);
+
+function getVisibleContentHeight() {
+    var viewportheight;
+
+    // the more standards compliant browsers (mozilla/netscape/opera/IE7
+    // use window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth !== 'undefined') {
+        viewportheight = window.innerHeight;
+    } else if (typeof document.documentElement !== 'undefined' &&
+        typeof document.documentElement.clientWidth !== 'undefined' &&
+            document.documentElement.clientWidth !== 0) {
+        // IE6 in standards compliant mode (i.e. with a valid doctype
+        // as the first line in the document)
+        viewportheight = document.documentElement.clientHeight;
+    } else {
+        // older versions of IE
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+    }
+
+    return viewportheight -
+        (100 + $('header').outerHeight() +  $('.search-bar').outerHeight());
+}

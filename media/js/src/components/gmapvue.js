@@ -1,5 +1,5 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise */
+/* global Promise, getVisibleContentHeight */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
@@ -16,6 +16,7 @@ const GoogleMapVue = {
             sites: [],
             searchTerm: '',
             searchResults: null,
+            searchResultHeight: 0,
             year: 'Present'
         };
     },
@@ -232,6 +233,7 @@ const GoogleMapVue = {
                 site.marker.setOpacity(opacity);
             });
             this.map.fitBounds(bounds);
+            this.searchResultHeight = getVisibleContentHeight();
         },
         geocodeResults: function(results) {
             this.searchTerm = results[0].formatted_address;
@@ -286,6 +288,9 @@ const GoogleMapVue = {
             });
             this.map.overlayMapTypes.insertAt(0, overlay);
             this.year = $(event.currentTarget).html();
+        },
+        resize: function(event) {
+            this.searchResultHeight = getVisibleContentHeight();
         },
         searchDetail: function(siteId) {
             const site = this.getSiteById(siteId);
@@ -364,6 +369,9 @@ const GoogleMapVue = {
                 google.maps.event.removeListener(listener);
             });
         }
+
+        // eslint-disable-next-line scanjs-rules/call_addEventListener
+        window.addEventListener('resize', this.resize);
     },
     updated: function() {
         this.sites.forEach((site) => {
