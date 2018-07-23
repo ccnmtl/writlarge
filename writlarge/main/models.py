@@ -344,6 +344,12 @@ class LearningSite(models.Model):
         if self.defunct:
             return self.defunct.get_year()
 
+    def get_max_year(self):
+        if self.defunct:
+            return self.defunct.get_year()
+        if self.established:
+            return self.established.get_year()
+
 
 class LearningSiteRelationship(models.Model):
     site_one = models.ForeignKey(
