@@ -39,6 +39,9 @@
         </div>
         <div class="google-map" :id="mapName"></div>
         <div v-if="selectedSite" class="pin-place-detail">
+            <div v-if="searchResults">
+                <button class="btn btn-link pl-0" v-on:click.prevent="searchList"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back to results</button>
+            </div>
             <h5>{{selectedSite.title}}</h5>
             <div v-if="selectedSite.digital_object.length" class="pin-place-thumbnail clearfix">
                 <div v-if="selectedSite.digital_object[0].file" class="thumbnail-bg" v-bind:style="{ backgroundImage: 'url(' + selectedSite.digital_object[0].file + ')' }"></div>
@@ -93,7 +96,7 @@
                 <ul class="list-group">
                     <li v-for="site in searchResults" class="list-group-item">
                         <h6>
-                            <img :src="site.iconUrl" :alt="site.title"/> {{site.title}}
+                            <a href="#" v-on:click="searchDetail(site.id)"><img :src="site.iconUrl" :alt="site.title"/> {{site.title}}</a>
                             <a class="float-right" target="_blank" :href="'/view/' + site.id + '/'"><i class="fa fa-share" aria-hidden="true"></i></a>
                         </h6>
 

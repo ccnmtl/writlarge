@@ -50,7 +50,7 @@ requirejs(['./common'], function() {
                     const data = {
                         'title': this.repositoryTitle,
                         'place': {
-                            'title': this.$children[0].getAddress(),
+                            'title': this.$children[0].getSearchTerm(),
                             'latlng': place.position.toJSON()
                         }
                     };
