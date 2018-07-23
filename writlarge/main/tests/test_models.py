@@ -132,6 +132,22 @@ class ExtendedDateTest(TestCase):
         self.assertEquals(d['month1'], '06')
         self.assertEquals(d['day1'], '30')
 
+    def test_get_year(self):
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        self.assertEquals(dt.get_year(), 1659)
+
+        dt = ExtendedDate.objects.create(edtf_format='2uuu')
+        self.assertEquals(dt.get_year(), 2000)
+
+        dt = ExtendedDate.objects.create(edtf_format='14uu')
+        self.assertEquals(dt.get_year(), 1400)
+
+        dt = ExtendedDate.objects.create(edtf_format='192u')
+        self.assertEquals(dt.get_year(), 1920)
+
+        dt = ExtendedDate.objects.create(edtf_format='unknown')
+        self.assertIsNone(dt.get_year())
+
 
 class PlaceTest(TestCase):
 
@@ -191,6 +207,20 @@ class LearningSiteTest(TestCase):
 
         site = LearningSiteFactory()
         self.assertEquals(site.group(), 'school')
+
+    def get_test_min_year(self):
+        site = LearningSiteFactory()
+        self.assertEquals(site.get_min_year(), 1984)
+
+        site.established = None
+        site.defunct = None
+        site.save()
+        self.assertEquals(site.get_min_year(), 0)
+
+        dt = ExtendedDate.objects.create(edtf_format='2018')
+        site.defunct = dt
+        site.save()
+        self.assertEquals(site.get_min_year(), 2018)
 
 
 class ArchivalCollectionSuggestionTest(TestCase):

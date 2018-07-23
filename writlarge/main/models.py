@@ -102,6 +102,16 @@ class ExtendedDate(models.Model):
 
         return d
 
+    def get_year(self):
+        # As Writ Large does not use ranges, simply return the lower year
+        if self.is_unknown():
+            return
+
+        (lower, upper) = self.wrap()
+        dt = lower.start_date()
+        if dt and dt.year:
+            return dt.year
+
 
 class Footnote(models.Model):
     ordinal = models.IntegerField(default=1)
@@ -327,6 +337,12 @@ class LearningSite(models.Model):
     def group(self):
         category = self.category.first()
         return category.group if category else 'other'
+
+    def get_min_year(self):
+        if self.established:
+            return self.established.get_year()
+        if self.defunct:
+            return self.defunct.get_year()
 
 
 class LearningSiteRelationship(models.Model):
