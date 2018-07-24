@@ -145,4 +145,3 @@ WIND_AFFIL_HANDLERS = [
 ]
 
 CONTACT_US_EMAIL = 'ctl-writlarge@columbia.edu'
-GOOGLE_VERIFY_RECAPTCHA_URL = 'https://www.google.com/recaptcha/api/siteverify'

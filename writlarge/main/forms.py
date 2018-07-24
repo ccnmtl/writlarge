@@ -7,8 +7,7 @@ from django.forms.widgets import (
 from writlarge.main.models import (
     ExtendedDate, LearningSite, DigitalObject, ArchivalCollection, Place,
     ArchivalCollectionSuggestion)
-from writlarge.main.utils import (
-    filter_fields, verify_recaptcha)
+from writlarge.main.utils import (filter_fields)
 
 
 class ExtendedDateForm(forms.Form):
@@ -295,6 +294,8 @@ class ConnectionForm(forms.Form):
 
 
 class ArchivalCollectionSuggestionForm(forms.ModelForm):
+    decoy = forms.CharField(required=False)
+
     class Meta:
         model = ArchivalCollectionSuggestion
 
@@ -337,9 +338,9 @@ class ArchivalCollectionSuggestionForm(forms.ModelForm):
             self._errors['inclusive-end'] = \
                 self.form_end.get_error_messages()
 
-        if not verify_recaptcha(self.request):
-            self._errors['__all__'] = self.error_class([
-                'Please verify you are not a robot'])
+        if 'decoy' in cleaned_data and len(cleaned_data['decoy']) > 0:
+            self._errors["decoy"] = self.error_class([
+                "Please leave this field blank"])
 
         return cleaned_data
 

@@ -181,6 +181,10 @@ footer li+li {
     padding: 0;
 }
 
+.map-view .search-results .list-group {
+    overflow-y: scroll;
+}
+
 .pin-place-header .close {
     padding: 0.5rem;
     margin: -0.8rem -0.5rem 0 0;
@@ -459,4 +463,9 @@ circle {
 
 a.search-repository-title {
     color: #212529;
+}
+
+input[name='decoy'],
+p.decoy {
+    display: none !important;
 }

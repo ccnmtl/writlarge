@@ -86,12 +86,10 @@
                 </div>
             </div>
 
-            {% if settings.GOOGLE_RECAPTCHA_SITE_KEY %}
-                <div class="mt-4">
-                    <p class="lead"><span class="step">5</span> Please verify you are not a robot</p>
-                    <div class="g-recaptcha" data-sitekey="{{settings.GOOGLE_RECAPTCHA_SITE_KEY}}"></div>
-                </div>
-            {% endif %}
+            <div class="form-group">
+                <input type="text" name="decoy" value="" autofill="off" />
+                <p class="help-block decoy">If you can see the decoy field, please leave it blank.</p>
+            </div>
 
             <div>
                 <hr class="mb-4">
