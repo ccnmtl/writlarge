@@ -93,7 +93,7 @@
                 <h5 class="pt-3 pr-3 pl-3 pb-2">No Sites of Teaching &amp; Learning Found</h5>
             </div>
             <div v-else>
-                <ul class="list-group">
+                <ul class="list-group" :style="'height:' + searchResultHeight + 'px;'">
                     <li v-for="site in searchResults" class="list-group-item">
                         <h6>
                             <a href="#" v-on:click="searchDetail(site.id)"><img :src="site.iconUrl" :alt="site.title"/> {{site.title}}</a>

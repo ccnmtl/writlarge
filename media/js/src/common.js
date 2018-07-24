@@ -15,12 +15,13 @@ requirejs.config({
         'domReady': 'lib/require/domReady',
         'jquery': 'lib/jquery-3.3.1.min',
         'edtfVue': 'src/components/extendeddatevue',
+        'familyNetworkVue': 'src/components/familynetworkvue',
         'googleMaps': mapsPath,
-        'Vue': vuePath,
         'mapVue': 'src/components/gmapvue',
         'miniMapVue': 'src/components/gmapminivue',
-        'familyNetworkVue': 'src/components/familynetworkvue',
-        'utils': 'src/utils'
+        'noUiSlider': 'lib/nouislider/nouislider.min',
+        'utils': 'src/utils',
+        'Vue': vuePath,
     },
     shim: {
         'bootstrap': {

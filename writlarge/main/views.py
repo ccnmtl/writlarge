@@ -1,3 +1,5 @@
+import datetime
+
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -44,6 +46,20 @@ class CoverView(TemplateView):
 
 class MapView(TemplateView):
     template_name = "main/map.html"
+
+    def get_min_year(self, qs):
+        site = min(qs, key=lambda site: site.get_min_year() or float('inf'))
+        return site.get_min_year()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(MapView, self).get_context_data(**kwargs)
+
+        qs = LearningSite.objects.filter().select_related(
+            'established', 'defunct')
+
+        context['min_year'] = self.get_min_year(qs)
+        context['max_year'] = datetime.date.today().year
+        return context
 
 
 class SearchView(LearningSiteSearchMixin, ListView):
