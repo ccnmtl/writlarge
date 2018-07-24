@@ -19,7 +19,20 @@
                 </div>
             </div>
         </div>
-        <div class="overlay-picker">
+        <div class="advanced-filters">
+            <div v-if="startYear" class="text-center mb-1 ml-5">Year {{startYear}} - {{endYear}}</div>
+            <div>
+                <h3><i class="fa fa-calendar text-muted float-left" aria-hidden="true"></i></h3>
+                <div class="w-75 ml-5 mt-1 float-left">
+                    <div id="the-slider"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="mt-4">
+                <h3><i class="fa fa-th-list text-muted" aria-hidden="true"></i></h3> 
+            </div>
+        </div>
+        <!--div class="overlay-picker">
             <div class="btn-group" role="group">
             <button id="overlays" type="button" class="btn btn-secondary dropdown-toggle"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -36,7 +49,7 @@
                 <p class="text-muted text-center small mb-0">Please be patient as <br /> map tiles load.</p>
             </div>
             </div>
-        </div>
+        </div-->
         <div class="google-map" :id="mapName"></div>
         <div v-if="selectedSite" class="pin-place-detail">
             <div v-if="searchResults">

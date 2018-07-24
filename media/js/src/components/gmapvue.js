@@ -1,10 +1,11 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise, getVisibleContentHeight */
+/* global Promise, getVisibleContentHeight, sanitize */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
     props: ['readonly', 'showsites', 'latitude',
-        'longitude', 'title', 'icon', 'autodrop'],
+        'longitude', 'title', 'icon', 'autodrop',
+        'slidermin', 'slidermax'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -17,7 +18,10 @@ const GoogleMapVue = {
             searchTerm: '',
             searchResults: null,
             searchResultHeight: 0,
-            year: 'Present'
+            year: 'Present',
+            sliderName: 'the-slider',
+            startYear: null,
+            endYear: null
         };
     },
     computed: {
@@ -89,7 +93,6 @@ const GoogleMapVue = {
         clearSearch: function() {
             this.searchResults = null;
             this.searchTerm = null;
-            this.markerOpacity(1);
         },
         clearSelectedSite: function() {
             if (!this.selectedSite) {
@@ -167,14 +170,16 @@ const GoogleMapVue = {
             return $.getJSON(url);
         },
         searchForAddress: function() {
-            const service = this.geocoder;
-            const request = {
-                query: this.searchTerm,
-                fields: ['formatted_address', 'geometry', 'types']
-            };
+            if (!this.searchTerm) {
+                return Promise.resolve();
+            }
 
+            const self = this;
             return new Promise(function(resolve, reject) {
-                service.findPlaceFromQuery(request, function(results) {
+                self.geocoder.findPlaceFromQuery({
+                        query: self.searchTerm,
+                        fields: ['formatted_address', 'geometry', 'types']
+                    }, function(results) {
                     resolve(results);
                 });
             });
@@ -194,7 +199,6 @@ const GoogleMapVue = {
             this.clearNewPin();
             this.clearSelectedSite();
             this.searchResults = null;
-            this.markerOpacity(1);
 
             // Kick off a sites search & a geocode search
             $.when(this.searchForSite(), this.searchForAddress())
@@ -218,22 +222,27 @@ const GoogleMapVue = {
         },
         siteResults: function(results) {
             let bounds = new google.maps.LatLngBounds();
-            this.searchResults = [];
             this.sites.forEach((site) => {
-                let opacity = 1;
                 if (!results.find(function(obj) {
                     return obj.id === site.id;
                 })) {
-                    opacity = 0.25;
-                } else {
+                    // dim the icon, this site is not in the results
+                    site.marker.setOpacity(.25);
+                } else if (this.searchTerm) {
+                    if (!this.searchResults) {
+                        this.searchResults = [];
+                    }
                     this.searchResults.push(site);
+                    site.marker.setOpacity(1);
                     bounds.extend(site.marker.position);
                     bounds = enlargeBounds(bounds);
                 }
-                site.marker.setOpacity(opacity);
             });
-            this.map.fitBounds(bounds);
-            this.searchResultHeight = getVisibleContentHeight();
+
+            if (this.searchTerm) {
+                this.map.fitBounds(bounds);
+                this.searchResultHeight = getVisibleContentHeight();
+            }
         },
         geocodeResults: function(results) {
             this.searchTerm = results[0].formatted_address;
@@ -309,7 +318,7 @@ const GoogleMapVue = {
         }
     },
     mounted: function() {
-        const elt = document.getElementById(this.mapName);
+        let elt = document.getElementById(this.mapName);
 
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
@@ -374,6 +383,7 @@ const GoogleMapVue = {
         window.addEventListener('resize', this.resize);
     },
     updated: function() {
+        console.log('updated');
         this.sites.forEach((site) => {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
@@ -388,7 +398,39 @@ const GoogleMapVue = {
                 google.maps.event.addListener(marker, 'click', (e) => {
                     this.selectSite(site);
                 });
+            } 
+
+            let opacity = 1;
+            if (site.min_year && site.min_year < this.startYear) {
+                opacity = 0.25;
+            } else if (site.max_year && site.max_year > this.endYear) {
+                opacity = 0.25;
             }
+            site.marker.setOpacity(opacity);
         });
+
+        // create the slider
+        if (!this.slider && this.slidermin && this.slidermax) {
+            const start = parseInt(this.slidermin, 10);
+            const end = parseInt(this.slidermax, 10);
+            let elt = document.getElementById(this.sliderName);
+            this.slider = this.$parent.noUiSlider.create(elt, {
+                start: [start, end],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': start,
+                    'max': end
+                }
+            });
+            this.startYear = start;
+            this.endYear = end;
+
+            // hook up events
+            this.slider.on('set', (values) => {
+                this.startYear = parseInt(values[0], 10);
+                this.endYear = parseInt(values[1], 10);
+            });
+        }
     }
 };
