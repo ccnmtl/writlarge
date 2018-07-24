@@ -1,7 +1,9 @@
+from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 
 from writlarge.main.forms import (
-    ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm)
+    ExtendedDateForm, LearningSiteForm, DigitalObjectForm, PlaceForm,
+    ArchivalCollectionSuggestionForm)
 from writlarge.main.models import ExtendedDate
 from writlarge.main.tests.factories import LearningSiteFactory, PlaceFactory
 
@@ -327,3 +329,40 @@ class TestPlaceForm(TestCase):
         # make sure this was all saved
         self.assertEquals(place.start_date.edtf_format, '2008?~')
         self.assertEquals(place.end_date.edtf_format, '2011')
+
+
+class TestArchivalSuggestionForm(TestCase):
+
+    def setUp(self):
+        self.cleaned_data = {
+            'decoy': '',
+            'person': 'Elizabeth B. Drewry',
+            'person_title': 'Director of the Roosevelt Library',
+            'email': 'foo@foo.com',
+            'repository_title': 'Repository',
+            'collection_title': 'Collection',
+            'description': '',
+            'finding_aid_url': '',
+            'linear_feet': '',
+            'title': 'Bar', 'latlng': 'SRID=4326;POINT(1 1)',
+            'inclusive-start-millenium1': '2',
+            'inclusive-start-century1': '0',
+            'inclusive-start-decade1': '0',
+            'inclusive-start-year1': '0',
+            'inclusive-end-millenium1': '2',
+            'inclusive-end-century1': '0',
+            'inclusive-end-decade1': '1',
+            'inclusive-end-year1': '0',
+        }
+
+        request = RequestFactory()
+        self.form = ArchivalCollectionSuggestionForm(
+            *[], **{'request': request})
+        self.form._errors = {}
+        self.form.cleaned_data = self.cleaned_data
+
+    def test_form_clean_decoy(self):
+        self.form.cleaned_data['decoy'] = 'botnet'
+        self.form.clean()
+        self.assertEquals(len(self.form._errors.keys()), 1)
+        self.assertTrue('decoy' in self.form._errors.keys())

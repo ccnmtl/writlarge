@@ -2,7 +2,7 @@
 
 requirejs(['./common'], function() {
     const a = ['jquery', 'utils', 'bootstrap', 'Vue',
-        'edtfVue', 'mapVue', 'recaptcha'];
+        'edtfVue', 'mapVue'];
 
     requirejs(a, function($, utils, bootstrap, Vue, edtfVue) {
 

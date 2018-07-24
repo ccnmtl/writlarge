@@ -30,7 +30,7 @@ from writlarge.main.serializers import (
 
 # returns important setting information for all web pages.
 def django_settings(request):
-    whitelist = ['GOOGLE_MAP_API', 'GOOGLE_RECAPTCHA_SITE_KEY']
+    whitelist = ['GOOGLE_MAP_API']
     return {
         'is_editor': (request.user.groups and
                       request.user.groups.filter(name='Editor').exists()),

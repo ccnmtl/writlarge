@@ -460,3 +460,8 @@ circle {
 a.search-repository-title {
     color: #212529;
 }
+
+input[name='decoy'],
+p.decoy {
+    display: none !important;
+}
