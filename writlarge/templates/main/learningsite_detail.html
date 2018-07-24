@@ -133,8 +133,57 @@
                     </dd>
                 {% endif %}
             </dl>
+            {% if is_editor %}
+                <a href="{% url 'site-update-view' object.id %}" class="btn btn-light btn-block mt-2">
+                    <i class="fa fa-pencil text-secondary form-check-input" aria-hidden="true"></i> Edit Details
+                </a>
+            {% endif %}
+
+            {% if object.has_connections or is_editor %}
+                <h4 class="mb-3 mt-5 text-muted">Connections</h4>
+
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#family-graph" role="tab" aria-controls="connection graph" aria-selected="true">Visualization</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#family-list" role="tab" aria-controls="connection list" aria-selected="false">List</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="family-graph" role="tabpanel" aria-labelledby="connection graph">
+                        <div class="w-100 text-center">
+                            <family-network siteid="{{object.id}}" />
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="family-list" role="tabpanel" aria-labelledby="connection list">
+                        <div class="w-100">
+                            <ul class="list-group">
+                            {% for site in object.associates %}
+                                <li class="list-group-item">
+                                    {% if is_editor %}
+                                    <a class="float-right text-secondary"
+                                        href="{% url 'connection-delete-view' object.id 'associate' site.id %}">
+                                        <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
+                                    </a>
+                                    {% endif %}
+                                    <img src="{{STATIC_URL}}png/pin-{{site.category.first}}.png" class="site-icon" /> <a href="{% url 'site-detail-view' site.id %}">{{site.title}}</a>
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% if is_editor %}
+                    <a href="{% url 'connection-add-view' object.id %}" class="btn btn-light btn-block mt-2">
+                        <i class="fa fa-chain text-secondary form-check-input" aria-hidden="true"></i> Add Connection
+                    </a>
+                {% endif %}
+            {% endif %}
         </div>
         <div class="col-md-4 mb-4">
+            <h4 class="mb-3 text-muted">Location</h4>
             <div class="w-100 text-center">
                 <div id="map-container">
                     <google-mini-map
@@ -178,37 +227,19 @@
                 {% endfor %}
                 </ul>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 mb-4">
-                {% if is_editor %}
-                <a href="{% url 'site-update-view' object.id %}" class="btn btn-light btn-block mt-2">
-                    <i class="fa fa-pencil text-secondary form-check-input" aria-hidden="true"></i> Edit Details
-                </a>
-            {% endif %}
-        </div>
-        <div class="col-md-4 order-md-2 mb-4">
-                {% if is_editor %}
-                <a href="{% url 'place-add-view' object.id %}" class="btn btn-light btn-block mt-2">
-                    <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Place
-                </a>
-                {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h4 class="mb-3 mt-5 text-muted">Connections</h4>
-            <div class="w-100 text-center">
-                <family-network siteid="{{object.id}}" />
-            </div>
 
             {% if is_editor %}
-                <a href="{% url 'connection-add-view' object.id %}" class="btn btn-light btn-block mt-2">
-                    <i class="fa fa-chain text-secondary form-check-input" aria-hidden="true"></i> Add Connection
-                </a>
+            <a href="{% url 'place-add-view' object.id %}" class="btn btn-light btn-block mt-2">
+                <i class="fa fa-plus text-secondary form-check-input" aria-hidden="true"></i> Add Place
+            </a>
             {% endif %}
 
+        </div>
+    </div>
+
+    {% if object.archivalcollection_set.length > 0 or is_editor %}
+    <div class="row">
+        <div class="col-md-12">
             <h4 class="mb-3 mt-5 text-muted">Archival Collections</h4>
             <ul class="list-group">
             {% for collection in object.archivalcollection_set.all %}
@@ -262,6 +293,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
 
     {% if object.footnotes.count > 0 or is_editor %}
     <div class="row">
