@@ -148,10 +148,32 @@ class LearningSiteSearchMixin(object):
                 qs = qs.filter(title__icontains=token.value)
         return qs
 
+    def _process_years(self, qs, start, end):
+        ids = []
+        for site in qs:
+            min_year = site.get_min_year()
+            max_year = site.get_max_year()
+
+            if min_year and (min_year > end):
+                ids.append(site.id)
+            elif max_year and (max_year < start):
+                ids.append(site.id)
+
+        return qs.exclude(id__in=ids)
+
     def filter(self, qs):
         q = self.request.GET.get('q', None)
         if q:
             qs = self._process_query(qs, q)
+
+        qs = qs.select_related('established', 'defunct')
+
+        start_year = self.request.GET.get('start', '')
+        end_year = self.request.GET.get('end', '')
+
+        if (re.match(r'[1-2][0-9]{3}', start_year) and
+                re.match(r'[1-2][0-9]{3}', end_year)):
+            qs = self._process_years(qs, int(start_year), int(end_year))
 
         return qs.select_related(
             'created_by', 'modified_by').prefetch_related(

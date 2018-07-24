@@ -3,15 +3,22 @@ from django.test.testcases import TestCase
 
 from writlarge.main.mixins import LearningSiteSearchMixin
 from writlarge.main.models import LearningSite
-from writlarge.main.tests.factories import LearningSiteFactory
+from writlarge.main.tests.factories import (
+    LearningSiteFactory, ExtendedDateFactory)
 
 
 class LearningSiteSearchMixinTest(TestCase):
 
     def setUp(self):
         self.site1 = LearningSiteFactory(title='Site Alpha')
-        self.site2 = LearningSiteFactory(title='Site Beta')
-        self.site3 = LearningSiteFactory(title='Site Gamma')
+        self.site2 = LearningSiteFactory(
+            title='Site Beta', established=None, defunct=None)
+
+        dt1 = ExtendedDateFactory(edtf_format='1918')
+        dt2 = ExtendedDateFactory(edtf_format='1932')
+        self.site3 = LearningSiteFactory(
+            title='Site Gamma', established=dt1, defunct=dt2)
+
         self.site3.tags.add('red')
 
     def test_filter(self):
@@ -20,6 +27,26 @@ class LearningSiteSearchMixinTest(TestCase):
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), self.site1)
+
+    def test_filter_years_only(self):
+        mixin = LearningSiteSearchMixin()
+
+        mixin.request = RequestFactory().get(
+            '/', {'q': '', 'start': 'abcde', 'end': '4567'})
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 3)
+
+        mixin.request = RequestFactory().get(
+            '/', {'q': '', 'start': '1900', 'end': '1920'})
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 2)
+        self.assertTrue(self.site2 in qs)
+        self.assertTrue(self.site3 in qs)
+
+        mixin.request = RequestFactory().get(
+            '/', {'q': 'Alpha', 'start': '1900', 'end': '1920'})
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 0)
 
     def test_process_query(self):
         mixin = LearningSiteSearchMixin()
@@ -74,3 +101,28 @@ class LearningSiteSearchMixinTest(TestCase):
         self.assertEquals(next(t), ('CATEGORY', 'foo'))
         self.assertEquals(next(t), ('TAG', 'xyz'))
         self.assertEquals(next(t), ('STRING', 'terms'))
+
+    def test_process_years(self):
+        mixin = LearningSiteSearchMixin()
+
+        all = LearningSite.objects.all()
+
+        qs = mixin._process_years(all, 1776, 2018)
+        self.assertEquals(qs.count(), 3)
+        self.assertTrue(self.site1 in qs)
+        self.assertTrue(self.site2 in qs)
+        self.assertTrue(self.site3 in qs)
+
+        qs = mixin._process_years(all, 1900, 1918)
+        self.assertEquals(qs.count(), 2)
+        self.assertTrue(self.site2 in qs)
+        self.assertTrue(self.site3 in qs)
+
+        qs = mixin._process_years(all, 1980, 2018)
+        self.assertEquals(qs.count(), 2)
+        self.assertTrue(self.site1 in qs)
+        self.assertTrue(self.site2 in qs)
+
+        qs = mixin._process_years(all, 1800, 1812)
+        self.assertEquals(qs.count(), 1)
+        self.assertTrue(self.site2 in qs)
