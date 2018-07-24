@@ -100,7 +100,6 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'waffle.middleware.WaffleMiddleware',
-    'reversion.middleware.RevisionMiddleware',
     'writlarge.main.middleware.WhodidMiddleware'
 ]
 

@@ -75,8 +75,9 @@ class ArchivalCollectionAdmin(admin.ModelAdmin):
 class ArchivalCollectionSuggestionAdmin(admin.ModelAdmin):
     list_display = (
         'repository_title', 'collection_title', 'archival_collection')
-    exclude = ('record_format',)
+    exclude = ('record_format', 'archival_collection')
     actions = ['convert_suggested_collection']
+    readonly_fields = ('inclusive_start', 'inclusive_end')
 
     def convert_suggested_collection(self, request, queryset):
         msgs = []
