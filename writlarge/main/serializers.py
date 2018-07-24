@@ -73,6 +73,8 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     place = PlaceSerializer(many=True)
     tags = StringListField(read_only=True)
     family = serializers.SerializerMethodField(read_only=True)
+    min_year = serializers.SerializerMethodField(read_only=True)
+    max_year = serializers.SerializerMethodField(read_only=True)
 
     def get_family(self, obj):
         family = []
@@ -85,12 +87,18 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
             })
         return family
 
+    def get_min_year(self, obj):
+        return obj.get_min_year()
+
+    def get_max_year(self, obj):
+        return obj.get_max_year()
+
     class Meta:
         model = LearningSite
         fields = ('id', 'title', 'place', 'notes', 'category',
                   'digital_object', 'verified', 'verified_modified_at',
                   'empty', 'tags', 'created_at', 'modified_at',
-                  'family')
+                  'family', 'min_year', 'max_year')
 
     def create(self, validated_data):
         place_data = validated_data.pop('place')

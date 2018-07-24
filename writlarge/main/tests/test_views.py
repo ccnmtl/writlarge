@@ -12,9 +12,9 @@ from writlarge.main.serializers import LearningSiteSerializer
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory, FootnoteFactory,
-    LearningSiteRelationshipFactory)
+    LearningSiteRelationshipFactory, ExtendedDateFactory)
 from writlarge.main.views import (
-    django_settings, DigitalObjectCreateView, ConnectionCreateView)
+    django_settings, DigitalObjectCreateView, ConnectionCreateView, MapView)
 
 
 class BasicTest(TestCase):
@@ -744,3 +744,17 @@ class LearningSiteViewSetTest(TestCase):
         the_json = loads(response.content.decode('utf-8'))
         self.assertEquals(len(the_json), 1)
         self.assertEquals(the_json[0]['id'], site1.id)
+
+
+class MapViewTest(TestCase):
+
+    def test_get_min_year(self):
+        LearningSiteFactory(established=None, defunct=None)
+        LearningSiteFactory()
+
+        dt = ExtendedDateFactory(edtf_format='1918')
+        LearningSiteFactory(established=None, defunct=dt)
+
+        view = MapView()
+        qs = LearningSite.objects.all()
+        self.assertEquals(view.get_min_year(qs), 1918)
