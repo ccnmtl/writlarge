@@ -5,14 +5,6 @@ from writlarge.main.models import ArchivalRepository, LearningSite, \
     LearningSiteCategory, DigitalObject, Place
 
 
-class StringListField(serializers.ListField):
-    # from http://www.django-rest-framework.org/api-guide/fields/#listfield
-    child = serializers.CharField()
-
-    def to_representation(self, data):
-        return ', '.join(data.values_list('name', flat=True))
-
-
 class DigitalObjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DigitalObject
@@ -71,34 +63,12 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     category = LearningSiteCategorySerializer(read_only=True, many=True)
     digital_object = DigitalObjectSerializer(read_only=True, many=True)
     place = PlaceSerializer(many=True)
-    tags = StringListField(read_only=True)
-    family = serializers.SerializerMethodField(read_only=True)
-    min_year = serializers.SerializerMethodField(read_only=True)
-    max_year = serializers.SerializerMethodField(read_only=True)
-
-    def get_family(self, obj):
-        family = []
-        for site in obj.associates():
-            family.append({
-                'id': site.id,
-                'title': site.title,
-                'group': site.group(),
-                'relationship': 'associate'
-            })
-        return family
-
-    def get_min_year(self, obj):
-        return obj.get_min_year()
-
-    def get_max_year(self, obj):
-        return obj.get_max_year()
+    tags = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = LearningSite
-        fields = ('id', 'title', 'place', 'notes', 'category',
-                  'digital_object', 'verified', 'verified_modified_at',
-                  'empty', 'tags', 'created_at', 'modified_at',
-                  'family', 'min_year', 'max_year')
+        fields = ('id', 'title', 'place', 'category',
+                  'digital_object', 'empty')
 
     def create(self, validated_data):
         place_data = validated_data.pop('place')
@@ -113,3 +83,27 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.save()
         return instance
+
+    def tags(self, obj):
+        return ', '.join(obj.tags.names())
+
+
+class LearningSiteFamilySerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+    category = LearningSiteCategorySerializer(read_only=True, many=True)
+    family = serializers.SerializerMethodField(read_only=True)
+
+    def get_family(self, obj):
+        family = []
+        for site in obj.associates():
+            family.append({
+                'id': site.id,
+                'title': site.title,
+                'group': site.group(),
+                'relationship': 'associate'
+            })
+        return family
+
+    class Meta:
+        model = LearningSite
+        fields = ('id', 'title', 'category', 'family')

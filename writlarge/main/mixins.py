@@ -139,6 +139,8 @@ class LearningSiteSearchMixin(object):
                 yield SearchToken(kind, value[4:].strip())
 
     def _process_query(self, qs, q):
+        qs = qs.prefetch_related('category', 'tags')
+
         for token in self._tokenize(q):
             if token.typ == 'CATEGORY':
                 qs = qs.filter(category__name=token.value)
@@ -149,6 +151,8 @@ class LearningSiteSearchMixin(object):
         return qs
 
     def _process_years(self, qs, start, end):
+        qs = qs.prefetch_related('established', 'defunct')
+
         ids = []
         for site in qs:
             min_year = site.get_min_year()
@@ -162,20 +166,20 @@ class LearningSiteSearchMixin(object):
         return qs.exclude(id__in=ids)
 
     def filter(self, qs):
+        # filter by a search term
         q = self.request.GET.get('q', None)
         if q:
             qs = self._process_query(qs, q)
 
-        qs = qs.select_related('established', 'defunct')
-
+        # filter by start and end year
         start_year = self.request.GET.get('start', '')
         end_year = self.request.GET.get('end', '')
-
         if (re.match(r'[1-2][0-9]{3}', start_year) and
                 re.match(r'[1-2][0-9]{3}', end_year)):
             qs = self._process_years(qs, int(start_year), int(end_year))
 
         return qs.select_related(
+            'established', 'defunct',
             'created_by', 'modified_by').prefetch_related(
             'place', 'category', 'digital_object',
             'site_one', 'site_two', 'tags').order_by('-modified_at')
