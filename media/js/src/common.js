@@ -17,7 +17,6 @@ requirejs.config({
         'edtfVue': 'src/components/extendeddatevue',
         'familyNetworkVue': 'src/components/familynetworkvue',
         'googleMaps': mapsPath,
-        'recaptcha': 'https://www.google.com/recaptcha/api',
         'mapVue': 'src/components/gmapvue',
         'miniMapVue': 'src/components/gmapminivue',
         'noUiSlider': 'lib/nouislider/nouislider.min',
