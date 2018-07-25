@@ -11,6 +11,9 @@ html, body {
     margin: 0;
 }
 
+html.busy, html.busy * {  
+  cursor: wait;
+}
 
 main {
 }
@@ -174,6 +177,32 @@ footer li+li {
     -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
     z-index: 1050;
+}
+
+.map-view .advanced-filters .form-check-label,
+.map-view .advanced-filters .form-check {
+    position: absolute;
+}
+
+.map-view .advanced-filters .layer-1885 {
+    left: 195px;
+}
+
+.map-view .advanced-filters .layer-1916 {
+    left: 230px;
+}
+
+.map-view .advanced-filters .layer-1956 {
+    left: 274px;
+}
+
+.map-view .advanced-filters .layer-now {
+    left: 21.5rem;
+}
+
+.map-view .advanced-filters .form-check-label {
+    top: 2rem;
+    left: -.4rem;
 }
 
 .map-view .pin-place-detail {

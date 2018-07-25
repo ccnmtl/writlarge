@@ -1,5 +1,5 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise, getVisibleContentHeight, sanitize */
+/* global Promise, getVisibleContentHeight */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
@@ -166,7 +166,10 @@ const GoogleMapVue = {
             });
         },
         searchForSite: function() {
-            const url = WritLarge.baseUrl + 'api/site/?q=' + this.searchTerm;
+            const url = WritLarge.baseUrl + 'api/site/?' +
+                'q=' + this.searchTerm +
+                '&start=' + this.startYear +
+                '&end=' + this.endYear;
             return $.getJSON(url);
         },
         searchForAddress: function() {
@@ -177,9 +180,9 @@ const GoogleMapVue = {
             const self = this;
             return new Promise(function(resolve, reject) {
                 self.geocoder.findPlaceFromQuery({
-                        query: self.searchTerm,
-                        fields: ['formatted_address', 'geometry', 'types']
-                    }, function(results) {
+                    query: self.searchTerm,
+                    fields: ['formatted_address', 'geometry', 'types']
+                }, function(results) {
                     resolve(results);
                 });
             });
@@ -199,17 +202,24 @@ const GoogleMapVue = {
             this.clearNewPin();
             this.clearSelectedSite();
             this.searchResults = null;
+            $('html').addClass('busy');
 
             // Kick off a sites search & a geocode search
             $.when(this.searchForSite(), this.searchForAddress())
                 .done((sites, addresses) => {
-                    if (sites[0].length === 1) {
+                    if (!this.searchTerm) {
+                        // filtering solely by year range
+                        this.siteResults(sites[0]);
+                    } else if (sites[0].length === 1) {
                         // single site found
                         const site = this.getSiteById(sites[0][0].id);
                         this.selectSite(site);
                     } else if (sites[0].length > 1) {
-                        // multiple sites found
-                        this.siteResults(sites[0]);
+                        // multiple sites found via keyword + year range
+                        this.searchResults = [];
+                        const bounds = this.siteResults(sites[0]);
+                        this.map.fitBounds(bounds);
+                        this.searchResultHeight = getVisibleContentHeight();
                     } else if (addresses) {
                         // no sites found, try to display geocode result
                         this.geocodeResults(addresses);
@@ -218,31 +228,26 @@ const GoogleMapVue = {
                         this.markerOpacity(0.25);
                         this.searchResults = [];
                     }
+                    $('html').removeClass('busy');
                 });
         },
         siteResults: function(results) {
             let bounds = new google.maps.LatLngBounds();
             this.sites.forEach((site) => {
+                let opacity = 1;
                 if (!results.find(function(obj) {
                     return obj.id === site.id;
                 })) {
                     // dim the icon, this site is not in the results
-                    site.marker.setOpacity(.25);
+                    opacity = .25;
                 } else if (this.searchTerm) {
-                    if (!this.searchResults) {
-                        this.searchResults = [];
-                    }
                     this.searchResults.push(site);
-                    site.marker.setOpacity(1);
                     bounds.extend(site.marker.position);
                     bounds = enlargeBounds(bounds);
                 }
+                site.marker.setOpacity(opacity);
             });
-
-            if (this.searchTerm) {
-                this.map.fitBounds(bounds);
-                this.searchResultHeight = getVisibleContentHeight();
-            }
+            return bounds;
         },
         geocodeResults: function(results) {
             this.searchTerm = results[0].formatted_address;
@@ -383,7 +388,6 @@ const GoogleMapVue = {
         window.addEventListener('resize', this.resize);
     },
     updated: function() {
-        console.log('updated');
         this.sites.forEach((site) => {
             if (!site.marker) {
                 const position = new google.maps.LatLng(
@@ -398,17 +402,10 @@ const GoogleMapVue = {
                 google.maps.event.addListener(marker, 'click', (e) => {
                     this.selectSite(site);
                 });
-            } 
-
-            let opacity = 1;
-            if (site.min_year && site.min_year < this.startYear) {
-                opacity = 0.25;
-            } else if (site.max_year && site.max_year > this.endYear) {
-                opacity = 0.25;
             }
-            site.marker.setOpacity(opacity);
         });
 
+        // @todo - this should be a vue component
         // create the slider
         if (!this.slider && this.slidermin && this.slidermax) {
             const start = parseInt(this.slidermin, 10);
@@ -418,6 +415,7 @@ const GoogleMapVue = {
                 start: [start, end],
                 connect: true,
                 step: 1,
+                tooltips: false,
                 range: {
                     'min': start,
                     'max': end
@@ -427,9 +425,12 @@ const GoogleMapVue = {
             this.endYear = end;
 
             // hook up events
-            this.slider.on('set', (values) => {
+            this.slider.on('slide', (values) => {
                 this.startYear = parseInt(values[0], 10);
                 this.endYear = parseInt(values[1], 10);
+            });
+            this.slider.on('set', (values) => {
+                this.search();
             });
         }
     }
