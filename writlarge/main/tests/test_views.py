@@ -86,6 +86,8 @@ class ApiViewTest(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
+        self.user.groups.add(GroupFactory(name='Editor'))
+
         self.site = LearningSiteFactory()
         self.repository = ArchivalRepositoryFactory()
 
