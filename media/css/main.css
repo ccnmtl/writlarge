@@ -11,6 +11,9 @@ html, body {
     margin: 0;
 }
 
+html.busy, html.busy * {  
+  cursor: wait;
+}
 
 main {
 }
@@ -156,6 +159,50 @@ footer li+li {
 .map-view .pin-place-detail .list-group-item {
     border-left: 0;
     border-right: 0;
+}
+
+.map-view .advanced-filters {
+    position: absolute;
+    width: 90vw;
+    bottom: 0;
+    left: 5vw;
+    right: 5vw; 
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -moz-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.2),0 -1px 0px rgba(0,0,0,0.02);
+    z-index: 1050;
+}
+
+.map-view .advanced-filters .form-check-label,
+.map-view .advanced-filters .form-check {
+    position: absolute;
+}
+
+.map-view .advanced-filters .layer-1885 {
+    left: 195px;
+}
+
+.map-view .advanced-filters .layer-1916 {
+    left: 230px;
+}
+
+.map-view .advanced-filters .layer-1956 {
+    left: 274px;
+}
+
+.map-view .advanced-filters .layer-now {
+    left: 21.5rem;
+}
+
+.map-view .advanced-filters .form-check-label {
+    top: 2rem;
+    left: -.4rem;
 }
 
 .map-view .pin-place-detail {
@@ -396,10 +443,19 @@ input[type=number] {
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .map-view .pin-place-detail {
+    .map-view .advanced-filters {
         border-top: 1px solid #ddd;
         width: 25rem;
         top: 4.5rem;
+        left: 0.625rem;
+        right: 0;
+        bottom: auto;
+    }
+
+    .map-view .pin-place-detail {
+        border-top: 1px solid #ddd;
+        width: 25rem;
+        top: 14.25rem;
         left: 0.625rem;
         right: 0;
         bottom: auto;

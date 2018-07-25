@@ -1,6 +1,6 @@
 /* global google: true */
 /* exported csrfSafeMethod, enlargeBounds, lightGrayStyle */
-/* exported getVisibleContentHeight */
+/* exported getVisibleContentHeight, sanitize */
 
 
 function csrfSafeMethod(method) {
@@ -225,6 +225,7 @@ function getVisibleContentHeight() {
         viewportheight = document.getElementsByTagName('body')[0].clientHeight;
     }
 
-    return viewportheight -
-        (100 + $('header').outerHeight() +  $('.search-bar').outerHeight());
+    return viewportheight - (
+        100 + $('header').outerHeight() +  $('.search-bar').outerHeight() +
+        $('.advanced-filters').outerHeight());
 }

@@ -5,6 +5,10 @@
 {% block mainclass %}container-fluid px-0 map-space{% endblock %}
 {% block navclass %}fixed-top{% endblock %}
 
+{% block css %}
+    <link rel="stylesheet" href="{{STATIC_URL}}js/lib/nouislider/nouislider.min.css">
+{% endblock %}
+
 {% block client_templates %}
     <meta name="csrf-token" content="{{csrf_token}}">
     {% include "main/client/map_template.html" %}
@@ -22,6 +26,7 @@
 
 {% block content %}
     <div id="map-container">
-        <google-map readonly="{% if is_editor %}false{% else %}true{% endif %}" showsites="true" icon="other" />
+        <google-map readonly="{% if is_editor %}false{% else %}true{% endif %}"
+            showsites="true" icon="other" slidermin="{{min_year}}" slidermax="{{max_year}}" />
     </div>
 {% endblock %}
