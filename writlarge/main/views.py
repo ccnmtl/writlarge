@@ -54,7 +54,7 @@ class MapView(TemplateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MapView, self).get_context_data(**kwargs)
 
-        qs = LearningSite.objects.filter().select_related(
+        qs = LearningSite.objects.all().select_related(
             'established', 'defunct')
 
         context['min_year'] = self.get_min_year(qs)
