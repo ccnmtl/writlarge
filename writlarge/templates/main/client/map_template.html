@@ -76,7 +76,11 @@
 
                 <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.tags">
                   <dt class="mr-1">Tags:</dt>
-                  <dd class="mb-0">{{selectedSite.tags}}</dd>
+                  <dd class="mb-0">
+                    <span v-for="(tag, idx) in tags">
+                        {{tag}}<span v-if="index + 1 < tags.length">,</span>
+                    </span>
+                  </dd>
                 </dl>
                 <div class="row mt-4 mt-md-3">
                     <div class="col">

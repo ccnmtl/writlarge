@@ -203,7 +203,7 @@ var FamilyNetworkVue = {
         }
     },
     created: function() {
-        const url = WritLarge.baseUrl + 'api/site/' +  this.siteid + '/';
+        const url = WritLarge.baseUrl + 'api/family/' +  this.siteid + '/';
         jQuery.getJSON(url, (data) => {
             this.nodes = data.family;
             this.nodes.unshift({

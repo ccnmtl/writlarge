@@ -28,7 +28,7 @@ class LearningSiteSearchMixinTest(TestCase):
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), self.site1)
 
-    def test_filter_years_only(self):
+    def test_filter_years_invalid(self):
         mixin = LearningSiteSearchMixin()
 
         mixin.request = RequestFactory().get(
@@ -36,6 +36,8 @@ class LearningSiteSearchMixinTest(TestCase):
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 3)
 
+    def test_filter_years_valid_range(self):
+        mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get(
             '/', {'q': '', 'start': '1900', 'end': '1920'})
         qs = mixin.filter(LearningSite.objects.all())
@@ -43,6 +45,8 @@ class LearningSiteSearchMixinTest(TestCase):
         self.assertTrue(self.site2 in qs)
         self.assertTrue(self.site3 in qs)
 
+    def test_filter_years_valid_out_of_range(self):
+        mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get(
             '/', {'q': 'Alpha', 'start': '1900', 'end': '1920'})
         qs = mixin.filter(LearningSite.objects.all())

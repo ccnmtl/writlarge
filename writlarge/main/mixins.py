@@ -3,6 +3,7 @@ import json
 import re
 
 from django.contrib.auth.decorators import login_required
+from django.db.models.query_utils import Q
 from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
@@ -139,6 +140,8 @@ class LearningSiteSearchMixin(object):
                 yield SearchToken(kind, value[4:].strip())
 
     def _process_query(self, qs, q):
+        qs = qs.prefetch_related('category', 'tags')
+
         for token in self._tokenize(q):
             if token.typ == 'CATEGORY':
                 qs = qs.filter(category__name=token.value)
@@ -149,10 +152,17 @@ class LearningSiteSearchMixin(object):
         return qs
 
     def _process_years(self, qs, start, end):
+        # exclude sites with invalid dates, and prefetch the foreign keys
+        sites = qs.exclude(
+            established__edtf_format='unknown',
+            defunct__edtf_format='unknown').exclude(
+                Q(established__isnull=True),
+                Q(defunct__isnull=True)).prefetch_related(
+                    'established', 'defunct')
+
         ids = []
-        for site in qs:
-            min_year = site.get_min_year()
-            max_year = site.get_max_year()
+        for site in sites:
+            (min_year, max_year) = site.get_year_range()
 
             if min_year and (min_year > end):
                 ids.append(site.id)
@@ -162,20 +172,20 @@ class LearningSiteSearchMixin(object):
         return qs.exclude(id__in=ids)
 
     def filter(self, qs):
+        # filter by a search term
         q = self.request.GET.get('q', None)
         if q:
             qs = self._process_query(qs, q)
 
-        qs = qs.select_related('established', 'defunct')
-
+        # filter by start and end year
         start_year = self.request.GET.get('start', '')
         end_year = self.request.GET.get('end', '')
-
         if (re.match(r'[1-2][0-9]{3}', start_year) and
                 re.match(r'[1-2][0-9]{3}', end_year)):
             qs = self._process_years(qs, int(start_year), int(end_year))
 
         return qs.select_related(
+            'established', 'defunct',
             'created_by', 'modified_by').prefetch_related(
             'place', 'category', 'digital_object',
             'site_one', 'site_two', 'tags').order_by('-modified_at')

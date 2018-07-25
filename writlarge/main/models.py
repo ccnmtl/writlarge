@@ -338,17 +338,18 @@ class LearningSite(models.Model):
         category = self.category.first()
         return category.group if category else 'other'
 
-    def get_min_year(self):
-        if self.established:
-            return self.established.get_year()
-        if self.defunct:
-            return self.defunct.get_year()
+    def get_year_range(self):
+        est = self.established.get_year() if self.established else None
+        defunct = self.defunct.get_year() if self.defunct else None
 
-    def get_max_year(self):
-        if self.defunct:
-            return self.defunct.get_year()
-        if self.established:
-            return self.established.get_year()
+        if est and defunct:
+            return (est, defunct)
+        elif est:
+            return (est, est)
+        elif defunct:
+            return (defunct, defunct)
+        else:
+            return (None, None)
 
 
 class LearningSiteRelationship(models.Model):
