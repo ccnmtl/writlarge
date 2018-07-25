@@ -144,3 +144,15 @@ WIND_AFFIL_HANDLERS = [
 ]
 
 CONTACT_US_EMAIL = 'ctl-writlarge@columbia.edu'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'writlarge.main.utils.IsEditorOrAnonReadOnly'
+    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'writlarge.main.utils.BrowsableAPIRendererNoForms'
+    ),
+    'PAGINATE_BY': 15,
+    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
+}

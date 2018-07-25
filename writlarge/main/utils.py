@@ -1,10 +1,52 @@
 from datetime import date
 import re
 
+from django.contrib.auth.models import User
 from edtf import parse_edtf
 from edtf.parser.edtf_exceptions import EDTFParseException
 from edtf.parser.parser_classes import (
     EARLIEST, PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY)
+from rest_framework import permissions
+from rest_framework.renderers import BrowsableAPIRenderer
+
+
+class IsEditorOrAnonReadOnly(permissions.BasePermission):
+    message = 'Adding customers not allowed.'
+
+    def has_permission(self, request, view):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        if request.user.is_anonymous():
+            return False
+
+        # user must be an editor
+        return User.objects.filter(
+            pk=self.request.user.id,
+            groups__name='Editor').exists()
+
+
+class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
+    '''https://bradmontgomery.net/blog/'''
+    '''disabling-forms-django-rest-frameworks-browsable-api/'''
+
+    def get_context(self, *args, **kwargs):
+        ctx = super(BrowsableAPIRendererNoForms, self).get_context(
+            *args, **kwargs)
+        ctx['display_edit_forms'] = False
+        return ctx
+
+    def show_form_for_method(self, view, method, request, obj):
+        """We never want to do this! So just return False."""
+        return False
+
+    def get_rendered_html_form(self, data, view, method, request):
+        """Why render _any_ forms at all. This method should return
+        rendered HTML, so let's simply return an empty string.
+        """
+        return ""
 
 
 def filter_fields(request_data, prefix):
