@@ -85,7 +85,7 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
         return instance
 
     def tags(self, obj):
-        return ', '.join(obj.tags.names())
+        return obj.tags.names()
 
 
 class LearningSiteFamilySerializer(serializers.HyperlinkedModelSerializer):

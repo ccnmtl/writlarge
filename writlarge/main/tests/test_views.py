@@ -8,7 +8,7 @@ from django.urls.base import reverse
 from writlarge.main.forms import ConnectionForm
 from writlarge.main.models import (
     ArchivalCollection, LearningSite, ArchivalCollectionSuggestion)
-from writlarge.main.serializers import LearningSiteSerializer
+from writlarge.main.serializers import LearningSiteFamilySerializer
 from writlarge.main.tests.factories import (
     UserFactory, LearningSiteFactory, ArchivalRepositoryFactory,
     GroupFactory, ArchivalCollectionFactory, FootnoteFactory,
@@ -150,7 +150,7 @@ class ApiViewTest(TestCase):
         LearningSiteRelationshipFactory(site_one=parent, site_two=sib)
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
-        family = LearningSiteSerializer().get_family(parent)
+        family = LearningSiteFamilySerializer().get_family(parent)
         self.assertEquals(len(family), 2)
         self.assertEquals(family[0]['id'], sib.id)
         self.assertEquals(family[0]['relationship'], 'associate')

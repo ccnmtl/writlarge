@@ -27,7 +27,8 @@ from writlarge.main.models import (
     DigitalObject, ArchivalCollection, Footnote,
     ArchivalCollectionSuggestion)
 from writlarge.main.serializers import (
-    ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer)
+    ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer,
+    LearningSiteFamilySerializer)
 
 
 # returns important setting information for all web pages.
@@ -48,8 +49,9 @@ class MapView(TemplateView):
     template_name = "main/map.html"
 
     def get_min_year(self, qs):
-        site = min(qs, key=lambda site: site.get_min_year() or float('inf'))
-        return site.get_min_year()
+        site = min(
+            qs, key=lambda site: site.get_year_range()[0] or float('inf'))
+        return site.get_year_range()[0]
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(MapView, self).get_context_data(**kwargs)
@@ -462,6 +464,11 @@ class LearningSiteViewSet(LearningSiteSearchMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         qs = LearningSite.objects.all()
         return self.filter(qs)
+
+
+class LearningSiteFamilyViewSet(viewsets.ModelViewSet):
+    queryset = LearningSite.objects.all()
+    serializer_class = LearningSiteFamilySerializer
 
 
 class PlaceViewSet(viewsets.ModelViewSet):

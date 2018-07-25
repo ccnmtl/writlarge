@@ -208,21 +208,18 @@ class LearningSiteTest(TestCase):
         site = LearningSiteFactory()
         self.assertEquals(site.group(), 'school')
 
-    def test_get_min_max_year(self):
+    def test_get_year_range(self):
         site = LearningSiteFactory()
-        self.assertEquals(site.get_min_year(), 1984)
-        self.assertEquals(site.get_max_year(), 1984)
+        self.assertEquals(site.get_year_range(), (1984, 1984))
 
         site = LearningSiteFactory(established=None, defunct=None)
-        self.assertIsNone(site.get_min_year())
-        self.assertIsNone(site.get_max_year())
+        self.assertEquals(site.get_year_range(), (None, None))
 
         site = LearningSiteFactory()
         dt = ExtendedDate.objects.create(edtf_format='2018')
         site.defunct = dt
         site.save()
-        self.assertEquals(site.get_min_year(), 1984)
-        self.assertEquals(site.get_max_year(), 2018)
+        self.assertEquals(site.get_year_range(), (1984, 2018))
 
 
 class ArchivalCollectionSuggestionTest(TestCase):

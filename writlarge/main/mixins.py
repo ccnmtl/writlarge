@@ -3,6 +3,7 @@ import json
 import re
 
 from django.contrib.auth.decorators import login_required
+from django.db.models.query_utils import Q
 from django.forms.models import modelform_factory
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
@@ -151,12 +152,17 @@ class LearningSiteSearchMixin(object):
         return qs
 
     def _process_years(self, qs, start, end):
-        qs = qs.prefetch_related('established', 'defunct')
+        # exclude sites with invalid dates, and prefetch the foreign keys
+        sites = qs.exclude(
+            established__edtf_format='unknown',
+            defunct__edtf_format='unknown').exclude(
+                Q(established__isnull=True),
+                Q(defunct__isnull=True)).prefetch_related(
+                    'established', 'defunct')
 
         ids = []
-        for site in qs:
-            min_year = site.get_min_year()
-            max_year = site.get_max_year()
+        for site in sites:
+            (min_year, max_year) = site.get_year_range()
 
             if min_year and (min_year > end):
                 ids.append(site.id)
