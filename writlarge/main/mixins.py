@@ -9,6 +9,7 @@ from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseRedirect
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 
 from writlarge.main.models import LearningSite
 
@@ -175,7 +176,7 @@ class LearningSiteSearchMixin(object):
         # filter by a search term
         q = self.request.GET.get('q', None)
         if q:
-            qs = self._process_query(qs, q)
+            qs = self._process_query(qs, escape(q))
 
         # filter by start and end year
         start_year = self.request.GET.get('start', '')

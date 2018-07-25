@@ -1,5 +1,5 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise, getVisibleContentHeight */
+/* global Promise, getVisibleContentHeight, sanitize */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
@@ -167,9 +167,9 @@ const GoogleMapVue = {
         },
         searchForSite: function() {
             const url = WritLarge.baseUrl + 'api/site/?' +
-                'q=' + this.searchTerm +
-                '&start=' + this.startYear +
-                '&end=' + this.endYear;
+                'q=' + sanitize(this.searchTerm) +
+                '&start=' + sanitize(this.startYear) +
+                '&end=' + sanitize(this.endYear);
             return $.getJSON(url);
         },
         searchForAddress: function() {
