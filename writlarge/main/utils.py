@@ -116,9 +116,10 @@ class ExtendedDateWrapper(object):
         try:
             dt = self.edtf_date._strict_date(EARLIEST)
         except AttributeError:
-            dt = self.edtf_date.lower_strict()
-        except AttributeError:
-            return None
+            try:
+                dt = self.edtf_date.lower_strict()
+            except AttributeError:
+                return None
 
         return self._validate_python_date(dt)
 
