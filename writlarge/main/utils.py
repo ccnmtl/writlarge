@@ -19,13 +19,12 @@ class IsEditorOrAnonReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             return False
 
         # user must be an editor
         return User.objects.filter(
-            pk=self.request.user.id,
-            groups__name='Editor').exists()
+            pk=request.user.id, groups__name='Editor').exists()
 
 
 class BrowsableAPIRendererNoForms(BrowsableAPIRenderer):
