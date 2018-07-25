@@ -198,6 +198,10 @@ const GoogleMapVue = {
                     }
                 });
         },
+        resetSearch: function(event) {
+            this.searchTerm = '';
+            this.search();
+        },
         search: function(event) {
             this.clearNewPin();
             this.clearSelectedSite();
@@ -213,6 +217,7 @@ const GoogleMapVue = {
                     } else if (sites[0].length === 1) {
                         // single site found
                         const site = this.getSiteById(sites[0][0].id);
+                        this.searchResults = [site];
                         this.selectSite(site);
                     } else if (sites[0].length > 1) {
                         // multiple sites found via keyword + year range

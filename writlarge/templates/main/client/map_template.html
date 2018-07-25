@@ -13,7 +13,7 @@
                         v-on:click="search"><i class="fa fa-search"></i>
                     </button>
                     <button v-if="searchTerm" class="btn btn-light btn-clear-search text-muted" type="button"
-                        v-on:click.prevent="clearAll">
+                        v-on:click.prevent="resetSearch">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
