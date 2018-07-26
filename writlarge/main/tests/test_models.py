@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.test import TestCase
 
 from writlarge.main.models import Place, ExtendedDate, LearningSite
@@ -147,6 +149,13 @@ class ExtendedDateTest(TestCase):
 
         dt = ExtendedDate.objects.create(edtf_format='unknown')
         self.assertIsNone(dt.get_year())
+
+    def test_internal_dates(self):
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        self.assertEquals(dt.lower, date(1659, 6, 30))
+
+        dt = ExtendedDate.objects.create(edtf_format='192u')
+        self.assertEquals(dt.lower, date(1920, 1, 1))
 
 
 class PlaceTest(TestCase):

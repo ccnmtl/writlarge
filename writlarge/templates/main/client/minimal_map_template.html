@@ -2,6 +2,7 @@
 <script type="text/x-template" id="google-mini-map-template">
     <div class="card">
         <div class="google-map" :id="mapName"></div>
+        <div v-if="site" style="display: none">{{site.id}}</div>
     </div>
 </script>
 {% endverbatim %}

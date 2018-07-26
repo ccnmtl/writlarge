@@ -1,8 +1,8 @@
 /* global GoogleMapVue:true, csrfSafeMethod:true */
 
 requirejs(['./common'], function() {
-    const a = ['jquery', 'utils', 'bootstrap', 'Vue', 'mapVue'];
-    requirejs(a, function($, utils, bootstrap, Vue, mapVue) {
+    const a = ['jquery', 'utils', 'bootstrap', 'noUiSlider', 'Vue', 'mapVue'];
+    requirejs(a, function($, utils, bootstrap, noUiSlider, Vue, mapVue) {
 
         $.ajaxSetup({
             beforeSend: function(xhr, settings) {
@@ -16,6 +16,9 @@ requirejs(['./common'], function() {
 
         new Vue({
             el: '#map-container',
+            data: {
+                noUiSlider: noUiSlider
+            },
             components: {
                 'google-map': GoogleMapVue
             }

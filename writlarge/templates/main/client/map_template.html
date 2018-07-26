@@ -13,28 +13,39 @@
                         v-on:click="search"><i class="fa fa-search"></i>
                     </button>
                     <button v-if="searchTerm" class="btn btn-light btn-clear-search text-muted" type="button"
-                        v-on:click.prevent="clearAll">
+                        v-on:click.prevent="resetSearch">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
         </div>
-        <div class="overlay-picker">
-            <div class="btn-group" role="group">
-            <button id="overlays" type="button" class="btn btn-secondary dropdown-toggle"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-clock-o" aria-hidden="true"></i> {{year}}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                <a class="dropdown-item" href="#" data-id="864" v-on:click="changeOverlay">1885</a>
-                <a class="dropdown-item" href="#" data-id="1090" v-on:click="changeOverlay">1891</a>
-                <a class="dropdown-item" href="#" data-id="871" v-on:click="changeOverlay">1911</a>
-                <a class="dropdown-item" href="#" data-id="862" v-on:click="changeOverlay">1916</a>
-                <a class="dropdown-item" href="#" data-id="1453" v-on:click="changeOverlay">1956</a>
-                <a class="dropdown-item" href="#" data-id="Present" v-on:click="changeOverlay">Present</a>
-                <hr class="mb-2" />
-                <p class="text-muted text-center small mb-0">Please be patient as <br /> map tiles load.</p>
+        <div class="advanced-filters">
+            <div v-if="startYear" class="text-center mb-1 ml-5">Year {{startYear}} - {{endYear}}</div>
+            <div>
+                <h3><i class="fa fa-calendar text-muted float-left" aria-hidden="true"></i></h3>
+                <div class="w-75 ml-5 mt-1 float-left">
+                    <div id="the-slider"></div>
+                </div>
+                <div class="clearfix"></div>
             </div>
+            <div class="mt-2 position-relative">
+                <h3 class="float-left mt-3"><i class="fa fa-th-list text-muted" aria-hidden="true"></i></h3>
+                <div class="form-check float-left layer-1885">
+                    <input class="form-check-input" type="radio" name="overlay" data-id="864" v-on:click="changeOverlay" />
+                    <label class="form-check-label text-muted small">1885</label>
+                </div>
+                <div class="form-check float-left layer-1916">
+                    <input class="form-check-input" type="radio" name="overlay" data-id="862" v-on:click="changeOverlay" />
+                    <label class="form-check-label text-muted small">1916</label>
+                </div>
+                <div class="form-check float-left layer-1956">
+                    <input class="form-check-input" type="radio" name="overlay" data-id="1453" v-on:click="changeOverlay" />
+                    <label class="form-check-label text-muted small">1956</label>
+                </div>
+                <div class="form-check float-left layer-now">
+                    <input class="form-check-input" type="radio" name="overlay" data-id="Present" v-on:click="changeOverlay" />
+                    <label class="form-check-label text-muted small">Now</label>
+                </div>
             </div>
         </div>
         <div class="google-map" :id="mapName"></div>

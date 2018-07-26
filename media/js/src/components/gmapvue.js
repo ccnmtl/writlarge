@@ -1,10 +1,11 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise, getVisibleContentHeight */
+/* global Promise, getVisibleContentHeight, sanitize */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
     props: ['readonly', 'showsites', 'latitude',
-        'longitude', 'title', 'icon', 'autodrop'],
+        'longitude', 'title', 'icon', 'autodrop',
+        'slidermin', 'slidermax'],
     template: '#google-map-template',
     data: function() {
         return {
@@ -17,7 +18,10 @@ const GoogleMapVue = {
             searchTerm: '',
             searchResults: null,
             searchResultHeight: 0,
-            year: 'Present'
+            year: 'Present',
+            sliderName: 'the-slider',
+            startYear: null,
+            endYear: null
         };
     },
     computed: {
@@ -89,7 +93,6 @@ const GoogleMapVue = {
         clearSearch: function() {
             this.searchResults = null;
             this.searchTerm = null;
-            this.markerOpacity(1);
         },
         clearSelectedSite: function() {
             if (!this.selectedSite) {
@@ -163,18 +166,23 @@ const GoogleMapVue = {
             });
         },
         searchForSite: function() {
-            const url = WritLarge.baseUrl + 'api/site/?q=' + this.searchTerm;
+            const url = WritLarge.baseUrl + 'api/site/?' +
+                'q=' + sanitize(this.searchTerm) +
+                '&start=' + sanitize(this.startYear) +
+                '&end=' + sanitize(this.endYear);
             return $.getJSON(url);
         },
         searchForAddress: function() {
-            const service = this.geocoder;
-            const request = {
-                query: this.searchTerm,
-                fields: ['formatted_address', 'geometry', 'types']
-            };
+            if (!this.searchTerm) {
+                return Promise.resolve();
+            }
 
+            const self = this;
             return new Promise(function(resolve, reject) {
-                service.findPlaceFromQuery(request, function(results) {
+                self.geocoder.findPlaceFromQuery({
+                    query: self.searchTerm,
+                    fields: ['formatted_address', 'geometry', 'types']
+                }, function(results) {
                     resolve(results);
                 });
             });
@@ -190,22 +198,33 @@ const GoogleMapVue = {
                     }
                 });
         },
+        resetSearch: function(event) {
+            this.searchTerm = '';
+            this.search();
+        },
         search: function(event) {
             this.clearNewPin();
             this.clearSelectedSite();
             this.searchResults = null;
-            this.markerOpacity(1);
+            $('html').addClass('busy');
 
             // Kick off a sites search & a geocode search
             $.when(this.searchForSite(), this.searchForAddress())
                 .done((sites, addresses) => {
-                    if (sites[0].length === 1) {
+                    if (!this.searchTerm) {
+                        // filtering solely by year range
+                        this.siteResults(sites[0]);
+                    } else if (sites[0].length === 1) {
                         // single site found
                         const site = this.getSiteById(sites[0][0].id);
+                        this.searchResults = [site];
                         this.selectSite(site);
                     } else if (sites[0].length > 1) {
-                        // multiple sites found
-                        this.siteResults(sites[0]);
+                        // multiple sites found via keyword + year range
+                        this.searchResults = [];
+                        const bounds = this.siteResults(sites[0]);
+                        this.map.fitBounds(bounds);
+                        this.searchResultHeight = getVisibleContentHeight();
                     } else if (addresses) {
                         // no sites found, try to display geocode result
                         this.geocodeResults(addresses);
@@ -214,26 +233,26 @@ const GoogleMapVue = {
                         this.markerOpacity(0.25);
                         this.searchResults = [];
                     }
+                    $('html').removeClass('busy');
                 });
         },
         siteResults: function(results) {
             let bounds = new google.maps.LatLngBounds();
-            this.searchResults = [];
             this.sites.forEach((site) => {
                 let opacity = 1;
                 if (!results.find(function(obj) {
                     return obj.id === site.id;
                 })) {
-                    opacity = 0.25;
-                } else {
+                    // dim the icon, this site is not in the results
+                    opacity = .25;
+                } else if (this.searchTerm) {
                     this.searchResults.push(site);
                     bounds.extend(site.marker.position);
                     bounds = enlargeBounds(bounds);
                 }
                 site.marker.setOpacity(opacity);
             });
-            this.map.fitBounds(bounds);
-            this.searchResultHeight = getVisibleContentHeight();
+            return bounds;
         },
         geocodeResults: function(results) {
             this.searchTerm = results[0].formatted_address;
@@ -309,7 +328,7 @@ const GoogleMapVue = {
         }
     },
     mounted: function() {
-        const elt = document.getElementById(this.mapName);
+        let elt = document.getElementById(this.mapName);
 
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
@@ -390,5 +409,34 @@ const GoogleMapVue = {
                 });
             }
         });
+
+        // @todo - this should be a vue component
+        // create the slider
+        if (!this.slider && this.slidermin && this.slidermax) {
+            const start = parseInt(this.slidermin, 10);
+            const end = parseInt(this.slidermax, 10);
+            let elt = document.getElementById(this.sliderName);
+            this.slider = this.$parent.noUiSlider.create(elt, {
+                start: [start, end],
+                connect: true,
+                step: 1,
+                tooltips: false,
+                range: {
+                    'min': start,
+                    'max': end
+                }
+            });
+            this.startYear = start;
+            this.endYear = end;
+
+            // hook up events
+            this.slider.on('slide', (values) => {
+                this.startYear = parseInt(values[0], 10);
+                this.endYear = parseInt(values[1], 10);
+            });
+            this.slider.on('set', (values) => {
+                this.search();
+            });
+        }
     }
 };
