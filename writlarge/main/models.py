@@ -70,9 +70,23 @@ class ExtendedDateManager(models.Manager):
 class ExtendedDate(models.Model):
     objects = ExtendedDateManager()
     edtf_format = models.CharField(max_length=256)
+    lower = models.DateField(null=True)
+    upper = models.DateField(null=True)
 
     class Meta:
         verbose_name = 'Extended Date Format'
+
+    def _set_internal_dates(self):
+        if not self.is_unknown():
+            (lower, upper) = self.wrap()
+            if lower:
+                self.lower = lower.start_date()
+            if upper:
+                self.upper = upper.end_date()
+
+    def save(self, *args, **kwargs):
+        self._set_internal_dates()
+        super(ExtendedDate, self).save(*args, **kwargs)
 
     def wrap(self):
         return ExtendedDateWrapper.create(self.edtf_format)
