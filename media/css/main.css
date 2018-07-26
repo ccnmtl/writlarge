@@ -55,6 +55,217 @@ h4 {
   border: .05rem solid #fff;
 }
 
+
+/* Cover */
+
+.pane-splash {
+    background: url('../img/bg_splash.jpg') no-repeat center;
+}
+
+.pane-exemplars {
+    background: url('../img/bg_exemplars.jpg') no-repeat center right;
+}
+
+.pane-moreinfo {
+    background-color: #fff;
+}
+
+.pane-intro {
+    background: url('../img/home_intro_bg.png') repeat;
+    font-size: 1.4rem;
+}
+
+.intro-logo img {
+    display: block;
+    margin: auto;
+    width: 50%;
+}
+
+.pane-slide {
+    background-color: #fff;
+    position: relative;
+}
+
+#slideContentTab {
+    position: absolute;
+    z-index: 200;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+    background-color: #fff;
+}
+
+#slideContentTab li .nav-link {
+    height: 3rem;
+    padding : 0;
+    margin-bottom: 0.5rem;
+    line-height: 3rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #cc6666;
+    text-align: center;
+    border-bottom: 3px solid transparent;
+}
+
+#slideContentTab li .nav-link.active,
+#slideContentTab li .nav-link.active:hover {
+    border-bottom: 3px solid #900;
+    color: #900;
+}
+
+#slideContentTab li .nav-link:hover {
+    color: #cc3333;
+}
+
+
+#slideContent {
+    padding-top: 3.5rem;
+}
+
+#slide-map {
+    background-image: url('../img/slide-map.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#slide-archives {
+    background-image: url('../img/slide-archives.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.slide-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #997a6b;
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.4rem;
+}
+
+.slide-link {
+    border: 1px solid #fff;
+    color: #fff;
+    font-weight: bold;
+    background-color: #b2a199;
+}
+
+.slide-link:hover {
+    background-color: #b2a199;
+    border: 1px solid #ffffcc;
+    color: #ffffcc;
+}
+
+.cover-exemplar {
+    position: relative;
+}
+
+.pane-exemplars h2 {
+    font-weight: bold;
+}
+
+.pane-exemplars p {
+    font-size: 1.4rem;
+}
+
+.cover-exemplar img {
+    z-index: 100;
+}
+
+.cover-exemplar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 200;
+}
+
+.exemplar-label
+{
+	position: relative;
+	background: #000000;
+	color: #fff;
+	display: inline-block;
+	padding: 2px 5px;
+	margin: 10px;
+	height: 30px;
+}
+
+.exemplar-label a
+{
+	color: #fff;
+}
+
+.exemplar-label a:hover
+{
+	color: #ff6;
+	text-decoration: none;
+}
+
+.exemplar01:after {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(0, 0, 0, 0);
+	border-left-color: #000000;
+	border-width: 15px;
+	margin-top: -15px;
+}
+
+.exemplar02:after {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(0, 0, 0, 0);
+	border-right-color: #000000;
+	border-width: 15px;
+	margin-top: -15px;
+}
+
+.exemplar01 {
+    position: absolute;
+    top: 20px;
+    left: 250px;
+    padding-left: 10px;
+}
+
+.exemplar02 {
+    position: absolute;
+    top: 118px;
+    left: 488px;
+    padding-right: 10px;
+}
+
+.pane-moreinfo h2 {
+    font-weight: bold;
+}
+
+.pane-moreinfo .nav-item {
+    width: 33%;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.pane-moreinfo .nav-link {
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #900;
+    background: url('../img/bg_moreinfo.jpg') no-repeat center;
+}
+
+
 /* Footer */
 footer {
     font-size: 85%;

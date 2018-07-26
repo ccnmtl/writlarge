@@ -2,16 +2,91 @@
 
 {% block title %}Home{% endblock %}
 
-{% block bodyclass %}bg-dark cover-page{% endblock %}
-{% block mainclass %}container-fluid{% endblock %}
+{% block mainclass %}container-fluid m-0 p-0{% endblock %}
 
 {% block content %}
-<div class="cover row justify-content-md-center pt-5">
-    <div class="col-md-auto text-center">
-        <h1 class="display-1">WritLargeNYC</h1>
-        <p class="lead">New York City's Educational Past from the Ground Up</p>
-        <a class="btn btn-cover btn-lg" href="{% url 'map-view' %}">Get Started</a>
-    </div>
+
+<section class="pane-splash py-5">
+    <div class="row container mx-auto p-0">
+        <div class="pane-intro col-lg p-4">
+        <div class="intro-logo">
+        <img src="{{STATIC_URL}}img/logo_writlarge.svg">
+        <h3 class="text-center">New York City’s Educational Past<br />from the Ground Up</h3>
+        <hr class="boreder border-secondary" />
+        </div>
+        <p>Writ Large contributes to a comprehensive understanding of New York City’s educational past by locating formal and informal sites of teaching and learning in neighborhoods across time and to identify archival resources in New York City repositories, and elsewhere), to document that history.</p>
+        <p>This site is designed to document the multiple settings in which diverse New Yorkers learned and capture the reciprocal relationship between education and the transformation of the city.</p>
+        </div>
+        <div class="pane-slide col-lg p-0">
+<ul class="nav" id="slideContentTab" role="tablist">
+  <li class="nav-item w-50 px-5">
+    <a class="nav-link active show" id="slide-map-tab" data-toggle="tab" href="#slide-map" role="tab" aria-controls="slide-map" aria-selected="true">Map</a>
+  </li>
+  <li class="nav-item w-50 px-5">
+    <a class="nav-link" id="slide-archives-tab" data-toggle="tab" href="#slide-archives" role="tab" aria-controls="slide-archives" aria-selected="false">Archives</a>
+  </li>
+</ul>
+<div class="tab-content h-100" id="slideContent">
+  <div class="tab-pane fade show active h-100" id="slide-map" role="tabpanel" aria-labelledby="slide-map-tab">
+  <div class="slide-caption p-3 py-4 w-100">
+  <p>Some short description here on what the map is about. The language should be direct, and invitational. The length of this description should be about thirty words.
+  </p>
+  <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block">
+  <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
+  Go to Writ Large Map
+  </a>
+  </div>
+  </div>
+  <div class="tab-pane fade h-100" id="slide-archives" role="tabpanel" aria-labelledby="slide-archives-tab">
+  <div class="slide-caption p-3 py-4 w-100">
+  <p>Some short description here on what the archival collection is about. The language should be invitational call to action. The length of this description should be about thirty words.
+  </p>
+  <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block">
+  <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
+  Contribute to Archival Collections
+  </a>
+  </div>
+  </div>
 </div>
+
+
+
+
+
+        </div>
+    </div>
+</section><!-- /.pane-splash -->
+
+
+
+<section class="pane-exemplars py-5">
+    <div class="container mx-auto pb-3">
+    <h2 class="text-center">STL Exemplars</h2>
+    <p class="text-center">Here are example sites of teaching and learning in Writ Large. Click to see the record.</p>
+    <div class="cover-exemplar">
+        <ul class="h-100 w-100 position-absolute">
+            <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/93/">New York Public Library-Riverside</a></li>
+            <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
+        </ul>
+        <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-block border border-secondary w-100">
+    </div>
+    </div>
+
+
+</section><!-- /.pane-exemplars -->
+
+<div class="pane-moreinfo py-5">
+    <div class="container">
+        <h2 class="text-center">Connect with Writ Large</h2>
+        <ul class="nav py-3">
+            <li class="nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest a Collection</a></li>
+            <li class="nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
+            <li class="nav-item"><a href="/about/" class="nav-link">About Writ Large</a></li>
+        </ul>
+    </div>
+</div><!-- /.pane-moreinfo -->
+
+
+
 
 {% endblock %}
