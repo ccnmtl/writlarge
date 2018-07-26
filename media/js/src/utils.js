@@ -8,6 +8,13 @@ function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
 
+function sanitize(s) {
+    // http://shebang.brandonmintern.com/foolproof-html-escaping-in-javascript/
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(s));
+    return div.innerHTML;
+}
+
 function enlargeBounds(bounds) {
     // Don't zoom in too far on only one marker
     // http://stackoverflow.com/questions/3334729/
