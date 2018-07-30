@@ -300,6 +300,12 @@ footer li+li {
     margin-left: 1rem;
 }
 
+footer .footer-logo img {
+    height: 40px;
+    display: block;
+    margin: auto;
+}
+
 /* Map View */
 .map-view footer {
     display: none;
