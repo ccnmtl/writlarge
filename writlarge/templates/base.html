@@ -5,13 +5,27 @@
     <title>Writ Large: {% block title %}{% endblock %}</title>
 
     <meta charset="utf-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- The above 2 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="generator" content="Hugo 0.31.1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://writlarge.ctl.columbia.edu/" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}js/lib/bootstrap/css/bootstrap.min.css">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="{{STATIC_URL}}css/fontawesome/font-awesome.min.css">
+   
+   <!-- Adobe Typekit for (Futura and Garamond) -->
+    <link rel="stylesheet" href="https://use.typekit.net/jye4muh.css">
+
+    {% compress css %}
+        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
+    {% endcompress %}
+
+    {% block css %}
+    {% endblock %}
+
     <meta name="description" content="Writ Large: Discover the Hidden Histories of New York City’s Teaching and Learning Communities">
     <meta name="keywords" content="teaching, learning, education, history, mapping" />
     <meta name="author" content="Columbia University Center for Teaching & Learning">
@@ -37,23 +51,6 @@
     <link rel="icon" href="{{STATIC_URL}}img/favicon.ico">
     <link rel="icon" type="image/png" href="{{STATIC_URL}}img/favicon.png">
  
-    <link rel="canonical" href="https://writlarge.ctl.columbia.edu/" />
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{STATIC_URL}}js/lib/bootstrap/css/bootstrap.min.css">
-
-    <!-- FontAwesome CSS -->
-    <link rel="stylesheet" href="{{STATIC_URL}}css/fontawesome/font-awesome.min.css">
-   
-   <!-- Adobe Typekit for (Futura and Garamond) -->
-    <link rel="stylesheet" href="https://use.typekit.net/jye4muh.css">
-
-    {% compress css %}
-        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
-    {% endcompress %}
-
-    {% block css %}
-    {% endblock %}
 
     {% block client_templates %}
     {% endblock %}
@@ -132,6 +129,13 @@
     </main>
 
     <footer class="bd-footer text-muted bg-dark">
+    <ul class="footer-logo row container mx-auto pt-5">
+        <li class="col-lg pb-5 py-lg-0 px-4"><a href="https://www.tc.columbia.edu" target="_blank"><img src="{{STATIC_URL}}img/logo-footer-tc.svg"></a></li>
+        <li class="col-lg pb-5 py-lg-0 px-4"><a href="https://www.tc.columbia.edu/che/" target="_blank"><img src="{{STATIC_URL}}img/logo-footer-che.svg"></a></li>
+        <li class="col-lg pb-5 py-lg-0 px-4"><a href="https://ctl.columbia.edu" target="_blank"><img src="{{STATIC_URL}}img/logo-footer-ctl.svg"></a></li>
+    </ul>
+
+
       <div class="container-fluid p-3 p-md-5">
         <ul class="text-left">
           <li><a href="https://github.com/ccnmtl/writlarge">GitHub</a></li>
