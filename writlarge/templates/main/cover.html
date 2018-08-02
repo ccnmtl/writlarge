@@ -67,39 +67,27 @@
 
 <section class="pane-exemplars py-3 py-md-4 py-lg-5">
     <div class="container mx-auto pb-0 pb-sm-3">
-        <h2 class="text-center">STL Exemplars</h2>
-        <p class="text-center">Here are example sites of teaching and learning in Writ Large. Click to see the record.</p>
+        <h2 class="text-center"><span class="font-italic">Writ Large</span> Exemplars</h2>
+        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>. Click to see the record.</p>
         <div class="cover-exemplar">
             <ul>
-                <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/93/">Hudson Guild</a></li>
-                <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/23/">Colored Orphan Asylum</a></li>
+                <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
+                <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/321/">Colored Orphan Asylum</a></li>
             </ul>
             <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-none d-sm-block">
         </div>
     </div>
 </section><!-- /.pane-exemplars -->
 
-<div class="pane-moreinfo py-5">
+<section class="pane-moreinfo py-3 py-md-4 py-lg-5">
     <div class="container">
-        <h2 class="text-center">Connect with Writ Large</h2>
-        <ul class="nav py-3">
-            <li class="nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest a Collection</a></li>
-            <li class="nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
-            <li class="nav-item"><a href="/about/" class="nav-link">About Writ Large</a></li>
+        <h2 class="text-center">Connect with <span class="font-italic">Writ Large</span></h2>
+        <ul class="nav row mt-0 mt-md-4">
+            <li class="col-sm nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest <span class="text-nowrap">a Collection</span></a></li>
+            <li class="col-sm nav-item"><a href="/about/" class="nav-link">About <span class="text-nowrap font-italic">Writ Large</span></a></li>
+            <li class="col-sm nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
         </ul>
     </div>
-</div><!-- /.pane-moreinfo -->
-
-
-<!-- 
-Keep this till I remove it - Zarina
-<h2 class="d-none d-xl-block text-white text-center bg-primary">I am: Extra large desktop</h2>
-<h2 class="d-none d-lg-block d-xl-none text-white text-center bg-primary">I am: Large desktop</h2>
-<h2 class="d-none d-md-block d-lg-none text-white text-center bg-primary">I am: Medium desktop, tablet</h2>
-<h2 class="d-none d-sm-block d-md-none text-white text-center bg-primary">I am: Small devices</h2>
-<h2 class="d-block d-sm-none text-white text-center bg-primary">I am: Extra small devices</h2>
- -->
-
-
+</section><!-- /.pane-moreinfo -->
 
 {% endblock %}
