@@ -189,4 +189,4 @@ class LearningSiteSearchMixin(object):
             'established', 'defunct',
             'created_by', 'modified_by').prefetch_related(
             'place', 'category', 'digital_object',
-            'site_one', 'site_two', 'tags').order_by('-modified_at')
+            'site_one', 'site_two', 'tags').order_by('title')
