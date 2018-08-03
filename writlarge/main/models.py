@@ -372,6 +372,16 @@ class LearningSite(models.Model):
             empty_start_date=Count('start_date')).order_by(
                 '-empty_start_date', '-start_date__lower', 'title')
 
+    def established_display(self):
+        if not self.established or not self.established.lower:
+            return ''
+        return self.established.lower.strftime('%Y')
+
+    def defunct_display(self):
+        if not self.defunct or not self.defunct.lower:
+            return ''
+        return self.defunct.lower.strftime('%m-%d-%Y')
+
 
 class LearningSiteRelationship(models.Model):
     site_one = models.ForeignKey(
