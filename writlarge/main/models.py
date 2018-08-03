@@ -380,7 +380,7 @@ class LearningSite(models.Model):
     def defunct_display(self):
         if not self.defunct or not self.defunct.lower:
             return ''
-        return self.defunct.lower.strftime('%m-%d-%Y')
+        return self.defunct.lower.strftime('%Y')
 
 
 class LearningSiteRelationship(models.Model):
