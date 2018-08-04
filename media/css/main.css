@@ -277,8 +277,13 @@ footer li+li {
     margin-left: 1rem;
 }
 
+footer .footer-logo li {
+    margin: 0;
+}
+
 footer .footer-logo img {
-    height: 40px;
+    /*height: 40px;*/
+    height: 35px;
     display: block;
     margin: auto;
 }
@@ -811,6 +816,9 @@ input[type=number] {
     .pane-moreinfo .nav-link {
         line-height: 2;
     }
+    footer .footer-logo img {
+        height: 28px;
+    }
     .map-view .pin-place-detail {
         border-top: 1px solid #ddd;
         width: 25rem;
@@ -873,6 +881,9 @@ input[type=number] {
     .pane-moreinfo .nav-link {
         line-height: 2;
         font-size: 1.4rem;
+    }
+    footer .footer-logo img {
+        height: 40px;
     }
 }
 

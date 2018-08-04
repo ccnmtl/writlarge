@@ -8,7 +8,7 @@
 
 
 
-<section class="pane-splash py-3 py-md-4 py-lg-5">
+<section class="pane-splash py-4 py-lg-5">
     <div class="row container mx-auto p-0">
         <div class="pane-intro col-lg p-2 p-sm-3 p-md-4">
             <div class="intro-logo pb-1 mb-2 mb-md-3">
@@ -16,10 +16,10 @@
                 <h3 class="text-center">New York City’s Educational Past<br />from the Ground Up</h3>
             </div>
             <p>
-                Writ Large contributes to a comprehensive understanding of New York City’s educational past by locating formal and informal sites of teaching and learning in neighborhoods across time and to identify archival resources in New York City repositories, and elsewhere), to document that history.
+                <span class="font-italic">Writ Large</span> tells the story of New York City’s educational past in space and time. It locates the many and varied sites of teaching and learning in the built environment that were an integral part of neighborhood life and the transformation of the city over time.
             </p>
             <p>
-                This site is designed to document the multiple settings in which diverse New Yorkers learned and capture the reciprocal relationship between education and the transformation of the city.
+                To support new historical perspectives about education and the city, <span class="font-italic">Writ Large</span> connects sites found on the map with relevant archival collections.
             </p>
         </div><!-- /.pane-intro -->
         <div class="pane-slides col-lg p-0 mt-3 m-lg-0">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="slide-caption p-2 p-sm-3">
                         <p>
-                        Some short description here on what the map is about. The language should be direct, and invitational. The length of this description should be about thirty words.
+                        New York City neighborhoods are rich with places where children, youth, and adults learned. Use the map to find these sites and see how the city’s educational landscape changed across time.
                         </p>
                         <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block">
                         <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
@@ -52,11 +52,11 @@
                     </div>
                     <div class="slide-caption p-2 p-sm-3">
                         <p>
-                        Some short description here on what the map is about. The language should be direct, and invitational. The length of this description should be about thirty words.
+                        Help us build our database of archival resources related to mapped learning sites. If you are a NYC archivist or librarian, please tell us about relevant collections your repository holds.
                         </p>
-                        <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block">
+                        <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block">
                         <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
-                        Go to Writ Large Map
+                        Contribute to Archival Collections
                         </a>
                     </div>
                 </div>
@@ -65,10 +65,10 @@
     </div><!-- /.row .container -->
 </section><!-- /.pane-splash -->
 
-<section class="pane-exemplars py-3 py-md-4 py-lg-5">
+<section class="pane-exemplars py-4 py-lg-5">
     <div class="container mx-auto pb-0 pb-sm-3">
         <h2 class="text-center"><span class="font-italic">Writ Large</span> Exemplars</h2>
-        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>. Click to see the record.</p>
+        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>. Click each title to see the record.</p>
         <div class="cover-exemplar">
             <ul>
                 <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
@@ -79,11 +79,11 @@
     </div>
 </section><!-- /.pane-exemplars -->
 
-<section class="pane-moreinfo py-3 py-md-4 py-lg-5">
+<section class="pane-moreinfo py-4 py-lg-5">
     <div class="container">
         <h2 class="text-center">Connect with <span class="font-italic">Writ Large</span></h2>
         <ul class="nav row mt-0 mt-md-4">
-            <li class="col-sm nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest <span class="text-nowrap">a Collection</span></a></li>
+            <li class="col-sm nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest <span class="text-nowrap">an Archive</span></a></li>
             <li class="col-sm nav-item"><a href="/about/" class="nav-link">About <span class="text-nowrap font-italic">Writ Large</span></a></li>
             <li class="col-sm nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
         </ul>
