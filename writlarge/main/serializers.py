@@ -64,11 +64,14 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
     digital_object = DigitalObjectSerializer(read_only=True, many=True)
     place = PlaceSerializer(many=True)
     tags = serializers.SerializerMethodField(read_only=True)
+    established_display = serializers.SerializerMethodField(read_only=True)
+    defunct_display = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = LearningSite
         fields = ('id', 'title', 'place', 'category',
-                  'digital_object', 'empty')
+                  'digital_object', 'empty',
+                  'established_display', 'defunct_display')
 
     def create(self, validated_data):
         place_data = validated_data.pop('place')
@@ -86,6 +89,12 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
 
     def tags(self, obj):
         return obj.tags.names()
+
+    def established_display(self, obj):
+        return obj.established_display()
+
+    def defunct_display(self, obj):
+        return obj.defunct_display()
 
 
 class LearningSiteFamilySerializer(serializers.HyperlinkedModelSerializer):

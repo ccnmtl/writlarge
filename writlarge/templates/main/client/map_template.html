@@ -84,7 +84,21 @@
                     </template>
                   </dd>
                 </dl>
-
+                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.established_display && selectedSite.defunct_display">
+                  <dt>{{selectedSite.established_display}} &mdash; {{selectedSite.defunct_display}}</dt>
+                  <dd class="mb-0">
+                  </dd>
+                </dl>
+                <dl class="pin-detail-tags d-flex flex-row mb-0" v-else-if="selectedSite.established_display">
+                  <dt>est. {{selectedSite.established_display}}</dt>
+                  <dd class="mb-0">
+                  </dd>
+                </dl>
+                <dl class="pin-detail-tags d-flex flex-row mb-0" v-else-if="selectedSite.defunct_display">
+                  <dt>defunct {{selectedSite.defunct_display}}</dt>
+                  <dd class="mb-0">
+                  </dd>
+                </dl>
                 <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.tags">
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">
