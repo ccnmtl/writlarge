@@ -75,7 +75,21 @@
                 </div>
             </div>
             <div v-else class="pin-place-content mt-2">
-                <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.category.length > 0">
+              <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.established_display && selectedSite.defunct_display">
+                  <dt></dt>
+                  <dd class="mb-0">
+                    {{selectedSite.established_display}} &mdash; {{selectedSite.defunct_display}}
+                  </dd>
+              </dl>
+              <dl class="pin-detail-tags d-flex flex-row mb-1" v-else-if="selectedSite.established_display">
+                  <dt></dt>
+                  <dd class="mb-0">est. {{selectedSite.established_display}}</dd>
+              </dl>
+              <dl class="pin-detail-tags d-flex flex-row mb-1" v-else-if="selectedSite.defunct_display">
+                  <dt></dt>
+                  <dd class="mb-0">defunct {{selectedSite.defunct_display}}</dd>
+              </dl>
+              <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.category.length > 0">
                   <dt class="mr-1 mb-0" v-if="selectedSite.category.length > 1">Categories:</dt>
                   <dt class="mr-1 mb-0" v-else>Category:</dt>
                   <dd class="mb-0">
@@ -83,40 +97,24 @@
                     {{ c.name }}<template v-if="index + 1 < selectedSite.category.length">, </template>
                     </template>
                   </dd>
-                </dl>
-                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.established_display && selectedSite.defunct_display">
-                  <dt>{{selectedSite.established_display}} &mdash; {{selectedSite.defunct_display}}</dt>
-                  <dd class="mb-0">
-                  </dd>
-                </dl>
-                <dl class="pin-detail-tags d-flex flex-row mb-0" v-else-if="selectedSite.established_display">
-                  <dt>est. {{selectedSite.established_display}}</dt>
-                  <dd class="mb-0">
-                  </dd>
-                </dl>
-                <dl class="pin-detail-tags d-flex flex-row mb-0" v-else-if="selectedSite.defunct_display">
-                  <dt>defunct {{selectedSite.defunct_display}}</dt>
-                  <dd class="mb-0">
-                  </dd>
-                </dl>
-                <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="selectedSite.tags">
+              </dl>
+              <dl class="pin-detail-tags d-flex flex-row mb-0 mt-1" v-if="selectedSite.tags_display">
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">
-                    <span v-for="(tag, idx) in tags">
-                      <a href='#' v-on:click="searchByTag(tag)">
+                    <span v-for="(tag, idx) in selectedSite.tags_display">
                         {{tag}}
-                      </a><span v-if="index + 1 < tags.length">,</span>
+                        <span v-if="idx + 1 < selectedSite.tags_display.length">,</span>
                     </span>
                   </dd>
-                </dl>
-                <div class="row mt-4 mt-md-3">
-                    <div class="col">
-                        <a :href="'/view/' + selectedSite.id + '/'"
+              </dl>
+              <div class="row mt-4 mt-md-3">
+                  <div class="col">
+                      <a :href="'/view/' + selectedSite.id + '/'"
                             class="w-100 btn btn-sm btn-secondary">
                             Details
-                        </a>
-                    </div>
-                </div>
+                      </a>
+                  </div>
+              </div>
             </div>
         </div>
         <div v-else-if="searchResults" class="pin-place-detail search-results">
@@ -136,14 +134,20 @@
                             <dt class="mr-1 mb-0" v-else>Category:</dt>
                             <dd class="mb-0">
                                 <template v-for="(c, index) in site.category">
-                                    {{ c.name }}<template v-if="index + 1 < site.category.length">, </template>
+                                    <a href="#" v-on:click="searchByCategory(c.name)">{{ c.name }}</a><template v-if="index + 1 < site.category.length">, </template>
                                 </template>
                             </dd>
                         </dl>
 
-                        <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="site.tags">
+                        <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="site.tags_display">
                             <dt class="mr-1">Tags:</dt>
-                            <dd class="mb-0">{{site.tags}}</dd>
+                            <dd class="mb-0">
+                              <span v-for="(tag, idx) in site.tags_display">
+                                <a href='#' v-on:click="searchByTag(tag)">
+                                  {{tag}}
+                                </a><span v-if="idx + 1 < site.tags_display.length">,</span>
+                              </span>
+                            </dd>
                         </dl>
                     </li>
                 </ul>

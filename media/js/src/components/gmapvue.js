@@ -318,11 +318,13 @@ const GoogleMapVue = {
         searchList: function(event) {
             this.clearSelectedSite();
         },
-        searchTag: function(event) {
-            alert('searchTag')
+        searchByTag: function(tag) {
+            this.searchTerm += ' tag:' + tag;
+            this.search();
         },
-        searchCategory: function(event) {
-            alert('searchCategory');
+        searchByCategory: function(category) {
+            this.searchTerm += ' category:' + category;
+            this.search();
         }
     },
     created: function() {
