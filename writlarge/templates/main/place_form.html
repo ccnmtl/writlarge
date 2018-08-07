@@ -52,7 +52,7 @@
             <div class="form-group">
                 <label for="id_start_date">Start</label>
                 <edtf id="edtf-start-date" name="start_date"
-                    {% for key, value in object.star_date.to_dict.items %}
+                    {% for key, value in object.start_date.to_dict.items %}
                         {% if value %}
                             initial-{{key}}="{{value}}"
                         {% endif %}
