@@ -381,6 +381,9 @@ class LearningSite(models.Model):
         if not self.defunct or not self.defunct.lower:
             return ''
         return self.defunct.lower.strftime('%Y')
+    
+    def tags_display(self):
+        return self.tags.names()
 
 
 class LearningSiteRelationship(models.Model):

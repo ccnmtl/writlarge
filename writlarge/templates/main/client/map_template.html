@@ -103,7 +103,9 @@
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">
                     <span v-for="(tag, idx) in tags">
-                        {{tag}}<span v-if="index + 1 < tags.length">,</span>
+                      <a href='#' v-on:click="searchByTag(tag)">
+                        {{tag}}
+                      </a><span v-if="index + 1 < tags.length">,</span>
                     </span>
                   </dd>
                 </dl>
