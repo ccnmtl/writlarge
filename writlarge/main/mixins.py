@@ -140,7 +140,7 @@ class LearningSiteSearchMixin(object):
             elif kind == 'TAG':
                 yield SearchToken(kind, value[4:].strip())
 
-    def _process_query(self, qs, q):
+    def _process_query(self, qs, q, full_search=False):
         qs = qs.prefetch_related('category', 'tags')
 
         for token in self._tokenize(q):
@@ -148,8 +148,14 @@ class LearningSiteSearchMixin(object):
                 qs = qs.filter(category__name=token.value)
             elif token.typ == 'TAG':
                 qs = qs.filter(tags__name__in=[token.value])
+            elif token.typ == 'STRING' and full_search:
+                qs = qs.filter(
+                    Q(title__icontains=token.value) |
+                    Q(description__icontains=token.value)
+                )
             elif token.typ == 'STRING':
                 qs = qs.filter(title__icontains=token.value)
+
         return qs
 
     def _process_years(self, qs, start, end):
@@ -172,11 +178,11 @@ class LearningSiteSearchMixin(object):
 
         return qs.exclude(id__in=ids)
 
-    def filter(self, qs):
+    def filter(self, qs, full_search=False):
         # filter by a search term
         q = self.request.GET.get('q', None)
         if q:
-            qs = self._process_query(qs, escape(q))
+            qs = self._process_query(qs, escape(q), full_search)
 
         # filter by start and end year
         start_year = self.request.GET.get('start', '')

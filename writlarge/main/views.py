@@ -82,7 +82,7 @@ class SearchView(LearningSiteSearchMixin, ListView):
 
     def get_queryset(self):
         qs = super(SearchView, self).get_queryset()
-        return self.filter(qs)
+        return self.filter(qs, True)
 
 
 class PlaceCreateView(LoggedInEditorMixin,
