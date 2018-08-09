@@ -382,6 +382,9 @@ class LearningSite(models.Model):
             return ''
         return self.defunct.lower.strftime('%Y')
 
+    def tags_display(self):
+        return self.tags.names()
+
 
 class LearningSiteRelationship(models.Model):
     site_one = models.ForeignKey(

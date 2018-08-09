@@ -317,6 +317,14 @@ const GoogleMapVue = {
         },
         searchList: function(event) {
             this.clearSelectedSite();
+        },
+        searchByTag: function(tag) {
+            this.searchTerm += ' tag:' + tag;
+            this.search();
+        },
+        searchByCategory: function(category) {
+            this.searchTerm += ' category:' + category;
+            this.search();
         }
     },
     created: function() {
