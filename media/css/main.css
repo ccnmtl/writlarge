@@ -34,20 +34,7 @@ h4 {
     font-weight: 300;
 }
 
-.cover-page main {
-    padding-top: 125px;
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    background-image: url("../img/nypl-cover-map.png");
-    background-position: center; 
-    color: white;
-}
-
 #detail-container p.lead {text-align: left;}
-
-.cover-page p.lead {font-family: "adobe-garamond-pro",serif;}
-
 
 .btn-cover,
 .btn-cover:hover,
@@ -160,7 +147,6 @@ h4 {
     bottom: 0;
     left: 0;
     background-color: #998470;
-    /* #997a6b;*/
     color: #fff;
     font-size: 1.1rem;
     line-height: 1.4rem;
@@ -696,7 +682,6 @@ input[type=number] {
     }
     .cover-exemplar {
         position: relative;
-        /* */
         width: 100%;
         height: 182px;
         overflow: hidden;
@@ -708,7 +693,6 @@ input[type=number] {
         width: 100%;
     }
     .cover-exemplar img {
-        /* margin: */
         margin-left: -290px;
         z-index: 100;
     }
@@ -1021,6 +1005,245 @@ input[type=number] {
     .pane-moreinfo .nav-item {
         border-right: 0.5rem solid #fff;
         border-left: 0.5rem solid #fff;
+    }
+}
+
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+	.cover-page header {
+	    display: none;
+	}
+	.pane-splash,
+	.pane-highlights,
+	.pane-exemplars {
+	    background: none;
+	}
+	.pane-splash .row {
+	    display: block;
+	}
+	.pane-intro {
+	    margin: 2in auto 0 auto;
+	    padding: 0;
+	    background: none;
+	    width: 7in;
+	    page-break-after: always;
+	}
+	.intro-logo {
+	    margin-bottom: 5rem !important;
+	    border: none;
+	}
+    .intro-logo img {
+        margin: auto;
+        width: 100%;
+    }
+    .intro-logo h3 {
+        font-size: 2rem;
+    }
+    .intro-logo hr {
+        padding: 0;
+        margin: 0 auto;
+        border-color: #999;
+    }
+    .wl-url {
+        font-size: 1.8rem;
+        line-height: 100%;
+    }
+    .pane-intro p {
+       font-size: 1.5rem;
+       text-align: center;
+    }
+    .pane-slides {
+	    margin: 0 auto 0 auto !important;
+	    padding: 0;
+	    background: none;
+	    width: 7in;
+	    page-break-after: always;
+    }
+    #slideContent {
+        padding-top: 0;
+        margin-top: 0;
+    }
+    #slide-map .slide-image,
+    #slide-archives .slide-image {
+        border-top: 0;
+        height: 3.5in;
+    }
+    #slide-map {
+        margin-top: 0.5in;
+    }
+    #slide-archives {
+        margin-top: 1in;
+    }
+    #slide-map .slide-image img,
+    #slide-archives .slide-image img {
+        margin-top: 0;
+    }
+    .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: alpha(opacity=100);
+        border: 1px solid #999;
+        margin: 0;
+    }
+    .slide-caption {
+        padding: 0 0.5rem !important;
+        margin: 0 !important;
+        position: static;
+        background-color: #fff;
+        color: #000;
+    }
+    .slide-caption h3 {
+        font-size: 1.5rem;
+        line-height: 100%;
+        font-weight: bold;
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+    .slide-caption .wl-url {
+        font-size: 1.3rem;
+        line-height: 100%;
+    }
+    .slide-caption p {
+        font-size: 1.2rem;
+        line-height: 100%;
+        margin: 0;
+        padding: 1rem 0;
+    }
+    .pane-highlights {
+	    margin: 0 auto 0 auto !important;
+	    padding: 0;
+	    background: none;
+	    page-break-after: always;
+    }
+	.pane-highlights .row {
+	    display: block;
+	}
+    .highlights-list {
+        display: none;
+    }
+    .highlights-content {
+	    margin: auto !important;
+	    max-width: 100%;
+	    position: relative;
+        color: #000;
+        border: 0;
+    }
+    .highlights-content .tab-pane {
+        padding: 0;
+        color: #000;
+        border: 0;
+        width: 49.8%;
+        border-top: 4rem solid transparent;
+        border-bottom: 4rem solid transparent;
+        margin: 0;
+        display: inline-block !important;
+    }
+    .highlights-content .tab-pane:nth-child(1),
+    .highlights-content .tab-pane:nth-child(3)
+     {
+        border-left: 0;
+        border-right: 3rem solid transparent;
+    }
+    .highlights-content .tab-pane:nth-child(2),
+    .highlights-content .tab-pane:nth-child(4)
+     {
+        border-left: 0;
+        border-right: 3rem solid transparent;
+    }
+    .highlights-content h3 {
+        display: block;
+        margin: 0;
+        padding: 0;
+        font-size: 1.5rem;
+        line-height: 100%;
+        font-weight: bold;
+    }
+    .highlights-content p {
+        display:block;
+        position: static;
+        background: none;
+        font-size: 1.2rem;
+        line-height: 1.4rem;
+        padding: 0.3rem 0;
+        margin: 0;
+        color: #000;
+        -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+        filter: alpha(opacity=100);
+        opacity: 1;
+    }
+    .highlights-content img {
+        border: 1px solid #999 !important;
+    }
+    .pane-exemplars {
+	    margin: 0.5in auto 0 auto !important;
+	    padding: 0;
+	    background: none;
+    }
+    .pane-exemplars ul {
+        width: 7in;
+        margin: auto;
+        font-size: 1.4rem;
+        line-height: 150%;
+    }
+    .print-exemplars {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    .print-exemplars li {
+        padding: 1rem 0;
+    }
+    .pane-moreinfo {
+	    margin: 1in auto 0 auto !important;
+	    padding: 0;
+	    background: none;
+    }
+    .pane-moreinfo ul {
+        margin: 0;
+        padding: 0;
+        background: none;
+    }
+    .pane-moreinfo ul.row {
+        display: block;
+    }
+    .pane-moreinfo .nav-item {
+        border: 0;
+        margin: 0;
+        padding: 1rem 0;
+   }
+    .pane-moreinfo .nav-link {
+        padding: 0;
+        margin: 0;
+        color: #000;
+        text-decoration: none;
+        line-height: 150%;
+    }
+    .pane-moreinfo .nav-link::after {
+        content:":\A https://writlarge.ctl.columbia.edu" attr(href) " ";
+        white-space: pre;
+        font-weight: normal;
+    }
+    footer {
+        text-align: center;
+        margin: 1in;
+        border-top: 1px solid #999;
+    }
+    footer.text-muted, footer a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+    footer.bg-dark {
+        background: transparent !important;
+    }
+    .footer-link::after {
+        content:" (" attr(href) ")";
+        white-space: pre;
+        font-weight: normal;
     }
 }
 

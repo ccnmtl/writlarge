@@ -2,6 +2,7 @@
 
 {% block title %}Home{% endblock %}
 
+{% block bodyclass %}cover-page{% endblock %}
 {% block mainclass %}container-fluid m-0 p-0{% endblock %}
 
 {% block content %}
@@ -14,6 +15,10 @@
             <div class="intro-logo pb-1 mb-2 mb-md-3">
                 <img src="{{STATIC_URL}}img/logo_writlarge.svg" class="py-1">
                 <h3 class="text-center">New York City’s Educational Past<br />from the Ground Up</h3>
+                <div class="wl-url d-none d-print-block text-center my-5">
+                <hr class="w-25 mb-5" />
+                writlarge.ctl.columbia.edu
+                </div>
             </div>
             <p>
                 <span class="font-italic">Writ Large</span> tells the story of New York City’s educational past in space and time. It locates the many and varied sites of teaching and learning in the built environment that were an integral part of neighborhood life and the transformation of the city over time.
@@ -23,7 +28,7 @@
             </p>
         </div><!-- /.pane-intro -->
         <div class="pane-slides col-lg p-0 mt-3 m-lg-0">
-            <ul class="nav" id="slideContentTab" role="tablist">
+            <ul class="nav d-print-none" id="slideContentTab" role="tablist">
                 <li class="nav-item w-50 px-5">
                     <a class="nav-link active show" id="slide-map-tab" data-toggle="tab" href="#slide-map" role="tab" aria-controls="slide-map" aria-selected="true">Map</a>
                 </li>
@@ -37,12 +42,14 @@
                         <img src="{{STATIC_URL}}img/slide-map.jpg" class="w-100">
                     </div>
                     <div class="slide-caption p-2 p-sm-3">
+                        <h3 class="d-none d-print-block"><span class="font-italic">Writ Large</span> Map</h3>
+                        <div class="wl-url d-none d-print-block">writlarge.ctl.columbia.edu/map/</div>
                         <p>
                         New York City neighborhoods are rich with places where children, youth, and adults learned. Use the map to find these sites and see how the city’s educational landscape changed across time.
                         </p>
-                        <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block">
+                        <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block d-print-none">
                         <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
-                        Go to Writ Large Map
+                        Go to <span class="font-italic">Writ Large</span> Map
                         </a>
                     </div>
                 </div>
@@ -51,10 +58,12 @@
                         <img src="{{STATIC_URL}}img/slide-archives.jpg" class="w-100">
                     </div>
                     <div class="slide-caption p-2 p-sm-3">
+                        <h3 class="d-none d-print-block">Contribute to Archival Collections</h3>
+                        <div class="wl-url d-none d-print-block">writlarge.ctl.columbia.edu/suggest/collection/</div>
                         <p>
                         Help us build our database of archival resources related to mapped learning sites. If you are a NYC archivist or librarian, please tell us about relevant collections your repository holds.
                         </p>
-                        <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block">
+                        <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block d-print-none">
                         <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
                         Contribute to Archival Collections
                         </a>
@@ -121,14 +130,20 @@
 <section class="pane-exemplars py-4 py-lg-5">
     <div class="container mx-auto pb-0 pb-sm-3">
         <h2 class="text-center"><span class="font-italic">Writ Large</span> Exemplars</h2>
-        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>. Click each title to see the record.</p>
-        <div class="cover-exemplar">
+        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>.
+        <span class="d-print-none">Click each title to see the record.</span></p>
+        <div class="cover-exemplar d-print-none">
             <ul>
                 <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
                 <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/321/">Colored Orphan Asylum</a></li>
             </ul>
-            <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-none d-sm-block">
+            <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-none d-print-none d-sm-block">
         </div>
+        <ul class="print-exemplars d-none d-print-block">
+            <li class="text-center"><b>Hudson Guild</b><br />https://writlarge.ctl.columbia.edu/view/23/</li>
+            <li class="text-center"><b>Colored Orphan Asylum</b><br />https://writlarge.ctl.columbia.edu/view/321/</li>
+            
+        </ul>
     </div>
 </section><!-- /.pane-exemplars -->
 
