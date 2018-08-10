@@ -14,6 +14,9 @@ locals().update(
 #       s3static=False,
     ))
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',

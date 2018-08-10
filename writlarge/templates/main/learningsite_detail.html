@@ -191,7 +191,7 @@
                         icon="{{object.category.first.group|default:'other'}}" />
                 </div>
                 <ul class="list-group">
-                {% for place in object.place.all %}
+                {% for place in object.places_by_start_date %}
                     <li class="list-group-item">
                         {% if is_editor %}
                         <div class="row">

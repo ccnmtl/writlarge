@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.gis.db.models.fields import PointField
 from django.contrib.gis.geos.point import Point
 from django.db import models
+from django.db.models.aggregates import Count
 from django.urls.base import reverse
 from edtf import text_to_edtf
 from taggit.managers import TaggableManager
@@ -364,6 +365,25 @@ class LearningSite(models.Model):
             return (defunct, defunct)
         else:
             return (None, None)
+
+    def places_by_start_date(self):
+        # Sort places by start_date desc, but sort empty dates to the end
+        return self.place.all().annotate(
+            empty_start_date=Count('start_date')).order_by(
+                '-empty_start_date', '-start_date__lower', 'title')
+
+    def established_display(self):
+        if not self.established or not self.established.lower:
+            return ''
+        return self.established.lower.strftime('%Y')
+
+    def defunct_display(self):
+        if not self.defunct or not self.defunct.lower:
+            return ''
+        return self.defunct.lower.strftime('%Y')
+
+    def tags_display(self):
+        return self.tags.names()
 
 
 class LearningSiteRelationship(models.Model):

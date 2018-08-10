@@ -6,7 +6,7 @@ from writlarge.main.models import Place, ExtendedDate, LearningSite
 from writlarge.main.tests.factories import (
     ExtendedDateFactory, LearningSiteFactory,
     LearningSiteRelationshipFactory, ArchivalCollectionSuggestionFactory,
-    ArchivalRepositoryFactory, ArchivalCollectionFactory)
+    ArchivalRepositoryFactory, ArchivalCollectionFactory, PlaceFactory)
 
 
 class ExtendedDateTest(TestCase):
@@ -229,6 +229,22 @@ class LearningSiteTest(TestCase):
         site.defunct = dt
         site.save()
         self.assertEquals(site.get_year_range(), (1984, 2018))
+
+    def test_places_by_start_date(self):
+        site = LearningSiteFactory()
+        place1 = site.place.first()
+
+        place2 = PlaceFactory(start_date=None, end_date=None)
+        site.place.add(place2)
+
+        dt = ExtendedDate.objects.create(edtf_format='1920')
+        place3 = PlaceFactory(start_date=dt)
+        site.place.add(place3)
+
+        qs = site.places_by_start_date()
+        self.assertEquals(qs[0], place1)
+        self.assertEquals(qs[1], place3)
+        self.assertEquals(qs[2], place2)
 
 
 class ArchivalCollectionSuggestionTest(TestCase):

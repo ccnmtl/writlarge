@@ -16,7 +16,7 @@ flake8==3.5.0
 tornado==5.1
 beautifulsoup4==4.6.1
 cssselect==1.0.3
-lxml==4.2.3
+lxml==4.2.4
 fuzzywuzzy==0.16.0
 sure==1.4.11
 traitlets==4.3.2  # ipython
@@ -32,7 +32,7 @@ backports.shutil_get_terminal_size==1.0.0  # ipython
 wcwidth==0.1.7  # ipython
 prompt_toolkit==2.0.4  # ipython
 pygments==2.2.0  # ipython
-scandir==1.7  # ipython
+scandir==1.8  # ipython
 ipython==6.5.0
 ipdb==0.11
 rdflib==4.2.2
@@ -48,13 +48,13 @@ certifi==2018.4.16  # requests
 requests==2.19.1
 logilab-common==1.4.2
 logilab-astng==0.24.3
-astroid==2.0.2
-pylint==2.0.1
+astroid==2.0.3
+pylint==2.1.1
 six==1.11.0
 ipaddress==1.0.21  # faker
 faker==0.8.17  # factory_boy
 factory_boy==2.11.1
-ldap3==2.5
+ldap3==2.5.1
 sqlparse==0.2.4
 boto==2.49.0
 python-dateutil==2.7.3
@@ -93,7 +93,7 @@ ccnmtlsettings==1.4.0
 django-reversion==3.0.0
 text_unidecode==1.2
 
-django-taggit==0.22.2
+django-taggit==0.23.0
 
 django-cacheds3storage==0.1.2
 
@@ -101,7 +101,7 @@ nameparser==0.5.7
 httplib2==0.10.3
 oauth2==1.9.0.post1
 oauthlib==2.1.0
-pylti==0.6.0
+pylti==0.7.0
 django-lti-provider==0.3.3
 
 pyparsing==2.2.0

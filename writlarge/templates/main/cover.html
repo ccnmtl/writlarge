@@ -2,91 +2,160 @@
 
 {% block title %}Home{% endblock %}
 
+{% block bodyclass %}cover-page{% endblock %}
 {% block mainclass %}container-fluid m-0 p-0{% endblock %}
 
 {% block content %}
 
-<section class="pane-splash py-5">
+
+
+<section class="pane-splash py-4 py-lg-5">
     <div class="row container mx-auto p-0">
-        <div class="pane-intro col-lg p-4">
-        <div class="intro-logo">
-        <img src="{{STATIC_URL}}img/logo_writlarge.svg">
-        <h3 class="text-center">New York City’s Educational Past<br />from the Ground Up</h3>
-        <hr class="boreder border-secondary" />
-        </div>
-        <p>Writ Large contributes to a comprehensive understanding of New York City’s educational past by locating formal and informal sites of teaching and learning in neighborhoods across time and to identify archival resources in New York City repositories, and elsewhere), to document that history.</p>
-        <p>This site is designed to document the multiple settings in which diverse New Yorkers learned and capture the reciprocal relationship between education and the transformation of the city.</p>
-        </div>
-        <div class="pane-slide col-lg p-0">
-<ul class="nav" id="slideContentTab" role="tablist">
-  <li class="nav-item w-50 px-5">
-    <a class="nav-link active show" id="slide-map-tab" data-toggle="tab" href="#slide-map" role="tab" aria-controls="slide-map" aria-selected="true">Map</a>
-  </li>
-  <li class="nav-item w-50 px-5">
-    <a class="nav-link" id="slide-archives-tab" data-toggle="tab" href="#slide-archives" role="tab" aria-controls="slide-archives" aria-selected="false">Archives</a>
-  </li>
-</ul>
-<div class="tab-content h-100" id="slideContent">
-  <div class="tab-pane fade show active h-100" id="slide-map" role="tabpanel" aria-labelledby="slide-map-tab">
-  <div class="slide-caption p-3 py-4 w-100">
-  <p>Some short description here on what the map is about. The language should be direct, and invitational. The length of this description should be about thirty words.
-  </p>
-  <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block">
-  <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
-  Go to Writ Large Map
-  </a>
-  </div>
-  </div>
-  <div class="tab-pane fade h-100" id="slide-archives" role="tabpanel" aria-labelledby="slide-archives-tab">
-  <div class="slide-caption p-3 py-4 w-100">
-  <p>Some short description here on what the archival collection is about. The language should be invitational call to action. The length of this description should be about thirty words.
-  </p>
-  <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block">
-  <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
-  Contribute to Archival Collections
-  </a>
-  </div>
-  </div>
-</div>
-
-
-
-
-
-        </div>
-    </div>
+        <div class="pane-intro col-lg p-2 p-sm-3 p-md-4">
+            <div class="intro-logo pb-1 mb-2 mb-md-3">
+                <img src="{{STATIC_URL}}img/logo_writlarge.svg" class="py-1">
+                <h3 class="text-center">New York City’s Educational Past<br />from the Ground Up</h3>
+                <div class="wl-url d-none d-print-block text-center my-5">
+                <hr class="w-25 mb-5" />
+                writlarge.ctl.columbia.edu
+                </div>
+            </div>
+            <p>
+                <span class="font-italic">Writ Large</span> tells the story of New York City’s educational past in space and time. It locates the many and varied sites of teaching and learning in the built environment that were an integral part of neighborhood life and the transformation of the city over time.
+            </p>
+            <p>
+                To support new historical perspectives about education and the city, <span class="font-italic">Writ Large</span> connects sites found on the map with relevant archival collections.
+            </p>
+        </div><!-- /.pane-intro -->
+        <div class="pane-slides col-lg p-0 mt-3 m-lg-0">
+            <ul class="nav d-print-none" id="slideContentTab" role="tablist">
+                <li class="nav-item w-50 px-5">
+                    <a class="nav-link active show" id="slide-map-tab" data-toggle="tab" href="#slide-map" role="tab" aria-controls="slide-map" aria-selected="true">Map</a>
+                </li>
+                <li class="nav-item w-50 px-5">
+                    <a class="nav-link" id="slide-archives-tab" data-toggle="tab" href="#slide-archives" role="tab" aria-controls="slide-archives" aria-selected="false">Archives</a>
+                </li>
+            </ul><!-- /#slideContentTab -->
+            <div class="tab-content" id="slideContent">
+                <div class="tab-pane fade show active" id="slide-map" role="tabpanel" aria-labelledby="slide-map-tab">
+                    <div class="slide-image">
+                        <img src="{{STATIC_URL}}img/slide-map.jpg" class="w-100">
+                    </div>
+                    <div class="slide-caption p-2 p-sm-3">
+                        <h3 class="d-none d-print-block"><span class="font-italic">Writ Large</span> Map</h3>
+                        <div class="wl-url d-none d-print-block">writlarge.ctl.columbia.edu/map/</div>
+                        <p>
+                        New York City neighborhoods are rich with places where children, youth, and adults learned. Use the map to find these sites and see how the city’s educational landscape changed across time.
+                        </p>
+                        <a href="{% url 'map-view' %}" class="slide-link btn btn-default d-inline-block d-print-none">
+                        <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
+                        Go to <span class="font-italic">Writ Large</span> Map
+                        </a>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="slide-archives" role="tabpanel" aria-labelledby="slide-archives-tab">
+                    <div class="slide-image">
+                        <img src="{{STATIC_URL}}img/slide-archives.jpg" class="w-100">
+                    </div>
+                    <div class="slide-caption p-2 p-sm-3">
+                        <h3 class="d-none d-print-block">Contribute to Archival Collections</h3>
+                        <div class="wl-url d-none d-print-block">writlarge.ctl.columbia.edu/suggest/collection/</div>
+                        <p>
+                        Help us build our database of archival resources related to mapped learning sites. If you are a NYC archivist or librarian, please tell us about relevant collections your repository holds.
+                        </p>
+                        <a href="{% url 'collection-suggest-view' %}" class="slide-link btn btn-default d-inline-block d-print-none">
+                        <i class="fa fa-share-square-o fa-lg" aria-hidden="true"></i>
+                        Contribute to Archival Collections
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /#slideContent -->
+        </div><!-- /.pane-slides -->
+    </div><!-- /.row .container -->
 </section><!-- /.pane-splash -->
 
+<section class="pane-highlights py-4 py-lg-5">
+    <div class="row container mx-auto p-0">
+        <div class="col-12 col-lg-4 highlights-list p-0">
+            <div class="list-group flex-row flex-lg-column" id="list-tab" role="tablist">
+                <a class="list-group-item list-group-item-action active" id="list-research-list" data-toggle="list" href="#highlight-research" role="tab" aria-controls="research">
+                <h3 class="d-none d-lg-block">A Research Tool</h3>
+                <h3 class="d-block d-lg-none text-center m-0 p-0">1</h3>
+                <p class="d-none d-xl-block">Uncovers the scope of learning in the city from seminaries to playgrounds to libraries.</p>
+                </a>
+                <a class="list-group-item list-group-item-action" id="list-sanborn-list" data-toggle="list" href="#highlight-sanborn" role="tab" aria-controls="sanbprn">
+                <h3 class="d-none d-lg-block">The Built City</h3>
+                <h3 class="d-block d-lg-none text-center m-0 p-0">2</h3>
+                <p class="d-none d-xl-block">Sanborn Maps enable users to see learning sites within the changing built environment.</p>
+                </a>
+                <a class="list-group-item list-group-item-action" id="list-connections-list" data-toggle="list" href="#highlight-connections" role="tab" aria-controls="connections">
+                <h3 class="d-none d-lg-block">Connections</h3>
+                <h3 class="d-block d-lg-none text-center m-0 p-0">3</h3>
+                <p class="d-none d-xl-block">Documents connections and affiliations among learning sites within neighborhoods and across the city.</p>
+                </a>
+                <a class="list-group-item list-group-item-action" id="list-archives-list" data-toggle="list" href="#highlight-archives" role="tab" aria-controls="archives">
+                <h3 class="d-none d-lg-block">From the Record Up</h3>
+                <h3 class="d-block d-lg-none text-center m-0 p-0">4</h3>
+                <p class="d-none d-xl-block">Identifies archival resources to generate new studies of the city’s educational history.</p>
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 highlights-content p-0 m-lg-0">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane show active" id="highlight-research" role="tabpanel" aria-labelledby="list-research-list">
+                    <h3 class="text-center">A Research Tool</h3>
+                    <p class="text-center">Uncovers the scope of learning in the city from seminaries to playgrounds to libraries.</p>
+                    <img src="{{STATIC_URL}}img/highlight-research.jpg" class="img-fluid d-block border border-white">
+                </div>
+                <div class="tab-pane" id="highlight-sanborn" role="tabpanel" aria-labelledby="list-sanborn-list">
+                    <h3 class="text-center">The Built City</h3>
+                    <p class="text-center">Sanborn Maps enable users to see learning sites within the changing built environment.</p>
+                    <img src="{{STATIC_URL}}img/highlight-sanborn.jpg" class="img-fluid d-block border border-white">
+                </div>
+                <div class="tab-pane" id="highlight-connections" role="tabpanel" aria-labelledby="list-connections-list">
+                    <h3 class="text-center">Connections</h3>
+                    <p class="text-center">Documents connections and affiliations among learning sites within neighborhoods and across the city.</p>
+                    <img src="{{STATIC_URL}}img/highlight-connections.jpg" class="img-fluid d-block border border-white">
+                </div>
+                <div class="tab-pane" id="highlight-archives" role="tabpanel" aria-labelledby="list-archives-list">
+                    <h3 class="text-center">From the Record Up</h3>
+                    <p class="text-center">Identifies archival resources to generate new studies of the city’s educational history.</p>
+                    <img src="{{STATIC_URL}}img/highlight-archives.jpg" class="img-fluid d-block border border-white">
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- /.pane-highlights -->
 
-
-<section class="pane-exemplars py-5">
-    <div class="container mx-auto pb-3">
-    <h2 class="text-center">STL Exemplars</h2>
-    <p class="text-center">Here are example sites of teaching and learning in Writ Large. Click to see the record.</p>
-    <div class="cover-exemplar">
-        <ul class="h-100 w-100 position-absolute">
-            <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/93/">New York Public Library-Riverside</a></li>
-            <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
+<section class="pane-exemplars py-4 py-lg-5">
+    <div class="container mx-auto pb-0 pb-sm-3">
+        <h2 class="text-center"><span class="font-italic">Writ Large</span> Exemplars</h2>
+        <p class="text-center">Here are example sites of teaching and learning in <span class="font-italic">Writ Large</span>.
+        <span class="d-print-none">Click each title to see the record.</span></p>
+        <div class="cover-exemplar d-print-none">
+            <ul>
+                <li class="exemplar-label exemplar01"><a href="https://writlarge.ctl.columbia.edu/view/23/">Hudson Guild</a></li>
+                <li class="exemplar-label exemplar02"><a href="https://writlarge.ctl.columbia.edu/view/321/">Colored Orphan Asylum</a></li>
+            </ul>
+            <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-none d-print-none d-sm-block">
+        </div>
+        <ul class="print-exemplars d-none d-print-block">
+            <li class="text-center"><b>Hudson Guild</b><br />https://writlarge.ctl.columbia.edu/view/23/</li>
+            <li class="text-center"><b>Colored Orphan Asylum</b><br />https://writlarge.ctl.columbia.edu/view/321/</li>
+            
         </ul>
-        <img src="{{STATIC_URL}}img/exemplars_map.jpg" class="d-block border border-secondary w-100">
     </div>
-    </div>
-
-
 </section><!-- /.pane-exemplars -->
 
-<div class="pane-moreinfo py-5">
+<section class="pane-moreinfo py-4 py-lg-5">
     <div class="container">
-        <h2 class="text-center">Connect with Writ Large</h2>
-        <ul class="nav py-3">
-            <li class="nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest a Collection</a></li>
-            <li class="nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
-            <li class="nav-item"><a href="/about/" class="nav-link">About Writ Large</a></li>
+        <h2 class="text-center">Connect with <span class="font-italic">Writ Large</span></h2>
+        <ul class="nav row mt-0 mt-md-4">
+            <li class="col-sm nav-item"><a href="{% url 'collection-suggest-view' %}" class="nav-link">Suggest <span class="text-nowrap">an Archive</span></a></li>
+            <li class="col-sm nav-item"><a href="/about/" class="nav-link">About <span class="text-nowrap font-italic">Writ Large</span></a></li>
+            <li class="col-sm nav-item"><a href="/contact/" class="nav-link">Contact Us</a></li>
         </ul>
     </div>
-</div><!-- /.pane-moreinfo -->
-
-
-
+</section><!-- /.pane-moreinfo -->
 
 {% endblock %}

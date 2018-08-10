@@ -10,7 +10,8 @@ from writlarge.main.tests.factories import (
 class LearningSiteSearchMixinTest(TestCase):
 
     def setUp(self):
-        self.site1 = LearningSiteFactory(title='Site Alpha')
+        self.site1 = LearningSiteFactory(
+            title='Site Alpha', description='the first')
         self.site2 = LearningSiteFactory(
             title='Site Beta', established=None, defunct=None)
 
@@ -71,6 +72,12 @@ class LearningSiteSearchMixinTest(TestCase):
         qs = mixin._process_query(qs=all, q='tag:red')
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), self.site3)
+
+        all = LearningSite.objects.all()
+        qs = mixin._process_query(
+            qs=all, q='the first', full_search=True)
+        self.assertEquals(qs.count(), 1)
+        self.assertEquals(qs.first(), self.site1)
 
     def test_tokenize(self):
         mixin = LearningSiteSearchMixin()
