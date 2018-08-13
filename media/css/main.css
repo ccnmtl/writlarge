@@ -1215,6 +1215,7 @@ input[type=number] {
         border: 0;
         margin: 0;
         padding: 1rem 0;
+        font-size: 1.4rem !important;
    }
     .pane-moreinfo .nav-link {
         padding: 0;
@@ -1244,6 +1245,9 @@ input[type=number] {
         content:" (" attr(href) ")";
         white-space: pre;
         font-weight: normal;
+    }
+    footer .footer-logo img {
+        height: 40px;
     }
 }
 
