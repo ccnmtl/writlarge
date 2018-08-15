@@ -212,6 +212,11 @@ h4 {
     margin: 0;
 }
 
+.pane-highlights h2 {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
 .pane-highlights .list-group-item {
     background-color: #ddd;
 }
@@ -839,6 +844,10 @@ input[type=number] {
         right: 0;
         bottom: auto;
     }
+    .pane-highlights h2 {
+        font-weight: bold;
+        font-size: 2rem;
+    }
     .pane-highlights .list-group-item {
         padding: 1rem;
     }
@@ -924,6 +933,10 @@ input[type=number] {
         padding: 0;
         margin: 0;
     }
+    .pane-highlights h2 {
+        font-weight: bold;
+        font-size: 2rem;
+    }
     .pane-highlights h3 {
         margin: 0;
         padding: 0 0 0 0;
@@ -934,7 +947,7 @@ input[type=number] {
     .highlights-content {
         background-color: transparent;
         margin-left: -0.5rem !important;
-        z-index: 1000;
+        z-index: 999;
     }
     .highlights-content h3 {
         display: none;
@@ -1115,7 +1128,7 @@ input[type=number] {
         padding: 1rem 0;
     }
     .pane-highlights {
-	    margin: 0 auto 0 auto !important;
+	    margin: 0.5in auto 0 auto !important;
 	    padding: 0;
 	    background: none;
 	    page-break-after: always;
