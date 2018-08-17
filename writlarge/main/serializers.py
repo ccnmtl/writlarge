@@ -68,7 +68,7 @@ class LearningSiteSerializer(serializers.HyperlinkedModelSerializer):
         model = LearningSite
         fields = ('id', 'title', 'place', 'category',
                   'digital_object', 'empty', 'tags_display',
-                  'established_display', 'defunct_display')
+                  'established_defunct_display')
 
     def create(self, validated_data):
         place_data = validated_data.pop('place')

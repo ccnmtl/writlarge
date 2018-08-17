@@ -56,8 +56,19 @@
                     {% if form.established.errors %}initial-errors="1"{% endif %} />
             </div>
 
-            {% bootstrap_field form.defunct %}
             <div class="form-group">
+                <label>Is Defunct?</label>
+                <div class="checkbox">
+                    <label for="id_is_defunct" title="Does this learning site still exist?">
+                    <input type="checkbox" name="is_defunct" id="id_is_defunct" v-on:click="toggleNextGroup"
+                        {% if form.data.is_defunct or form.initial.is_defunct %}checked="checked"{% endif %}> &nbsp;{{object.title}} no longer exists.
+                    </label>
+                </div>
+            </div>
+
+            {% bootstrap_field form.defunct %}
+            <div class="form-group defunct-group"
+                {% if not form.data.is_defunct and not form.initial.is_defunct %}style="display: none"{% endif %}>
                 <label for="id_defunct">Defunct</label>
                 <edtf id="edtf-defunct" name="defunct"
                     {% for key, value in object.defunct.to_dict.items %}

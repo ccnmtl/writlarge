@@ -60,9 +60,21 @@
                     {% if form.start_date.errors %}initial-errors="1"{% endif %} />
             </div>
 
-            {% bootstrap_field form.end_date %}
             <div class="form-group">
+                <label>Has relocated?</label>
+                <div class="checkbox">
+                    <label for="id_is_ended" title="Is the site or archive still at this location?">
+                        <input type="checkbox" name="is_ended" id="id_is_ended" v-on:click="toggleNextGroup"
+                            {% if form.data.is_ended or form.initial.is_ended %}checked="checked"{% endif %}> &nbsp;{{parent.title}} is no longer at this location.
+                    </label>
+                </div>
+            </div>
+
+            {% bootstrap_field form.end_date %}
+            <div class="form-group"
+                {% if not form.data.is_ended and not form.initial.is_ended %}style="display: none"{% endif %}>
                 <label for="id_end_date">End Date</label>
+
                 <edtf id="edtf-end-date" name="end_date"
                     {% for key, value in object.end_date.to_dict.items %}
                         {% if value %}

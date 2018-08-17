@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load writlargetags %}
 
 {% block title %}{{object.title}}{% endblock %}
 
@@ -25,17 +26,11 @@
         <h2>
             {{object.title}}
         </h2>
-        {% with established=object.established defunct=object.defunct %}
-        {% if established %}
-            <h4 class="text-muted">
-                {{established}} - {% if defunct %}{{defunct}}{% else %}present{% endif %}
-            </h4>
-        {% else %}{% if defunct %}
-            <h4 class="text-muted">? - {{defunct}}</h4>
-        {% endif %}{% endif %}
-        {% endwith %}
-        {% if object.description %}
-            <p class="lead">{{object.description}}</p>
+        {% display_date_range object.established object.is_defunct object.defunct as dt%}
+        {% if dt != '? - ?' %}
+        <h4>
+            <h4 class="text-muted">{{dt}}</h4>
+        </h4>
         {% endif %}
     </div>
 
@@ -212,13 +207,7 @@
                             <div class="col">
                                 <div>{{place.title}}</div>
                                 <div class="small text-muted">
-                                {% with start_date=place.start_date end_date=place.end_date %}
-                                {% if start_date %}
-                                    {{start_date}} - {% if not end_date or end_date.is_unknown %}present{% else %}{{end_date}}{% endif %}
-                                {% else %}{% if end_date %}
-                                    ? - {{end_date}}
-                                {% endif %}{% endif %}
-                                {% endwith %}
+                                    {% display_date_range place.start_date place.is_ended place.end_date %}
                                 </div>
                             </div>
                         </div>

@@ -244,3 +244,22 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def format_date_range(edtf_start, is_ended, edtf_end):
+    start = str(edtf_start) if edtf_start else ''
+    end = str(edtf_end) if edtf_end else ''
+
+    if start:
+        if not is_ended:
+            return '{} - present'.format(start)
+        elif len(end) < 1:
+            return '{} - ?'.format(start, end)
+        else:
+            return '{} - {}'.format(start, end)
+    elif not is_ended:
+        return '? - present'
+    elif len(end) > 0:
+        return '? - {}'.format(end)
+
+    return '? - ?'

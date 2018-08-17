@@ -32,6 +32,16 @@ requirejs(['./common'], function() {
                             break;
                         }
                     }
+                },
+                toggleNextGroup: function(evt) {
+                    const $elt = $(event.currentTarget);
+                    const $grp = $elt.parents('.form-group')
+                        .first().nextAll('.form-group').first();
+                    if ($elt.is(':checked')) {
+                        $grp.show();
+                    } else {
+                        $grp.hide();
+                    }
                 }
             }
         });
