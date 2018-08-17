@@ -5,6 +5,7 @@ from writlarge.main.mixins import LearningSiteSearchMixin
 from writlarge.main.models import LearningSite
 from writlarge.main.tests.factories import (
     LearningSiteFactory, ExtendedDateFactory)
+from django.contrib.auth.models import AnonymousUser
 
 
 class LearningSiteSearchMixinTest(TestCase):
@@ -25,6 +26,7 @@ class LearningSiteSearchMixinTest(TestCase):
     def test_filter(self):
         mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get('/', {'q': 'Alpha'})
+        mixin.request.user = AnonymousUser()
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 1)
         self.assertEquals(qs.first(), self.site1)
@@ -34,6 +36,7 @@ class LearningSiteSearchMixinTest(TestCase):
 
         mixin.request = RequestFactory().get(
             '/', {'q': '', 'start': 'abcde', 'end': '4567'})
+        mixin.request.user = AnonymousUser()
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 3)
 
@@ -41,6 +44,7 @@ class LearningSiteSearchMixinTest(TestCase):
         mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get(
             '/', {'q': '', 'start': '1900', 'end': '1920'})
+        mixin.request.user = AnonymousUser()
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 2)
         self.assertTrue(self.site2 in qs)
@@ -50,6 +54,7 @@ class LearningSiteSearchMixinTest(TestCase):
         mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get(
             '/', {'q': 'Alpha', 'start': '1900', 'end': '1920'})
+        mixin.request.user = AnonymousUser()
         qs = mixin.filter(LearningSite.objects.all())
         self.assertEquals(qs.count(), 0)
 
