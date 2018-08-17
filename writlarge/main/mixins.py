@@ -161,6 +161,10 @@ class LearningSiteSearchMixin(object):
         return qs.exclude(id__in=ids)
 
     def filter(self, qs, full_search=False):
+        # filter out "empty" sites for anonymous users
+        if self.request.user.is_anonymous:
+            qs = qs.filter(category__isnull=False)
+
         # filter by a search term
         q = self.request.GET.get('q', None)
         if q:
