@@ -168,7 +168,7 @@
                                         <small><i class="fa fa-chain-broken" aria-hidden="true"></i> Remove</small>
                                     </a>
                                     {% endif %}
-                                    <img src="{{STATIC_URL}}png/pin-{{site.category.first}}.png" class="site-icon" /> <a href="{% url 'site-detail-view' site.id %}">{{site.title}}</a>
+                                    <img src="{{STATIC_URL}}png/pin-{{site.category.first.group}}.png" class="site-icon" /> <a href="{% url 'site-detail-view' site.id %}">{{site.title}}</a>
                                 </li>
                             {% endfor %}
                             </ul>
