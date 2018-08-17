@@ -75,19 +75,11 @@
                 </div>
             </div>
             <div v-else class="pin-place-content mt-2">
-              <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.established_display && selectedSite.defunct_display">
+              <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.established_defunct_display != '? - ?'">
                   <dt></dt>
                   <dd class="mb-0">
-                    {{selectedSite.established_display}} &mdash; {{selectedSite.defunct_display}}
+                    {{selectedSite.established_defunct_display}}
                   </dd>
-              </dl>
-              <dl class="pin-detail-tags d-flex flex-row mb-1" v-else-if="selectedSite.established_display">
-                  <dt></dt>
-                  <dd class="mb-0">est. {{selectedSite.established_display}}</dd>
-              </dl>
-              <dl class="pin-detail-tags d-flex flex-row mb-1" v-else-if="selectedSite.defunct_display">
-                  <dt></dt>
-                  <dd class="mb-0">defunct {{selectedSite.defunct_display}}</dd>
               </dl>
               <dl class="pin-detail-tags d-flex flex-row mb-2" v-if="selectedSite.category.length > 0">
                   <dt class="mr-1 mb-0" v-if="selectedSite.category.length > 1">Categories:</dt>

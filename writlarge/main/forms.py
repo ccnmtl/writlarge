@@ -123,8 +123,8 @@ class LearningSiteForm(forms.ModelForm):
         model = LearningSite
         fields = ['title', 'description',
                   'category', 'instructional_level', 'target_audience',
-                  'established', 'defunct', 'founder', 'corporate_body',
-                  'tags', 'notes']
+                  'established', 'is_defunct', 'defunct', 'founder',
+                  'corporate_body', 'tags', 'notes']
         widgets = {
             'title': TextInput,
             'category': CheckboxSelectMultiple,
@@ -255,7 +255,7 @@ class PlaceForm(forms.ModelForm):
 
     class Meta:
         model = Place
-        fields = ['title', 'latlng', 'start_date', 'end_date']
+        fields = ['title', 'latlng', 'start_date', 'is_ended', 'end_date']
         widgets = {
             'title': HiddenInput,
             'latlng': HiddenInput,

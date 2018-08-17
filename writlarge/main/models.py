@@ -9,7 +9,7 @@ from django.urls.base import reverse
 from edtf import text_to_edtf
 from taggit.managers import TaggableManager
 
-from writlarge.main.utils import ExtendedDateWrapper
+from writlarge.main.utils import ExtendedDateWrapper, format_date_range
 
 
 class ExtendedDateManager(models.Manager):
@@ -246,6 +246,9 @@ class Place(models.Model):
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='place_start_date')
 
+    is_ended = models.BooleanField(
+        default=True,
+        help_text="Is the site or archive still at this location?")
     end_date = models.OneToOneField(
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='place_end_date')
@@ -289,6 +292,10 @@ class LearningSite(models.Model):
     established = models.OneToOneField(
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_established')
+
+    is_defunct = models.BooleanField(
+        default=True,
+        help_text="Does this learning site still exist?")
     defunct = models.OneToOneField(
         ExtendedDate, null=True, blank=True, on_delete=models.SET_NULL,
         related_name='site_defunct')
@@ -372,15 +379,9 @@ class LearningSite(models.Model):
             empty_start_date=Count('start_date')).order_by(
                 '-empty_start_date', '-start_date__lower', 'title')
 
-    def established_display(self):
-        if not self.established or not self.established.lower:
-            return ''
-        return self.established.lower.strftime('%Y')
-
-    def defunct_display(self):
-        if not self.defunct or not self.defunct.lower:
-            return ''
-        return self.defunct.lower.strftime('%Y')
+    def established_defunct_display(self):
+        return format_date_range(
+            self.established, self.is_defunct, self.defunct)
 
     def tags_display(self):
         return self.tags.names()
