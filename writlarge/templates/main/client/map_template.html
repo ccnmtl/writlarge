@@ -98,7 +98,7 @@
                     </template>
                   </dd>
               </dl>
-              <dl class="pin-detail-tags d-flex flex-row mb-0 mt-1" v-if="selectedSite.tags_display">
+              <dl class="pin-detail-tags d-flex flex-row mb-0 mt-1" v-if="selectedSite.tags_display.length > 0">
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">
                     <span v-for="(tag, idx) in selectedSite.tags_display">
@@ -139,7 +139,7 @@
                             </dd>
                         </dl>
 
-                        <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="site.tags_display">
+                        <dl class="pin-detail-tags d-flex flex-row mb-0" v-if="site.tags_display.length > 0">
                             <dt class="mr-1">Tags:</dt>
                             <dd class="mb-0">
                               <span v-for="(tag, idx) in site.tags_display">
