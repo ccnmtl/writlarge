@@ -46,8 +46,7 @@ class LearningSiteSearchMixinTest(TestCase):
             '/', {'q': '', 'start': '1900', 'end': '1920'})
         mixin.request.user = AnonymousUser()
         qs = mixin.filter(LearningSite.objects.all())
-        self.assertEquals(qs.count(), 2)
-        self.assertTrue(self.site2 in qs)
+        self.assertEquals(qs.count(), 1)
         self.assertTrue(self.site3 in qs)
 
     def test_filter_years_valid_out_of_range(self):
@@ -124,21 +123,17 @@ class LearningSiteSearchMixinTest(TestCase):
         all = LearningSite.objects.all()
 
         qs = mixin._process_years(all, 1776, 2018)
-        self.assertEquals(qs.count(), 3)
+        self.assertEquals(qs.count(), 2)
         self.assertTrue(self.site1 in qs)
-        self.assertTrue(self.site2 in qs)
         self.assertTrue(self.site3 in qs)
 
         qs = mixin._process_years(all, 1900, 1918)
-        self.assertEquals(qs.count(), 2)
-        self.assertTrue(self.site2 in qs)
+        self.assertEquals(qs.count(), 1)
         self.assertTrue(self.site3 in qs)
 
         qs = mixin._process_years(all, 1980, 2018)
-        self.assertEquals(qs.count(), 2)
+        self.assertEquals(qs.count(), 1)
         self.assertTrue(self.site1 in qs)
-        self.assertTrue(self.site2 in qs)
 
         qs = mixin._process_years(all, 1800, 1812)
-        self.assertEquals(qs.count(), 1)
-        self.assertTrue(self.site2 in qs)
+        self.assertEquals(qs.count(), 0)

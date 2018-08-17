@@ -273,9 +273,6 @@ class Place(models.Model):
         return reverse(
             'place-detail-view', kwargs={'pk': self.id})
 
-    def empty(self):
-        return True
-
 
 class LearningSite(models.Model):
     title = models.TextField(unique=True)
@@ -362,7 +359,11 @@ class LearningSite(models.Model):
 
     def get_year_range(self):
         est = self.established.get_year() if self.established else None
-        defunct = self.defunct.get_year() if self.defunct else None
+
+        if not self.is_defunct:
+            defunct = date.today().year
+        else:
+            defunct = self.defunct.get_year() if self.defunct else None
 
         if est and defunct:
             return (est, defunct)
