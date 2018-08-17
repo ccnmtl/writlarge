@@ -341,7 +341,7 @@ const GoogleMapVue = {
         this.map = new google.maps.Map(elt, {
             mapTypeControl: false,
             clickableIcons: false,
-            zoom: 12,
+            zoom: 15,
             center: new google.maps.LatLng(40.778572, -73.970616),
             fullscreenControlOptions: {
                 position: google.maps.ControlPosition.RIGHT_BOTTOM,
