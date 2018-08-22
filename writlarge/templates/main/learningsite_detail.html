@@ -32,6 +32,9 @@
             <h4 class="text-muted">{{dt}}</h4>
         </h4>
         {% endif %}
+        {% if object.description %}
+            <p class="lead">{{object.description}}</p>
+        {% endif %}
     </div>
 
     <div class="mb-3 text-center">
