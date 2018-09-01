@@ -39,7 +39,7 @@ requirejs(['./common'], function() {
             },
             methods: {
                 onCreateRepository: function(event) {
-                    const place = this.$children[0].getPlace();
+                    const place = this.$children[0].getSelectedSite();
                     this.addressError = !place;
                     this.titleError = !this.repositoryTitle;
 
