@@ -39,7 +39,7 @@ rdflib==4.2.2
 coverage==4.5.2
 pyasn1==0.4.5
 cryptography==2.5  # pyOpenSSL
-pyOpenSSL==18.0.0
+pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 urllib3==1.24.1  # requests
 chardet==3.0.4  # requests
@@ -52,7 +52,7 @@ astroid==2.1.0
 pylint==2.2.2
 six==1.12.0
 ipaddress==1.0.22  # faker
-faker==1.0.1  # factory_boy
+faker==1.0.2  # factory_boy
 factory_boy==2.11.1
 ldap3==2.5.2
 sqlparse==0.2.4
@@ -108,7 +108,7 @@ pyparsing==2.3.0
 edtf==3.0.0 # pyup: <4.0.0
 
 pbr==5.1.1 # bandit
-pyyaml==4.2b1 # bandit
+pyyaml==4.2b4 # bandit
 stevedore==1.30.0  # bandit
 bandit==1.5.1
 
