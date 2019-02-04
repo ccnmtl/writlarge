@@ -11,7 +11,7 @@ pep8==1.7.1
 pyflakes==2.1.0
 mccabe==0.6.1
 configparser==3.7.1
-pycodestyle==2.4.0
+pycodestyle==2.5.0
 flake8==3.7.4
 tornado==5.1.1
 beautifulsoup4==4.7.1
@@ -76,7 +76,7 @@ django-waffle==0.15.1
 django-jenkins==0.110.0
 django-smoketest==1.1.0
 typing==3.6.6  # For django-extensions
-django-extensions==2.1.4
+django-extensions==2.1.5
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.4
@@ -104,10 +104,10 @@ oauthlib==3.0.1
 pylti==0.7.0
 django-lti-provider==0.3.3
 
-pyparsing==2.3.0
+pyparsing==2.3.0  # pyup: <2.3.1
 edtf==3.0.0 # pyup: <4.0.0
 
-pbr==5.1.1 # bandit
+pbr==5.1.2 # bandit
 pyyaml==4.2b4 # bandit
 stevedore==1.30.0  # bandit
 bandit==1.5.1
