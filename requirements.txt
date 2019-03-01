@@ -108,7 +108,7 @@ pyparsing==2.3.0  # pyup: <2.3.1
 edtf==3.0.0 # pyup: <4.0.0
 
 pbr==5.1.2 # bandit
-pyyaml==5.1b1 # bandit
+pyyaml==5.1b3 # bandit
 stevedore==1.30.0  # bandit
 bandit==1.5.1
 
