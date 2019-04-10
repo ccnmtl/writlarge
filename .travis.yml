@@ -1,5 +1,5 @@
 language: python
-dist: trusty
+dist: xenial
 sudo: false
 python:
   - "3.5"
@@ -12,3 +12,4 @@ addons:
   apt:
     packages:
         - libgdal-dev
+        - libsqlite3-mod-spatialite
