@@ -89,7 +89,7 @@ var FamilyNetworkVue = {
         createPatterns: function(svg) {
             let defs = svg.append('svg:defs');
             for (let group in this.patterns) {
-                if (this.patterns.hasOwnProperty(group)) {
+                if (this.patterns.prototype.hasOwnProperty.call(group)) {
                     defs.append('svg:pattern')
                         .attr('id', group)
                         .attr('height','100%')

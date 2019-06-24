@@ -1,5 +1,3 @@
-/* global requirejs: true */
-
 requirejs(['./common'], function(common) {
     requirejs(['jquery', 'domReady', 'bootstrap'],
         function($, domReady, bootstrap) {
