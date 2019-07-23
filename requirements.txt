@@ -57,7 +57,7 @@ ldap3==2.6
 sqlparse==0.3.0
 s3transfer==0.2.1
 jmespath==0.9.4
-botocore==1.12.192
+botocore==1.12.193
 boto3==1.9.193
 urllib3==1.25.3
 python-dateutil==2.8.0
@@ -79,7 +79,7 @@ django-waffle==0.17.0
 django-jenkins==0.110.0
 django-smoketest==1.1.0
 typing==3.7.4  # For django-extensions
-django-extensions==2.1.9
+django-extensions==2.2.1
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.4.1
@@ -103,14 +103,14 @@ django-cacheds3storage==0.2.1
 nameparser==1.0.4
 httplib2==0.13.0
 oauth2==1.9.0.post1
-oauthlib==3.0.1
+oauthlib==3.0.2
 pylti==0.7.0
 django-lti-provider==0.3.3
 
 pyparsing==2.3.0  # pyup: <2.3.1
 edtf==3.0.0 # pyup: <4.0.0
 
-pbr==5.3.1 # bandit
+pbr==5.4.1 # bandit
 pyyaml==5.1.1 # bandit
 stevedore==1.30.1  # bandit
 bandit==1.6.2
