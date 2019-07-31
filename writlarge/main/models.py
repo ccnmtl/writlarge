@@ -385,7 +385,7 @@ class LearningSite(models.Model):
             self.established, self.is_defunct, self.defunct)
 
     def tags_display(self):
-        return self.tags.names()
+        return [tag.name for tag in self.tags.all()]
 
 
 class LearningSiteRelationship(models.Model):

@@ -94,8 +94,7 @@
                   <dt class="mr-1">Tags:</dt>
                   <dd class="mb-0">
                     <span v-for="(tag, idx) in selectedSite.tags_display">
-                        {{tag}}
-                        <span v-if="idx + 1 < selectedSite.tags_display.length">,</span>
+                        {{tag}}<span v-if="idx + 1 < selectedSite.tags_display.length">,</span>
                     </span>
                   </dd>
               </dl>
@@ -136,8 +135,7 @@
                             <dd class="mb-0">
                               <span v-for="(tag, idx) in site.tags_display">
                                 <a href='#' v-on:click="searchByTag(tag)">
-                                  {{tag}}
-                                </a><span v-if="idx + 1 < site.tags_display.length">,</span>
+                                  {{tag}}</a><span v-if="idx + 1 < site.tags_display.length">,</span>
                               </span>
                             </dd>
                         </dl>
