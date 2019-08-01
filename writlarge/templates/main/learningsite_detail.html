@@ -231,7 +231,7 @@
         </div>
     </div>
 
-    {% if object.archivalcollection_set.length > 0 or is_editor %}
+    {% if object.archivalcollection_set.count > 0 or is_editor %}
     <div class="row">
         <div class="col-md-12">
             <h4 class="mb-3 mt-5 text-muted">Archival Collections</h4>
@@ -290,7 +290,7 @@
     {% endif %}
 
     {% if object.footnotes.count > 0 or is_editor %}
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-md-12">
             <h4 class="mb-3 mt-5 text-muted">References</h4>
             <ol class="list-group list-group-flush footnotes">
