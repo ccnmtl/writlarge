@@ -40,12 +40,12 @@ pyasn1==0.4.7
 cryptography==2.8  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
-urllib3==1.25.6  # requests, sentry-sdk
+urllib3==1.25.7  # requests, sentry-sdk
 chardet==3.0.4  # requests
 idna==2.8  # requests
 certifi==2019.9.11  # requests, sentry-sdk
 requests==2.22.0
-logilab-common==1.4.3
+logilab-common==1.4.4
 logilab-astng==0.24.3
 astroid==2.3.3
 pylint==2.4.3
