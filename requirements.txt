@@ -34,7 +34,7 @@ prompt_toolkit==2.0.10 # pyup: <3.0.0  # ipython
 pygments==2.5.2  # ipython
 scandir==1.10.0  # ipython
 ipython==7.9.0
-ipdb==0.12.2
+ipdb==0.12.3
 coverage==4.5.4
 pyasn1==0.4.8
 cryptography==2.8  # pyOpenSSL
