@@ -13,6 +13,6 @@
     "eslint-plugin-security": "~1.4.0",
     "mocha": "~6.2.0",
     "requirejs": "~2.3.2",
-    "sinon": "~8.0.0"
+    "sinon": "~8.1.0"
   }
 }
