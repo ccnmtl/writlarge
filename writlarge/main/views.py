@@ -13,7 +13,6 @@ from django.views.generic.edit import (
     UpdateView, CreateView, DeleteView, FormView)
 from django.views.generic.list import ListView
 from rest_framework import viewsets
-
 from writlarge.main.forms import (
     ArchivalCollectionCreateForm, ArchivalCollectionUpdateForm,
     ArchivalCollectionSuggestionForm, ConnectionForm,
@@ -29,6 +28,7 @@ from writlarge.main.models import (
 from writlarge.main.serializers import (
     ArchivalRepositorySerializer, LearningSiteSerializer, PlaceSerializer,
     LearningSiteFamilySerializer)
+from writlarge.main.utils import sanitize
 
 
 # returns important setting information for all web pages.
@@ -326,6 +326,7 @@ class ArchivalCollectionListView(ListView):
         context['query'] = query
 
         repo = self.request.GET.get('rid', '')
+        repo = sanitize(repo)
         if repo:
             try:
                 context['selected_repository'] = \
@@ -345,11 +346,13 @@ class ArchivalCollectionListView(ListView):
 
     def filter(self, qs):
         q = self.request.GET.get('q', '')
+        q = sanitize(q)
         if len(q) > 0:
             qs = qs.filter(Q(collection_title__icontains=q) |
                            Q(repository__title__icontains=q))
 
         repo = self.request.GET.get('rid', '')
+        repo = sanitize(repo)
         if len(repo) > 0:
             qs = qs.filter(repository__id=repo)
 

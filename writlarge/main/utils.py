@@ -1,4 +1,5 @@
 from datetime import date
+from html import escape
 import re
 
 from django.contrib.auth.models import User
@@ -263,3 +264,9 @@ def format_date_range(edtf_start, is_ended, edtf_end):
         return '? - {}'.format(end)
 
     return '? - ?'
+
+
+def sanitize(s):
+    if s and '\0' not in s and '\x00' not in s:
+        return escape(s)
+    return ''
