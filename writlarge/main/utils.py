@@ -270,3 +270,11 @@ def sanitize(s):
     if s and '\0' not in s and '\x00' not in s:
         return escape(s)
     return ''
+
+
+def validate_integer(s):
+    try:
+        s = sanitize(s)
+        return int(s)
+    except ValueError:
+        return ''
