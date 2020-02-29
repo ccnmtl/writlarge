@@ -1,5 +1,5 @@
 from datetime import date
-from html import escape
+from django.utils.html import escape
 import re
 
 from django.contrib.auth.models import User
