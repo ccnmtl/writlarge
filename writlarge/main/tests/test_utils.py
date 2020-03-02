@@ -1,7 +1,7 @@
 from django.test.testcases import TestCase
-
 from writlarge.main.models import ExtendedDate
-from writlarge.main.utils import filter_fields, format_date_range
+from writlarge.main.utils import (
+    filter_fields, format_date_range, sanitize, validate_integer)
 
 
 class TestUtils(TestCase):
@@ -51,3 +51,19 @@ class TestUtils(TestCase):
             format_date_range(None, True, end), '? - 2018')
         self.assertEquals(
             format_date_range(unknown, True, end), '? - 2018')
+
+    def test_sanitize(self):
+        self.assertEquals(sanitize('s\0s'), '')
+        self.assertEquals(sanitize('\x00s\x00s'), '')
+        self.assertEquals(sanitize('s\0s\x00'), '')
+        self.assertEquals(sanitize('query'), 'query')
+        self.assertEquals(sanitize('<tag>'), '&lt;tag&gt;')
+        self.assertEquals(sanitize(''), '')
+        self.assertEquals(sanitize(None), '')
+
+    def test_validate_integer(self):
+        self.assertEqual(validate_integer('x71ksckz'), '')
+        self.assertEqual(validate_integer(''), '')
+        self.assertEqual(validate_integer(None), '')
+        self.assertEqual(validate_integer('\x00'), '')
+        self.assertEquals(validate_integer('1'), 1)

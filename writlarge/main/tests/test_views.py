@@ -507,6 +507,16 @@ class TestArchivalCollectionListView(TestCase):
         self.assertTrue(
             self.coll2.repository in response.context['repositories'])
 
+    def test_query_null_bytes(self):
+        url = "{}?q=\x00&rid=".format(reverse('archival-collections'))
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_repo_null_bytes(self):
+        url = "{}?q=&rid=\x00".format(reverse('archival-collections'))
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
 
 class TestArchivalCollectionSuggestionView(TestCase):
 
