@@ -137,3 +137,27 @@ class LearningSiteSearchMixinTest(TestCase):
 
         qs = mixin._process_years(all, 1800, 1812)
         self.assertEquals(qs.count(), 0)
+
+    def test_filter_null_characters_q(self):
+        mixin = LearningSiteSearchMixin()
+        mixin.request = RequestFactory().get(
+            '/', {'q': '\x00', 'start': '1900', 'end': '1920'})
+        mixin.request.user = AnonymousUser()
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 1)
+
+    def test_filter_null_characters_start_year(self):
+        mixin = LearningSiteSearchMixin()
+        mixin.request = RequestFactory().get(
+            '/', {'q': '', 'start': '\x00', 'end': '1920'})
+        mixin.request.user = AnonymousUser()
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 3)
+
+    def test_filter_null_characters_end_year(self):
+        mixin = LearningSiteSearchMixin()
+        mixin.request = RequestFactory().get(
+            '/', {'q': '', 'start': '1900', 'end': '\x00'})
+        mixin.request.user = AnonymousUser()
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 3)

@@ -10,8 +10,8 @@ from django.http.response import HttpResponseNotAllowed, HttpResponse, \
 from django.urls.base import reverse
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
-
 from writlarge.main.models import LearningSite
+from writlarge.main.utils import sanitize
 
 
 class JSONResponseMixin(object):
@@ -126,17 +126,18 @@ class LearningSiteSearchMixin(object):
         qs = qs.prefetch_related('category', 'tags')
 
         for token in self._tokenize(q):
+            value = sanitize(token.value)
             if token.typ == 'CATEGORY':
-                qs = qs.filter(category__name=token.value)
+                qs = qs.filter(category__name=value)
             elif token.typ == 'TAG':
-                qs = qs.filter(tags__name__in=[token.value])
+                qs = qs.filter(tags__name__in=[value])
             elif token.typ == 'STRING' and full_search:
                 qs = qs.filter(
-                    Q(title__icontains=token.value) |
-                    Q(description__icontains=token.value)
+                    Q(title__icontains=value) |
+                    Q(description__icontains=value)
                 )
             elif token.typ == 'STRING':
-                qs = qs.filter(title__icontains=token.value)
+                qs = qs.filter(title__icontains=value)
 
         return qs
 
