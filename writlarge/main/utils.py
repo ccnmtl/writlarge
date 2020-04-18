@@ -255,7 +255,7 @@ def format_date_range(edtf_start, is_ended, edtf_end):
         if not is_ended:
             return '{} - present'.format(start)
         elif len(end) < 1:
-            return '{} - ?'.format(start, end)
+            return '{} - ?'.format(start)
         else:
             return '{} - {}'.format(start, end)
     elif not is_ended:
