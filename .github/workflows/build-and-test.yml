@@ -7,6 +7,9 @@ jobs:
       matrix:
           python-version: [3.6]
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Install Spatialite and libgdal
+        run: sudo apt-get install libgdal-dev libsqlite3-mod-spatialite
       - name: Build with Makefile
         run: make
