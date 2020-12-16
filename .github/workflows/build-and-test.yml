@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+      - name: Update environment
+        run: sudo apt update
       - name: Install Spatialite and libgdal
         run: sudo apt-get install libgdal-dev libsqlite3-mod-spatialite
       - name: Build with Makefile
