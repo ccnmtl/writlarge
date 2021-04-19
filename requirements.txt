@@ -42,7 +42,7 @@ factory_boy==2.12.0
 sqlparse==0.3.1
 ldap3==2.9
 
-s3transfer==0.3.7
+s3transfer==0.4.0
 jmespath==0.10.0
 
 botocore>=1.15.0,<1.21.0
