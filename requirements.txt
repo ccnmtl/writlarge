@@ -31,7 +31,7 @@ chardet==4.0.0  # requests
 idna==2.10  # requests
 certifi==2020.12.5  # requests, sentry-sdk
 requests==2.25.1
-logilab-common==1.6.3
+logilab-common==1.8.1
 astroid==2.4.1
 pylint==2.5.2
 six==1.16.0
