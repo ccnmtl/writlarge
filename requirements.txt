@@ -13,7 +13,7 @@ mccabe==0.6.1
 configparser==5.0.0
 pycodestyle==2.7.0
 importlib-metadata==2.1.1  # for flake8
-zipp==3.1.0  # for flake8
+zipp==3.4.1  # for flake8
 flake8==3.9.2
 tornado==6.0.4
 beautifulsoup4==4.9.3
@@ -28,18 +28,18 @@ pyOpenSSL==20.0.1
 ndg-httpsclient==0.5.1
 urllib3==1.26.4  # requests, sentry-sdk
 chardet==4.0.0  # requests
-idna==2.10  # requests
+idna==3.1  # requests
 certifi==2020.12.5  # requests, sentry-sdk
 requests==2.25.1
 logilab-common==1.6.3
-astroid==2.4.1
+astroid==2.5.6
 pylint==2.8.2
 six==1.16.0
 ipaddress==1.0.23  # faker
 faker==8.1.4  # factory_boy
 factory_boy==2.12.0
 
-sqlparse==0.3.1
+sqlparse==0.4.1
 ldap3==2.9
 
 s3transfer==0.4.2
@@ -76,7 +76,7 @@ gunicorn==20.1.0
 django-infranil==1.1.0
 django-flatblocks==1.0.0
 django-storages==1.9.1
-djangorestframework==3.11.0
+djangorestframework==3.12.4
 
 ccnmtlsettings==1.9.0
 
