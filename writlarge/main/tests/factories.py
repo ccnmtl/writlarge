@@ -17,13 +17,13 @@ class FuzzyPoint(BaseFuzzyAttribute):
                      random.uniform(-90.0, 90.0))
 
 
-class ExtendedDateFactory(factory.DjangoModelFactory):
+class ExtendedDateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ExtendedDate
     edtf_format = '1984~'
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
     username = factory.Sequence(lambda n: "user%03d" % n)
@@ -38,7 +38,7 @@ class UserFactory(factory.DjangoModelFactory):
             self.groups.add(extracted)
 
 
-class GroupFactory(factory.DjangoModelFactory):
+class GroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Group
 
@@ -52,7 +52,7 @@ class GroupFactory(factory.DjangoModelFactory):
             self.permissions.add(*lst)
 
 
-class LearningSiteCategoryFactory(factory.DjangoModelFactory):
+class LearningSiteCategoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LearningSiteCategory
 
@@ -60,7 +60,7 @@ class LearningSiteCategoryFactory(factory.DjangoModelFactory):
     group = 'school'
 
 
-class PlaceFactory(factory.DjangoModelFactory):
+class PlaceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Place
 
@@ -70,7 +70,7 @@ class PlaceFactory(factory.DjangoModelFactory):
     end_date = factory.SubFactory(ExtendedDateFactory)
 
 
-class LearningSiteFactory(factory.DjangoModelFactory):
+class LearningSiteFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LearningSite
 
@@ -91,7 +91,7 @@ class LearningSiteFactory(factory.DjangoModelFactory):
             self.place.add(PlaceFactory())
 
 
-class ArchivalRepositoryFactory(factory.DjangoModelFactory):
+class ArchivalRepositoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ArchivalRepository
 
@@ -99,7 +99,7 @@ class ArchivalRepositoryFactory(factory.DjangoModelFactory):
     place = factory.SubFactory(PlaceFactory)
 
 
-class ArchivalCollectionFactory(factory.DjangoModelFactory):
+class ArchivalCollectionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ArchivalCollection
 
@@ -107,7 +107,7 @@ class ArchivalCollectionFactory(factory.DjangoModelFactory):
     repository = factory.SubFactory(ArchivalRepositoryFactory)
 
 
-class ArchivalCollectionSuggestionFactory(factory.DjangoModelFactory):
+class ArchivalCollectionSuggestionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ArchivalCollectionSuggestion
 
@@ -129,14 +129,14 @@ class ArchivalCollectionSuggestionFactory(factory.DjangoModelFactory):
     inclusive_end = factory.SubFactory(ExtendedDateFactory)
 
 
-class FootnoteFactory(factory.DjangoModelFactory):
+class FootnoteFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Footnote
 
     note = factory.Sequence(lambda n: "footnote%03d" % n)
 
 
-class LearningSiteRelationshipFactory(factory.DjangoModelFactory):
+class LearningSiteRelationshipFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = LearningSiteRelationship
 
