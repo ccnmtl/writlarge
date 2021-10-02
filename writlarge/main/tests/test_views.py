@@ -272,6 +272,11 @@ class TestLearningSiteGalleryView(TestCase):
         response = self.client.get(self.url)
         self.assertEquals(response.status_code, 200)
 
+    def test_no_parent(self):
+        url = reverse('site-gallery-view', kwargs={'parent': 999})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 404)
+
 
 class TestAddRemoveCollection(TestCase):
 
