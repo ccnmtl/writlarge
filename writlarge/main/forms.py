@@ -36,6 +36,11 @@ class ExtendedDateForm(forms.Form):
         self.is_empty = False
 
         self.instance = self.get_extended_date()
+        if not self.instance:
+            self._errors['__all__'] = self.error_class([
+                'Please specify a valid date'])
+            return cleaned_data
+
         (lower, upper) = self.instance.wrap()
 
         if lower.is_invalid():
