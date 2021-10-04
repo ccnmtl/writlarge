@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.db.models.query_utils import Q
+from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls.base import reverse
@@ -157,6 +158,9 @@ class LearningSiteGalleryView(LearningSiteParamMixin, ListView):
     template_name = 'main/learningsite_gallery.html'
 
     def get_queryset(self):
+        if not self.parent:
+            raise Http404('')
+
         return self.parent.digital_object.all()
 
 
