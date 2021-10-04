@@ -23,6 +23,13 @@ class LearningSiteSearchMixinTest(TestCase):
 
         self.site3.tags.add('red')
 
+    def test_filter_empty(self):
+        mixin = LearningSiteSearchMixin()
+        mixin.request = RequestFactory().get('/', {})
+        mixin.request.user = AnonymousUser()
+        qs = mixin.filter(LearningSite.objects.all())
+        self.assertEquals(qs.count(), 3)
+
     def test_filter(self):
         mixin = LearningSiteSearchMixin()
         mixin.request = RequestFactory().get('/', {'q': 'Alpha'})

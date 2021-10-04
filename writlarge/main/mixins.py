@@ -173,7 +173,7 @@ class LearningSiteSearchMixin(object):
                 re.match(r'[1-2][0-9]{3}', end_year)):
             qs = self._process_years(qs, int(start_year), int(end_year))
 
-        return qs.select_related(
+        return qs.distinct().select_related(
             'established', 'defunct',
             'created_by', 'modified_by').prefetch_related(
             'place', 'category', 'digital_object',
