@@ -160,7 +160,6 @@ var FamilyNetworkVue = {
                 .attr('stroke', 'rgba(50, 50, 50, 0.5)')
                 .style('stroke-dasharray', this.getLineStyle);
 
-            /* eslint-disable scanjs-rules/assign_to_href */
             const nodeElements = svg.append('g')
                 .attr('class', 'nodes')
                 .selectAll('circle')
@@ -173,7 +172,6 @@ var FamilyNetworkVue = {
                 .on('click', function(d) {
                     location.href = '/view/' + d.id + '/';
                 });
-            /* eslint-enable scanjs-rules/assign_to_href */
 
             const textElements = svg.append('g')
                 .attr('class', 'texts')
@@ -230,7 +228,6 @@ var FamilyNetworkVue = {
         });
     },
     mounted: function() {
-        // eslint-disable-next-line scanjs-rules/call_addEventListener
         window.addEventListener('resize', this.buildDiagram);
     },
     updated: function() {

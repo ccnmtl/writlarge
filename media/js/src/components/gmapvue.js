@@ -397,7 +397,6 @@ const GoogleMapVue = {
             });
         }
 
-        // eslint-disable-next-line scanjs-rules/call_addEventListener
         window.addEventListener('resize', this.resize);
     },
     updated: function() {
