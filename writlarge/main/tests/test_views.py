@@ -97,14 +97,15 @@ class ApiViewTest(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(the_json[0]['id'], self.site.id)
+        self.assertEquals(len(the_json['results']), 1)
+        self.assertEquals(the_json['results'][0]['id'], self.site.id)
 
         response = self.client.get('/api/repository/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
 
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(the_json[0]['id'], self.repository.id)
+        self.assertEquals(the_json['results'][0]['id'], self.repository.id)
 
         # update fails
         response = self.client.post('/api/site/',
@@ -759,8 +760,8 @@ class LearningSiteViewSetTest(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json), 1)
-        self.assertEquals(the_json[0]['id'], site1.id)
+        self.assertEquals(len(the_json['results']), 1)
+        self.assertEquals(the_json['results'][0]['id'], site1.id)
 
 
 class MapViewTest(TestCase):

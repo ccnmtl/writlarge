@@ -1,5 +1,6 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
-/* global Promise, getVisibleContentHeight, sanitize */
+/* global Promise, getVisibleContentHeight, sanitize, AsyncQueue */
+/* global parsePageNumber */
 /* exported GoogleMapVue */
 
 const GoogleMapVue = {
@@ -36,6 +37,9 @@ const GoogleMapVue = {
         }
     },
     methods: {
+        url: function(pageNumber) {
+            return WritLarge.baseUrl + 'api/site/?page=' + pageNumber;
+        },
         getSearchTerm: function() {
             return this.searchTerm;
         },
@@ -325,15 +329,37 @@ const GoogleMapVue = {
         searchByCategory: function(category) {
             this.searchTerm += ' category:' + category;
             this.search();
+        },
+        processData: function(data) {
+            this.sites = this.sites.concat(data.results);
+            const nextPage = parsePageNumber(data.next);
+            if (nextPage > 1) {
+                this.getPage(nextPage);
+            }
+        },
+        getData: function(params) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: 'GET',
+                    url: this.url(params.page),
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: (data) => {
+                        resolve(data);
+                    },
+                    error: (error) => {
+                        reject(error);
+                    }
+                });
+            });
+        },
+        getPage: function(pageNumber) {
+            const ctx = {'page': pageNumber};
+            this.queue.add(this.getData, this.processData, ctx);
         }
     },
     created: function() {
-        if (this.showsites === 'true') {
-            const url = WritLarge.baseUrl + 'api/site/';
-            $.getJSON(url, (data) => {
-                this.sites = data;
-            });
-        }
+        this.queue = new AsyncQueue();
     },
     mounted: function() {
         let elt = document.getElementById(this.mapName);
@@ -398,6 +424,10 @@ const GoogleMapVue = {
         }
 
         window.addEventListener('resize', this.resize);
+
+        if (this.showsites === 'true') {
+            this.getPage(1);
+        }
     },
     updated: function() {
         this.sites.forEach((site) => {
