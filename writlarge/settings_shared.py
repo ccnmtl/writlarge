@@ -78,7 +78,6 @@ INSTALLED_APPS += [  # noqa
     'rest_framework',
     'lti_provider',
     'edtf',
-    'debug_toolbar',
     'contactus'
 ]
 
@@ -92,7 +91,6 @@ TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
 MIDDLEWARE = [
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -155,7 +153,10 @@ REST_FRAMEWORK = {
         'writlarge.main.utils.BrowsableAPIRendererNoForms'
     ),
     'PAGINATE_BY': 15,
-    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p'
+    'DATETIME_FORMAT': '%m/%d/%y %I:%M %p',
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 15,
 }
 
 SESSION_COOKIE_SECURE = True
