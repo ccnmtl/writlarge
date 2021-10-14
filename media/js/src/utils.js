@@ -8,7 +8,6 @@
 class AsyncQueue {
     constructor() {
         this.queue = [];
-        // eslint-disable-next-line scanjs-rules/call_setInterval
         setInterval(this.resolveNext.bind(this), 100);
     }
     add(fn, cb, params) {
