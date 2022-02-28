@@ -217,16 +217,16 @@ const GoogleMapVue = {
                 .done((sites, addresses) => {
                     if (!this.searchTerm) {
                         // filtering solely by year range
-                        this.siteResults(sites[0]);
-                    } else if (sites[0].length === 1) {
+                        this.siteResults(sites[0].results);
+                    } else if (sites[0].results.length === 1) {
                         // single site found
-                        const site = this.getSiteById(sites[0][0].id);
+                        const site = this.getSiteById(sites[0].results[0].id);
                         this.searchResults = [site];
                         this.selectSite(site);
-                    } else if (sites[0].length > 1) {
+                    } else if (sites[0].results.length > 1) {
                         // multiple sites found via keyword + year range
                         this.searchResults = [];
-                        const bounds = this.siteResults(sites[0]);
+                        const bounds = this.siteResults(sites[0].results);
                         this.map.fitBounds(bounds);
                         this.searchResultHeight = getVisibleContentHeight();
                     } else if (addresses) {
