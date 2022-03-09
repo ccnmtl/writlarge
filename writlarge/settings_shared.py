@@ -12,9 +12,9 @@ base = os.path.dirname(__file__)
 locals().update(common(project=project, base=base))
 
 
-if hasattr(platform, 'linux_distribution'):
-    if platform.linux_distribution()[0] == 'Ubuntu' \
-           and platform.linux_distribution()[1] == '18.04':
+if hasattr(platform, "linux_distribution") and \
+        platform.linux_distribution()[0] == 'Ubuntu':
+    if platform.linux_distribution()[1] == '18.04':
         # On Debian testing/buster, I had to do the following:
         # * Install the sqlite3 and libsqlite3-mod-spatialite packages.
         # * Add the following to writlarge/local_settings.py:
