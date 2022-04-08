@@ -63,7 +63,6 @@ USE_TZ = True
 
 INSTALLED_APPS += [  # noqa
     'bootstrap4',
-    'infranil',
     'writlarge.main',
     'taggit',
     'django.contrib.gis',
@@ -156,3 +155,5 @@ CSRF_COOKIE_SECURE = True
 
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
