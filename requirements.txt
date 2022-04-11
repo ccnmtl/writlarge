@@ -104,4 +104,4 @@ django-smtp-ssl==1.0
 django-contact-us==1.0.0
 
 entrypoints==0.4
-asgiref==3.4.1
+asgiref==3.5.0
