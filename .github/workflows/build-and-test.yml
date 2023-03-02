@@ -8,7 +8,7 @@ jobs:
           python-version: [3.8]
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Update environment
         run: sudo apt update
       - name: Install Spatialite and libgdal
