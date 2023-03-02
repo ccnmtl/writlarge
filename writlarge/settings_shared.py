@@ -11,6 +11,19 @@ base = os.path.dirname(__file__)
 
 locals().update(common(project=project, base=base))
 
+CAS_SERVER_URL = 'https://cas.columbia.edu/cas/'
+CAS_VERSION = '3'
+CAS_ADMIN_REDIRECT = False
+CAS_MAP_AFFILIATIONS = True
+
+# Translate CUIT's CAS user attributes to the Django user model.
+# https://cuit.columbia.edu/content/cas-3-ticket-validation-response
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_RENAME_ATTRIBUTES = {
+    'givenName': 'first_name',
+    'lastName': 'last_name',
+    'mail': 'email',
+}
 
 if hasattr(platform, "linux_distribution") and \
         platform.linux_distribution()[0] == 'Ubuntu':
@@ -66,17 +79,22 @@ INSTALLED_APPS += [  # noqa
     'writlarge.main',
     'taggit',
     'django.contrib.gis',
+    'django_cas_ng',
     'rest_framework',
     'lti_provider',
     'edtf',
-    'contactus'
+    'contactus',
 ]
+
+INSTALLED_APPS.remove('djangowind')
 
 LOGIN_REDIRECT_URL = "/"
 
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+TEMPLATES[0]['OPTIONS']['context_processors'].remove(
+    'djangowind.context.context_processor')
+TEMPLATES[0]['OPTIONS']['context_processors'].append(
     'django.template.context_processors.csrf')
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+TEMPLATES[0]['OPTIONS']['context_processors'].append(
     'writlarge.main.views.django_settings')
 
 MIDDLEWARE = [
@@ -88,7 +106,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'waffle.middleware.WaffleMiddleware',
     'writlarge.main.middleware.WhodidMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
@@ -104,7 +121,7 @@ REST_FRAMEWORK = {
 
 
 AUTHENTICATION_BACKENDS = [
-    'djangowind.auth.SAMLAuthBackend',
+    'django_cas_ng.backends.CASBackend',
     'django.contrib.auth.backends.ModelBackend',
     'lti_provider.auth.LTIBackend'
 ]
@@ -127,10 +144,8 @@ LTI_TOOL_CONFIGURATION = {
 }
 
 
-WIND_AFFIL_HANDLERS = [
+CAS_AFFILIATIONS_HANDLERS = [
     'writlarge.main.auth.EditorMapper',
-    'djangowind.auth.StaffMapper',
-    'djangowind.auth.SuperuserMapper'
 ]
 
 CONTACT_US_EMAIL = 'ctl-writlarge@columbia.edu'
