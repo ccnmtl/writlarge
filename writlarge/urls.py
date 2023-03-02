@@ -5,17 +5,12 @@ from django.urls.conf import path
 from django.views.generic import TemplateView
 from django.views.static import serve
 from rest_framework import routers
+from django_cas_ng import views as cas_views
 
 from writlarge.main import views
 
 
 admin.autodiscover()
-
-
-auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
-if hasattr(settings, 'CAS_BASE'):
-    auth_urls = url(r'^accounts/', include('djangowind.urls'))
-
 
 router = routers.DefaultRouter()
 router.register(r'site', views.LearningSiteViewSet, basename='site')
@@ -27,7 +22,12 @@ urlpatterns = [
     url(r'^$', views.CoverView.as_view()),
     url(r'^api/', include(router.urls)),
 
-    auth_urls,
+    path('accounts/', include('django.contrib.auth.urls')),
+
+    path('cas/login', cas_views.LoginView.as_view(),
+         name='cas_ng_login'),
+    path('cas/logout', cas_views.LogoutView.as_view(),
+         name='cas_ng_logout'),
 
     url(r'^map/$', views.MapView.as_view(), name='map-view'),
 
