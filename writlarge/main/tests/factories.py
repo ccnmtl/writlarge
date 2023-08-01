@@ -86,7 +86,7 @@ class LearningSiteFactory(factory.django.DjangoModelFactory):
             self.category.add(LearningSiteCategoryFactory())
 
     @factory.post_generation
-    def place(self, create, extracted, **kwargs):
+    def place(self, create, extracted, **kwargs): # noqa F811
         if create:
             self.place.add(PlaceFactory())
 
