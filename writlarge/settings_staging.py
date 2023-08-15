@@ -1,3 +1,4 @@
+import sys
 from django.conf import settings
 from writlarge.settings_shared import *  # noqa: F403
 from ccnmtlsettings.staging import common
@@ -37,7 +38,9 @@ try:
 except ImportError:
     pass
 
-if hasattr(settings, 'SENTRY_DSN'):
+if ('migrate' not in sys.argv) and \
+   ('collectstatic' not in sys.argv) and \
+   hasattr(settings, 'SENTRY_DSN'):
     sentry_sdk.init(
         dsn=SENTRY_DSN,  # noqa: F405
         integrations=[DjangoIntegration()],
