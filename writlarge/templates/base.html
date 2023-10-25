@@ -1,4 +1,4 @@
-{% load compress bootstrap4 %}
+{% load bootstrap4 %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +22,7 @@
    <!-- Backup Google font, Questrial -->
     <link href="https://fonts.googleapis.com/css?family=Didact+Gothic" rel="stylesheet">
 
-    {% compress css %}
-        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
-    {% endcompress %}
+    <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
 
     {% block css %}
     {% endblock %}
