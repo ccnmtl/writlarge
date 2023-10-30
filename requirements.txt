@@ -79,7 +79,7 @@ ctlsettings==0.2.0
 django-reversion==5.0.1
 text_unidecode==1.3
 
-django-taggit==4.0.0
+django-taggit==5.0.1
 
 nameparser==1.1.0
 httplib2==0.22.0
