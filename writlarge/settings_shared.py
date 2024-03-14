@@ -69,6 +69,7 @@ INSTALLED_APPS += [  # noqa
     'lti_provider',
     'edtf',
     'contactus',
+    'django_markwhat',
 ]
 
 LOGIN_REDIRECT_URL = "/"
