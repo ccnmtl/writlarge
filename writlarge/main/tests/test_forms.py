@@ -22,15 +22,15 @@ class ExtendedDateFormTest(TestCase):
         }
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'Please specify a valid date<br />')
+        self.assertEqual(form.get_error_messages(),
+                         u'Please specify a valid date<br />')
 
         data['millenium1'] = 2
         data['millenium2'] = 2
         ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'Please specify a valid date<br />')
+        self.assertEqual(form.get_error_messages(),
+                         u'Please specify a valid date<br />')
 
     def test_clean_valid_date(self):
         data = {
@@ -44,7 +44,7 @@ class ExtendedDateFormTest(TestCase):
         }
         form = ExtendedDateForm(data=data)
         self.assertTrue(form.is_valid())
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
     def test_clean_valid_date_range(self):
         data = {
@@ -58,12 +58,12 @@ class ExtendedDateFormTest(TestCase):
         }
         form = ExtendedDateForm(data=data)
         self.assertTrue(form.is_valid())
-        self.assertEquals(form.get_error_messages(), '')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(form.get_error_messages(), '')
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
         dt = form.save()
-        self.assertEquals(ExtendedDate.objects.count(), 1)
-        self.assertEquals(dt.edtf_format, '2010-02-28?~/2012-02-29')
+        self.assertEqual(ExtendedDate.objects.count(), 1)
+        self.assertEqual(dt.edtf_format, '2010-02-28?~/2012-02-29')
 
     def test_clean_invalid_date(self):
         data = {
@@ -77,14 +77,14 @@ class ExtendedDateFormTest(TestCase):
         }
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'Please specify a valid date<br />')
+        self.assertEqual(form.get_error_messages(),
+                         u'Please specify a valid date<br />')
 
         data['day1'] = 28
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'The date must be today or earlier<br />')
+        self.assertEqual(form.get_error_messages(),
+                         u'The date must be today or earlier<br />')
 
     def test_clean_invalid_date_ranges(self):
         data = {
@@ -100,43 +100,43 @@ class ExtendedDateFormTest(TestCase):
         # invalid start date
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'Please specify a valid date<br />')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(form.get_error_messages(),
+                         u'Please specify a valid date<br />')
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
         # invalid end date
         data['day1'] = '30'
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(
+        self.assertEqual(
             form.get_error_messages(),
             u'Please specify a valid date<br />')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
         # start year in the future
         data['day2'] = 30
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'All dates must be today or earlier<br />')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(form.get_error_messages(),
+                         u'All dates must be today or earlier<br />')
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
         # end year in the future
         data['century1'] = 0
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(form.get_error_messages(),
-                          u'All dates must be today or earlier<br />')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(form.get_error_messages(),
+                         u'All dates must be today or earlier<br />')
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
         # start > end
         data['century2'] = 0
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
-        self.assertEquals(
+        self.assertEqual(
             form.get_error_messages(),
             u'The start date must be earlier than the end date.<br />')
-        self.assertEquals(ExtendedDate.objects.count(), 0)
+        self.assertEqual(ExtendedDate.objects.count(), 0)
 
     def test_clean_incomplete_data(self):
         data = {
@@ -151,8 +151,8 @@ class ExtendedDateFormTest(TestCase):
         form = ExtendedDateForm(data=data)
         self.assertFalse(form.is_valid())
 
-        self.assertEquals(form.get_error_messages(),
-                          u'Please specify a valid date<br />')
+        self.assertEqual(form.get_error_messages(),
+                         u'Please specify a valid date<br />')
 
     def test_create_or_update(self):
         site = LearningSiteFactory(established=None)
@@ -173,7 +173,7 @@ class ExtendedDateFormTest(TestCase):
         form.create_or_update(site, 'established')
         site.refresh_from_db()
         established = site.established
-        self.assertEquals(established.edtf_format, '2010-02-28?~')
+        self.assertEqual(established.edtf_format, '2010-02-28?~')
 
         # update established date
         data['year1'] = 1
@@ -181,8 +181,8 @@ class ExtendedDateFormTest(TestCase):
         self.assertTrue(form.is_valid())
         form.create_or_update(site, 'established')
         site.refresh_from_db()
-        self.assertEquals(established.id, site.established.id)
-        self.assertEquals(established.edtf_format, '2011-02-28?~')
+        self.assertEqual(established.id, site.established.id)
+        self.assertEqual(established.edtf_format, '2011-02-28?~')
 
         # remove established date
         data = {
@@ -250,8 +250,8 @@ class LearningSiteFormTest(TestCase):
         form.save()
 
         # make sure this was all saved
-        self.assertEquals(site.established.edtf_format, '2008?~')
-        self.assertEquals(site.defunct.edtf_format, '2011')
+        self.assertEqual(site.established.edtf_format, '2008?~')
+        self.assertEqual(site.defunct.edtf_format, '2011')
 
 
 class TestDigitalObjectForm(TestCase):
@@ -265,7 +265,7 @@ class TestDigitalObjectForm(TestCase):
         }
 
         form.clean()
-        self.assertEquals(len(form.errors), 3)
+        self.assertEqual(len(form.errors), 3)
         self.assertTrue('file' in form.errors)
         self.assertTrue('source_url' in form.errors)
         self.assertTrue('__all__' in form.errors)
@@ -279,7 +279,7 @@ class TestDigitalObjectForm(TestCase):
         }
 
         form.clean()
-        self.assertEquals(len(form.errors), 0)
+        self.assertEqual(len(form.errors), 0)
 
 
 class TestPlaceForm(TestCase):
@@ -327,8 +327,8 @@ class TestPlaceForm(TestCase):
         form.save()
 
         # make sure this was all saved
-        self.assertEquals(place.start_date.edtf_format, '2008?~')
-        self.assertEquals(place.end_date.edtf_format, '2011')
+        self.assertEqual(place.start_date.edtf_format, '2008?~')
+        self.assertEqual(place.end_date.edtf_format, '2011')
 
 
 class TestArchivalSuggestionForm(TestCase):
@@ -364,5 +364,5 @@ class TestArchivalSuggestionForm(TestCase):
     def test_form_clean_decoy(self):
         self.form.cleaned_data['decoy'] = 'botnet'
         self.form.clean()
-        self.assertEquals(len(self.form._errors.keys()), 1)
+        self.assertEqual(len(self.form._errors.keys()), 1)
         self.assertTrue('decoy' in self.form._errors.keys())

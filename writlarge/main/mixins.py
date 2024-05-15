@@ -14,10 +14,14 @@ from writlarge.main.models import LearningSite
 from writlarge.main.utils import sanitize
 
 
+def is_ajax(request):
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+
 class JSONResponseMixin(object):
 
     def dispatch(self, *args, **kwargs):
-        if not self.request.is_ajax():
+        if not is_ajax(self.request):
             return HttpResponseNotAllowed("")
 
         return super(JSONResponseMixin, self).dispatch(*args, **kwargs)

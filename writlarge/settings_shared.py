@@ -69,7 +69,7 @@ INSTALLED_APPS += [  # noqa
     'lti_provider',
     'edtf',
     'contactus',
-    'django_markwhat',
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
 LOGIN_REDIRECT_URL = "/"
