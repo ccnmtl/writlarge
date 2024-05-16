@@ -14,12 +14,12 @@ class TestWagtailEditorMapper(TestCase):
         self.mapper = EditorMapper()
 
     def test_map_regular_user(self):
-        self.assertEquals(self.user.groups.count(), 0)
+        self.assertEqual(self.user.groups.count(), 0)
         self.mapper.map(self.user, ['foo', 'bar', 'baz'])
-        self.assertEquals(self.user.groups.count(), 0)
+        self.assertEqual(self.user.groups.count(), 0)
 
     def test_map_privileged_user(self):
-        self.assertEquals(self.user.groups.count(), 0)
+        self.assertEqual(self.user.groups.count(), 0)
         self.mapper.map(self.user, ['foo', 'foo.bar.local:columbia.edu'])
-        self.assertEquals(self.user.groups.count(), 1)
-        self.assertEquals(self.user.groups.first(), self.editor)
+        self.assertEqual(self.user.groups.count(), 1)
+        self.assertEqual(self.user.groups.first(), self.editor)

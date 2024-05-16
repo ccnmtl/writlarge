@@ -32,7 +32,7 @@ class ExtendedDateTest(TestCase):
     def test_use_cases(self):
         for key, val in self.use_cases.items():
             e = ExtendedDate(edtf_format=key)
-            self.assertEquals(e.__str__(), val)
+            self.assertEqual(e.__str__(), val)
 
     def test_create_from_dict_empty(self):
         values = {
@@ -42,8 +42,8 @@ class ExtendedDateTest(TestCase):
             'approximate1': False, 'uncertain1': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEquals(dt.edtf_format, 'unknown')
-        self.assertEquals(dt.__str__(), '?')
+        self.assertEqual(dt.edtf_format, 'unknown')
+        self.assertEqual(dt.__str__(), '?')
 
     def test_create_from_dict(self):
         values = {
@@ -56,7 +56,7 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEquals(dt.edtf_format, '2001-01-01?~/20uu')
+        self.assertEqual(dt.edtf_format, '2001-01-01?~/20uu')
 
     def test_create_from_dict_missing_elements(self):
         values = {
@@ -69,24 +69,24 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEquals(dt.edtf_format, '2001-01?~/20uu')
+        self.assertEqual(dt.edtf_format, '2001-01?~/20uu')
 
     def test_to_edtf(self):
         mgr = ExtendedDate.objects
         dt = mgr.to_edtf(2, None, None, None, None, None, True, True)
-        self.assertEquals(dt, '2uuu?~')
+        self.assertEqual(dt, '2uuu?~')
 
         dt = mgr.to_edtf(2, 0, None, None, None, None, True, True)
-        self.assertEquals(dt, '20uu?~')
+        self.assertEqual(dt, '20uu?~')
 
         dt = mgr.to_edtf(2, 0, 1, 5, None, None, False, False)
-        self.assertEquals(dt, '2015')
+        self.assertEqual(dt, '2015')
 
         dt = mgr.to_edtf(2, 0, 1, 5, 2, None, False, False)
-        self.assertEquals(dt, '2015-02')
+        self.assertEqual(dt, '2015-02')
 
         dt = mgr.to_edtf(2, 0, 1, 5, 12, 31, False, False)
-        self.assertEquals(dt, '2015-12-31')
+        self.assertEqual(dt, '2015-12-31')
 
     def test_match_string(self):
         edtf = ExtendedDateFactory()
@@ -95,27 +95,27 @@ class ExtendedDateTest(TestCase):
 
     def test_create_from_string(self):
         dt = ExtendedDate.objects.create_from_string('approximately 1983')
-        self.assertEquals(dt.edtf_format, '1983~')
+        self.assertEqual(dt.edtf_format, '1983~')
 
         dt = ExtendedDate.objects.create_from_string('before 1984')
-        self.assertEquals(dt.edtf_format, 'unknown/1984')
+        self.assertEqual(dt.edtf_format, 'unknown/1984')
 
     def test_invalid_month(self):
         dt = ExtendedDate.objects.create(edtf_format='1980-uu-17/1997-uu-18')
-        self.assertEquals(dt.__str__(),
-                          'unknown month 17, 1980 - unknown month 18, 1997')
+        self.assertEqual(dt.__str__(),
+                         'unknown month 17, 1980 - unknown month 18, 1997')
 
     def test_to_dict_invalid(self):
         dt = ExtendedDate.objects.create(edtf_format='999')
         d = dt.to_dict()
-        self.assertEquals(len(d), 0)
+        self.assertEqual(len(d), 0)
 
     def test_to_dict_partial(self):
         dt = ExtendedDate.objects.create(edtf_format='1uuu')
         d = dt.to_dict()
         self.assertFalse(d['approximate1'])
         self.assertFalse(d['uncertain1'])
-        self.assertEquals(d['millenium1'], '1')
+        self.assertEqual(d['millenium1'], '1')
         self.assertIsNone(d['century1'])
         self.assertIsNone(d['decade1'])
         self.assertIsNone(d['year1'])
@@ -127,35 +127,35 @@ class ExtendedDateTest(TestCase):
         d = dt.to_dict()
         self.assertTrue(d['approximate1'])
         self.assertTrue(d['uncertain1'])
-        self.assertEquals(d['millenium1'], '1')
-        self.assertEquals(d['century1'], '6')
-        self.assertEquals(d['decade1'], '5')
-        self.assertEquals(d['year1'], '9')
-        self.assertEquals(d['month1'], '06')
-        self.assertEquals(d['day1'], '30')
+        self.assertEqual(d['millenium1'], '1')
+        self.assertEqual(d['century1'], '6')
+        self.assertEqual(d['decade1'], '5')
+        self.assertEqual(d['year1'], '9')
+        self.assertEqual(d['month1'], '06')
+        self.assertEqual(d['day1'], '30')
 
     def test_get_year(self):
         dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
-        self.assertEquals(dt.get_year(), 1659)
+        self.assertEqual(dt.get_year(), 1659)
 
         dt = ExtendedDate.objects.create(edtf_format='2uuu')
-        self.assertEquals(dt.get_year(), 2000)
+        self.assertEqual(dt.get_year(), 2000)
 
         dt = ExtendedDate.objects.create(edtf_format='14uu')
-        self.assertEquals(dt.get_year(), 1400)
+        self.assertEqual(dt.get_year(), 1400)
 
         dt = ExtendedDate.objects.create(edtf_format='192u')
-        self.assertEquals(dt.get_year(), 1920)
+        self.assertEqual(dt.get_year(), 1920)
 
         dt = ExtendedDate.objects.create(edtf_format='unknown')
         self.assertIsNone(dt.get_year())
 
     def test_internal_dates(self):
         dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
-        self.assertEquals(dt.lower, date(1659, 6, 30))
+        self.assertEqual(dt.lower, date(1659, 6, 30))
 
         dt = ExtendedDate.objects.create(edtf_format='192u')
-        self.assertEquals(dt.lower, date(1920, 1, 1))
+        self.assertEqual(dt.lower, date(1920, 1, 1))
 
 
 class PlaceTest(TestCase):
@@ -165,7 +165,7 @@ class PlaceTest(TestCase):
         pt = Place.objects.string_to_point(latlng)
         place = Place.objects.create(latlng=pt)
 
-        self.assertEquals(place.__str__(), '')
+        self.assertEqual(place.__str__(), '')
         self.assertTrue(place.match_string(latlng))
         self.assertFalse(place.match_string('12.34,56.789'))
 
@@ -182,12 +182,12 @@ class LearningSiteTest(TestCase):
         self.assertTrue(r.site_two.has_connections())
 
         qs = r.site_one.associates()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs[0], r.site_two)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs[0], r.site_two)
 
         qs = r.site_two.associates()
-        self.assertEquals(qs.count(), 1)
-        self.assertEquals(qs[0], r.site_one)
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs[0], r.site_one)
 
     def test_empty(self):
         site = LearningSiteFactory()
@@ -205,30 +205,30 @@ class LearningSiteTest(TestCase):
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
         ids = parent.connections()
-        self.assertEquals(len(ids), 2)
+        self.assertEqual(len(ids), 2)
 
         self.assertTrue(sib.id in ids)
         self.assertTrue(sib2.id in ids)
 
     def test_group(self):
         site = LearningSite.objects.create(title='test site')
-        self.assertEquals(site.group(), 'other')
+        self.assertEqual(site.group(), 'other')
 
         site = LearningSiteFactory()
-        self.assertEquals(site.group(), 'school')
+        self.assertEqual(site.group(), 'school')
 
     def test_get_year_range(self):
         site = LearningSiteFactory()
-        self.assertEquals(site.get_year_range(), (1984, 1984))
+        self.assertEqual(site.get_year_range(), (1984, 1984))
 
         site = LearningSiteFactory(established=None, defunct=None)
-        self.assertEquals(site.get_year_range(), (None, None))
+        self.assertEqual(site.get_year_range(), (None, None))
 
         site = LearningSiteFactory()
         dt = ExtendedDate.objects.create(edtf_format='2018')
         site.defunct = dt
         site.save()
-        self.assertEquals(site.get_year_range(), (1984, 2018))
+        self.assertEqual(site.get_year_range(), (1984, 2018))
 
     def test_places_by_start_date(self):
         site = LearningSiteFactory()
@@ -242,9 +242,9 @@ class LearningSiteTest(TestCase):
         site.place.add(place3)
 
         qs = site.places_by_start_date()
-        self.assertEquals(qs[0], place1)
-        self.assertEquals(qs[1], place3)
-        self.assertEquals(qs[2], place2)
+        self.assertEqual(qs[0], place1)
+        self.assertEqual(qs[1], place3)
+        self.assertEqual(qs[2], place2)
 
 
 class ArchivalCollectionSuggestionTest(TestCase):
@@ -253,9 +253,9 @@ class ArchivalCollectionSuggestionTest(TestCase):
         s = ArchivalCollectionSuggestionFactory()
         repo = s.get_or_create_repository()
 
-        self.assertEquals(s.repository_title, repo.title)
-        self.assertEquals(s.title, repo.place.title)
-        self.assertEquals(s.latlng, repo.place.latlng)
+        self.assertEqual(s.repository_title, repo.title)
+        self.assertEqual(s.title, repo.place.title)
+        self.assertEqual(s.latlng, repo.place.latlng)
 
     def test_get_or_create_repository2(self):
         repo = ArchivalRepositoryFactory()
@@ -263,26 +263,26 @@ class ArchivalCollectionSuggestionTest(TestCase):
         s = ArchivalCollectionSuggestionFactory(
             repository_title=repo.title,
             latlng=repo.place.latlng, title=repo.place.title)
-        self.assertEquals(s.get_or_create_repository(), repo)
+        self.assertEqual(s.get_or_create_repository(), repo)
 
     def test_convert1(self):
         s = ArchivalCollectionSuggestionFactory()
         coll = s.convert_to_archival_collection()
 
-        self.assertEquals(s.collection_title, coll.collection_title)
-        self.assertEquals(s.repository_title, coll.repository.title)
-        self.assertEquals(s.description, coll.description)
-        self.assertEquals(
+        self.assertEqual(s.collection_title, coll.collection_title)
+        self.assertEqual(s.repository_title, coll.repository.title)
+        self.assertEqual(s.description, coll.description)
+        self.assertEqual(
             coll.notes,
             ('Suggested by Elizabeth B. Drewry, '
              'Director of the Roosevelt Library'))
-        self.assertEquals(s.finding_aid_url, coll.finding_aid_url)
-        self.assertEquals(s.linear_feet, coll.linear_feet)
-        self.assertEquals(s.inclusive_start, coll.inclusive_start)
-        self.assertEquals(s.inclusive_end, coll.inclusive_end)
+        self.assertEqual(s.finding_aid_url, coll.finding_aid_url)
+        self.assertEqual(s.linear_feet, coll.linear_feet)
+        self.assertEqual(s.inclusive_start, coll.inclusive_start)
+        self.assertEqual(s.inclusive_end, coll.inclusive_end)
 
         s.refresh_from_db()
-        self.assertEquals(s.archival_collection, coll)
+        self.assertEqual(s.archival_collection, coll)
 
     def test_convert2(self):
         coll = ArchivalCollectionFactory()
@@ -293,7 +293,7 @@ class ArchivalCollectionSuggestionTest(TestCase):
             latlng=coll.repository.place.latlng,
             title=coll.repository.place.title)
 
-        self.assertEquals(coll, s.convert_to_archival_collection())
+        self.assertEqual(coll, s.convert_to_archival_collection())
 
         s.refresh_from_db()
-        self.assertEquals(s.archival_collection, coll)
+        self.assertEqual(s.archival_collection, coll)

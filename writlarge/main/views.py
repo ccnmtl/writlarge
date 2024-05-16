@@ -438,12 +438,12 @@ class ConnectionCreateView(LoggedInEditorMixin,
 
 class ConnectionDeleteView(LoggedInEditorMixin, LearningSiteParamMixin,
                            DeleteView):
-
     model = LearningSite
     template_name = 'main/connection_confirm_delete.html'
+    success_url = '/'
 
     def delete(self, request, *args, **kwargs):
-        success_url = reverse('site-detail-view', args=[self.parent.id])
+        self.success_url = reverse('site-detail-view', args=[self.parent.id])
 
         site = self.get_object()
 
@@ -452,7 +452,7 @@ class ConnectionDeleteView(LoggedInEditorMixin, LearningSiteParamMixin,
             Q(site_one=site, site_two=self.parent))
         lsr.delete()
 
-        return HttpResponseRedirect(success_url)
+        return HttpResponseRedirect(self.success_url)
 
 
 """

@@ -14,8 +14,8 @@ class TestUtils(TestCase):
             'defunct-century1': '3',
         }
         data = filter_fields(data, 'established-')
-        self.assertEquals(data['millenium1'], '1')
-        self.assertEquals(data['century1'], '2')
+        self.assertEqual(data['millenium1'], '1')
+        self.assertEqual(data['century1'], '2')
 
     def test_format_date_range(self):
         unknown = ExtendedDate.objects.create(edtf_format='unknown')
@@ -23,47 +23,47 @@ class TestUtils(TestCase):
         end = ExtendedDate.objects.create(edtf_format='2018')
 
         # has not ended
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(None, False, None), '? - present')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(unknown, False, unknown), '? - present')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, False, None), '2015 - present')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, False, unknown), '2015 - present')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, False, end), '2015 - present')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(None, False, end), '? - present')
 
         # has ended
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(None, True, None), '? - ?')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(unknown, True, unknown), '? - ?')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, True, None), '2015 - ?')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, True, unknown), '2015 - ?')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(start, True, end), '2015 - 2018')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(None, True, end), '? - 2018')
-        self.assertEquals(
+        self.assertEqual(
             format_date_range(unknown, True, end), '? - 2018')
 
     def test_sanitize(self):
-        self.assertEquals(sanitize('s\0s'), '')
-        self.assertEquals(sanitize('\x00s\x00s'), '')
-        self.assertEquals(sanitize('s\0s\x00'), '')
-        self.assertEquals(sanitize('query'), 'query')
-        self.assertEquals(sanitize('<tag>'), '&lt;tag&gt;')
-        self.assertEquals(sanitize(''), '')
-        self.assertEquals(sanitize(None), '')
+        self.assertEqual(sanitize('s\0s'), '')
+        self.assertEqual(sanitize('\x00s\x00s'), '')
+        self.assertEqual(sanitize('s\0s\x00'), '')
+        self.assertEqual(sanitize('query'), 'query')
+        self.assertEqual(sanitize('<tag>'), '&lt;tag&gt;')
+        self.assertEqual(sanitize(''), '')
+        self.assertEqual(sanitize(None), '')
 
     def test_validate_integer(self):
         self.assertEqual(validate_integer('x71ksckz'), '')
         self.assertEqual(validate_integer(''), '')
         self.assertEqual(validate_integer(None), '')
         self.assertEqual(validate_integer('\x00'), '')
-        self.assertEquals(validate_integer('1'), 1)
+        self.assertEqual(validate_integer('1'), 1)

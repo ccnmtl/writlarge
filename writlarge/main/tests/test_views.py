@@ -23,11 +23,11 @@ class BasicTest(TestCase):
 
     def test_root(self):
         response = self.c.get("/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'PASS')
 
     @override_settings(GOOGLE_MAP_API='123456')
@@ -36,7 +36,7 @@ class BasicTest(TestCase):
         request.user = UserFactory()
 
         ctx = django_settings(request)
-        self.assertEquals(ctx['settings']['GOOGLE_MAP_API'], '123456')
+        self.assertEqual(ctx['settings']['GOOGLE_MAP_API'], '123456')
         self.assertFalse(ctx['is_editor'])
 
         request.user.groups.add(GroupFactory(name='Editor'))
@@ -52,19 +52,19 @@ class PasswordTest(TestCase):
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         response = self.client.get('/accounts/password_reset/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_logged_in(self):
         self.assertTrue(self.client.login(
             username=self.user.username, password="test"))
         response = self.client.get('/accounts/password_change/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.get('/accounts/password_reset/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class DetailViewTests(TestCase):
@@ -73,13 +73,13 @@ class DetailViewTests(TestCase):
         site = LearningSiteFactory()
         url = reverse('site-detail-view', kwargs={'pk': site.id})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_archival_collection_detail(self):
         collection = ArchivalCollectionFactory()
         url = reverse('collection-detail-view', kwargs={'pk': collection.id})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class ApiViewTest(TestCase):
@@ -95,23 +95,23 @@ class ApiViewTest(TestCase):
         # views succeed
         response = self.client.get('/api/site/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json['results']), 1)
-        self.assertEquals(the_json['results'][0]['id'], self.site.id)
+        self.assertEqual(len(the_json['results']), 1)
+        self.assertEqual(the_json['results'][0]['id'], self.site.id)
 
         response = self.client.get('/api/repository/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(the_json['results'][0]['id'], self.repository.id)
+        self.assertEqual(the_json['results'][0]['id'], self.repository.id)
 
         # update fails
         response = self.client.post('/api/site/',
                                     {'id': self.site.id, 'title': 'Foo'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_create(self):
         self.client.login(username=self.user.username, password='test')
@@ -124,10 +124,10 @@ class ApiViewTest(TestCase):
             dumps(data),
             content_type="application/json",
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 201)
+        self.assertEqual(response.status_code, 201)
 
         site = LearningSite.objects.get(title='Foo')
-        self.assertEquals(site.place.first().title, 'Bar')
+        self.assertEqual(site.place.first().title, 'Bar')
 
     def test_update(self):
         self.client.login(username=self.user.username, password='test')
@@ -141,9 +141,9 @@ class ApiViewTest(TestCase):
             dumps(data),
             content_type="application/json",
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.site.refresh_from_db()
-        self.assertEquals(self.site.title, 'Foo')
+        self.assertEqual(self.site.title, 'Foo')
 
     def test_family(self):
         parent = LearningSiteFactory()
@@ -154,11 +154,11 @@ class ApiViewTest(TestCase):
         LearningSiteRelationshipFactory(site_one=sib2, site_two=parent)
 
         family = LearningSiteFamilySerializer().get_family(parent)
-        self.assertEquals(len(family), 2)
-        self.assertEquals(family[0]['id'], sib.id)
-        self.assertEquals(family[0]['relationship'], 'associate')
-        self.assertEquals(family[1]['id'], sib2.id)
-        self.assertEquals(family[1]['relationship'], 'associate')
+        self.assertEqual(len(family), 2)
+        self.assertEqual(family[0]['id'], sib.id)
+        self.assertEqual(family[0]['relationship'], 'associate')
+        self.assertEqual(family[1]['id'], sib2.id)
+        self.assertEqual(family[1]['relationship'], 'associate')
 
 
 class TestLearningSiteUpdateView(TestCase):
@@ -171,20 +171,20 @@ class TestLearningSiteUpdateView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_non_editor(self):
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_editor(self):
         editor = UserFactory()
         editor.groups.add(GroupFactory(name='Editor'))
         self.client.login(username=editor.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TestLearningSiteDeleteView(TestCase):
@@ -205,24 +205,24 @@ class TestLearningSiteDeleteView(TestCase):
 
     def test_restricted_access(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         user = UserFactory()  # random user
         self.client.login(username=user.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.client.login(username=self.editor.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_creator(self):
         self.client.login(username=self.creator.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.assertTrue(LearningSite.objects.count(), 0)
 
@@ -236,20 +236,20 @@ class TestDigitalObjectCreateView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_non_editor(self):
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_editor(self):
         editor = UserFactory()
         editor.groups.add(GroupFactory(name='Editor'))
         self.client.login(username=editor.username, password='test')
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         view = DigitalObjectCreateView()
         view.request = RequestFactory()
@@ -259,7 +259,7 @@ class TestDigitalObjectCreateView(TestCase):
         view.object = None
 
         ctx = view.get_context_data()
-        self.assertEquals(ctx['parent'], self.site)
+        self.assertEqual(ctx['parent'], self.site)
 
 
 class TestLearningSiteGalleryView(TestCase):
@@ -271,12 +271,12 @@ class TestLearningSiteGalleryView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_no_parent(self):
         url = reverse('site-gallery-view', kwargs={'parent': 999})
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
 
 class TestAddRemoveCollection(TestCase):
@@ -292,10 +292,10 @@ class TestAddRemoveCollection(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.link_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         response = self.client.post(self.unlink_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_link_and_unlink(self):
         editor = UserFactory()
@@ -303,20 +303,20 @@ class TestAddRemoveCollection(TestCase):
         self.client.login(username=editor.username, password='test')
 
         response = self.client.get(self.link_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.link_url,
                                     {'collection': self.collection.id})
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(self.site.archivalcollection_set.count(), 1)
-        self.assertEquals(
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.site.archivalcollection_set.count(), 1)
+        self.assertEqual(
             self.site.archivalcollection_set.first(), self.collection)
 
         response = self.client.get(self.unlink_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post(self.unlink_url, {})
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(self.site.archivalcollection_set.count(), 0)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.site.archivalcollection_set.count(), 0)
 
 
 class TestArchivalCollectionCreateView(TestCase):
@@ -330,12 +330,12 @@ class TestArchivalCollectionCreateView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_create(self):
         editor = UserFactory()
@@ -343,7 +343,7 @@ class TestArchivalCollectionCreateView(TestCase):
         self.client.login(username=editor.username, password='test')
 
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         data = {
             'collection_title': 'New', 'description': '',
@@ -360,13 +360,13 @@ class TestArchivalCollectionCreateView(TestCase):
             'inclusive-end-year1': '1',
         }
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         collection = ArchivalCollection.objects.get(collection_title='New')
         self.assertTrue(collection.learning_sites.filter(
             title=self.site.title).exists())
-        self.assertEquals(collection.inclusive_start.edtf_format, '2000')
-        self.assertEquals(collection.inclusive_end.edtf_format, '2001')
+        self.assertEqual(collection.inclusive_start.edtf_format, '2000')
+        self.assertEqual(collection.inclusive_end.edtf_format, '2001')
 
 
 class TestArchivalCollectionUpdateView(TestCase):
@@ -382,12 +382,12 @@ class TestArchivalCollectionUpdateView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_update(self):
         editor = UserFactory()
@@ -395,7 +395,7 @@ class TestArchivalCollectionUpdateView(TestCase):
         self.client.login(username=editor.username, password='test')
 
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         data = {
             'repository': self.collection.repository.id,
@@ -414,19 +414,19 @@ class TestArchivalCollectionUpdateView(TestCase):
             'inclusive-end-year1': '1',
         }
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.collection.refresh_from_db()
-        self.assertEquals(self.collection.collection_title, 'Updated')
-        self.assertEquals(self.collection.inclusive_start.edtf_format, '2000')
-        self.assertEquals(self.collection.inclusive_end.edtf_format, '2001')
+        self.assertEqual(self.collection.collection_title, 'Updated')
+        self.assertEqual(self.collection.inclusive_start.edtf_format, '2000')
+        self.assertEqual(self.collection.inclusive_end.edtf_format, '2001')
 
         self.collection.repository.refresh_from_db()
-        self.assertEquals(self.collection.repository.title, 'foobarbaz')
+        self.assertEqual(self.collection.repository.title, 'foobarbaz')
         self.collection.repository.place.refresh_from_db()
-        self.assertEquals(self.collection.repository.place.title, 'Bar')
-        self.assertEquals(self.collection.repository.place.latitude(), 1.0)
-        self.assertEquals(self.collection.repository.place.longitude(), 1.0)
+        self.assertEqual(self.collection.repository.place.title, 'Bar')
+        self.assertEqual(self.collection.repository.place.latitude(), 1.0)
+        self.assertEqual(self.collection.repository.place.longitude(), 1.0)
 
 
 class TestArchivalCollectionDeleteView(TestCase):
@@ -442,12 +442,12 @@ class TestArchivalCollectionDeleteView(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.post(self.url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_delete(self):
         editor = UserFactory()
@@ -455,10 +455,10 @@ class TestArchivalCollectionDeleteView(TestCase):
         self.client.login(username=editor.username, password='test')
 
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post(self.url, {})
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(self.site.archivalcollection_set.count(), 0)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.site.archivalcollection_set.count(), 0)
 
 
 class TestArchivalCollectionListView(TestCase):
@@ -471,15 +471,15 @@ class TestArchivalCollectionListView(TestCase):
     def test_search_by_title(self):
         url = "{}?q=beta&rid=".format(reverse('archival-collections'))
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 1)
-        self.assertEquals(
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 1)
+        self.assertEqual(
             response.context['page_obj'].object_list[0], self.coll2)
 
-        self.assertEquals(response.context['query'], 'beta')
-        self.assertEquals(
+        self.assertEqual(response.context['query'], 'beta')
+        self.assertEqual(
             response.context['base_url'], '/collections/?q=beta&rid=&page=')
-        self.assertEquals(response.context['repositories'].count(), 1)
+        self.assertEqual(response.context['repositories'].count(), 1)
         self.assertTrue(
             self.coll2.repository in response.context['repositories'])
 
@@ -488,13 +488,13 @@ class TestArchivalCollectionListView(TestCase):
                                     self.coll1.repository.id)
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 1)
-        self.assertEquals(
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 1)
+        self.assertEqual(
             response.context['page_obj'].object_list[0], self.coll1)
 
-        self.assertEquals(response.context['query'], '')
-        self.assertEquals(response.context['repositories'].count(), 1)
+        self.assertEqual(response.context['query'], '')
+        self.assertEqual(response.context['repositories'].count(), 1)
         self.assertTrue(
             self.coll1.repository in response.context['repositories'])
 
@@ -502,8 +502,8 @@ class TestArchivalCollectionListView(TestCase):
         url = reverse('archival-collections')
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 2)
         self.assertTrue(
             self.coll1 in response.context['page_obj'].object_list)
         self.assertTrue(
@@ -516,12 +516,12 @@ class TestArchivalCollectionListView(TestCase):
     def test_query_null_bytes(self):
         url = "{}?q=\x00&rid=".format(reverse('archival-collections'))
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_repo_null_bytes(self):
         url = "{}?q=&rid=\x00".format(reverse('archival-collections'))
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 
 class TestArchivalCollectionSuggestionView(TestCase):
@@ -532,7 +532,7 @@ class TestArchivalCollectionSuggestionView(TestCase):
     def test_submit(self):
         # incomplete data
         response = self.client.get(self.url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         data = {
             'person': 'Elizabeth B. Drewry',
@@ -554,14 +554,14 @@ class TestArchivalCollectionSuggestionView(TestCase):
             'inclusive-end-year1': '1',
         }
         response = self.client.post(self.url, data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         collection = ArchivalCollectionSuggestion.objects.get(
             collection_title='Collection')
-        self.assertEquals(collection.inclusive_start.edtf_format, '2000')
-        self.assertEquals(collection.inclusive_end.edtf_format, '2001')
-        self.assertEquals(collection.title, 'Bar')
-        self.assertEquals(collection.latlng, 'SRID=4326;POINT(1 1)')
+        self.assertEqual(collection.inclusive_start.edtf_format, '2000')
+        self.assertEqual(collection.inclusive_end.edtf_format, '2001')
+        self.assertEqual(collection.title, 'Bar')
+        self.assertEqual(collection.latlng, 'SRID=4326;POINT(1 1)')
 
 
 class TestFootnoteViews(TestCase):
@@ -581,48 +581,48 @@ class TestFootnoteViews(TestCase):
 
     def test_anonymous(self):
         response = self.client.get(self.create_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(self.edit_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(self.delete_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_non_editor(self):
         user = UserFactory()
         self.client.login(username=user.username, password='test')
         response = self.client.get(self.create_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(self.edit_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         response = self.client.get(self.delete_url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_editor(self):
         editor = UserFactory()
         editor.groups.add(GroupFactory(name='Editor'))
         self.client.login(username=editor.username, password='test')
         response = self.client.get(self.create_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get(self.edit_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.get(self.delete_url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.create_url,
                                     {'ordinal': 2, 'note': 'Something'})
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(self.site.footnotes.count(), 2)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.site.footnotes.count(), 2)
 
         response = self.client.post(self.edit_url,
                                     {'ordinal': 2, 'note': 'Changed'})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.footnote.refresh_from_db()
-        self.assertEquals(self.footnote.note, 'Changed')
+        self.assertEqual(self.footnote.note, 'Changed')
 
         response = self.client.post(self.delete_url, {})
-        self.assertEquals(response.status_code, 302)
-        self.assertEquals(self.site.footnotes.count(), 1)
-        self.assertEquals(self.site.footnotes.first().note, 'Something')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.site.footnotes.count(), 1)
+        self.assertEqual(self.site.footnotes.first().note, 'Something')
 
 
 class DisplayDateViewTest(TestCase):
@@ -633,13 +633,13 @@ class DisplayDateViewTest(TestCase):
 
     def test_post(self):
         # no ajax
-        self.assertEquals(self.client.post(self.url).status_code, 405)
+        self.assertEqual(self.client.post(self.url).status_code, 405)
 
         # no_data(self):
         response = self.client.post(self.url,
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
@@ -649,10 +649,10 @@ class DisplayDateViewTest(TestCase):
                                      'decade1': '7', 'year1': '3',
                                      'month1': '', 'day1': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
-        self.assertEquals(the_json['display'], '1673')
+        self.assertEqual(the_json['display'], '1673')
 
         # invalid date
         response = self.client.post(self.url,
@@ -660,7 +660,7 @@ class DisplayDateViewTest(TestCase):
                                      'decade1': '7', 'year1': '3',
                                      'month1': '', 'day1': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
 
@@ -678,21 +678,21 @@ class SearchViewTest(TestCase):
     def test_search_by_title(self):
         url = "{}?q=bar".format(reverse('search-view'))
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 1)
-        self.assertEquals(
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 1)
+        self.assertEqual(
             response.context['page_obj'].object_list[0], self.site2)
 
-        self.assertEquals(response.context['query'], 'bar')
-        self.assertEquals(
+        self.assertEqual(response.context['query'], 'bar')
+        self.assertEqual(
             response.context['base_url'], '/search/?q=bar&page=')
 
     def test_empty_search(self):
         url = reverse('search-view')
 
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(len(response.context['page_obj'].object_list), 2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['page_obj'].object_list), 2)
         self.assertTrue(
             self.site1 in response.context['page_obj'].object_list)
         self.assertTrue(
@@ -712,8 +712,8 @@ class ConnectionCreateViewTest(TestCase):
         view.request.method = 'GET'
 
         frm = view.get_form()
-        self.assertEquals(frm.fields['site'].queryset.count(), 1)
-        self.assertEquals(frm.fields['site'].queryset[0], self.site)
+        self.assertEqual(frm.fields['site'].queryset.count(), 1)
+        self.assertEqual(frm.fields['site'].queryset[0], self.site)
 
     def test_form_valid_associates(self):
         site = LearningSiteFactory()
@@ -727,7 +727,7 @@ class ConnectionCreateViewTest(TestCase):
         view.form_valid(frm)
 
         self.assertTrue(len(self.parent.associates()), 1)
-        self.assertEquals(self.parent.associates()[0], site)
+        self.assertEqual(self.parent.associates()[0], site)
 
 
 class ConnectionDeleteViewTest(TestCase):
@@ -748,7 +748,7 @@ class ConnectionDeleteViewTest(TestCase):
             'type': 'associate',
             'pk': self.site.pk})
         response = self.client.post(url)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(self.site not in self.parent.associates())
 
 
@@ -758,10 +758,10 @@ class LearningSiteViewSetTest(TestCase):
         site1 = LearningSiteFactory(title='Site Alpha')
         url = "/api/site/?q=Alpha"
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = loads(response.content.decode('utf-8'))
-        self.assertEquals(len(the_json['results']), 1)
-        self.assertEquals(the_json['results'][0]['id'], site1.id)
+        self.assertEqual(len(the_json['results']), 1)
+        self.assertEqual(the_json['results'][0]['id'], site1.id)
 
 
 class MapViewTest(TestCase):
@@ -775,4 +775,4 @@ class MapViewTest(TestCase):
 
         view = MapView()
         qs = LearningSite.objects.all()
-        self.assertEquals(view.get_min_year(qs), 1918)
+        self.assertEqual(view.get_min_year(qs), 1918)
