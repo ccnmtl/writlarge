@@ -1,5 +1,7 @@
+/* eslint-disable no-undef */
 /* eslint-env node */
 
+// eslint-disable-next-line no-redeclare
 var requirejs = require('requirejs');
 requirejs.config({
     paths: {
@@ -20,7 +22,6 @@ var path = require('path');
 var basePath = './media/js/tests';
 var mocha = new Mocha();
 
-// eslint-disable-next-line security/detect-non-literal-fs-filename
 fs.readdirSync(basePath).filter(function(file) {
     return file !== __filename && file.substr(-3) === '.js';
 }).forEach(function(file) {

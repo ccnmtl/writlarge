@@ -1,4 +1,5 @@
 /* global google: true, enlargeBounds: true, lightGrayStyle: true */
+// eslint-disable-next-line no-redeclare
 /* global Promise, getVisibleContentHeight, sanitize, AsyncQueue */
 /* global parsePageNumber */
 /* exported GoogleMapVue */

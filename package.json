@@ -7,8 +7,11 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "eslint": "~8.57.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.7.0",
+    "eslint": "~9.7.0",
     "eslint-plugin-security": "~3.0.0",
+    "globals": "^15.8.0",
     "mocha": "~10.6.0",
     "requirejs": "~2.3.6",
     "sinon": "~18.0.0"

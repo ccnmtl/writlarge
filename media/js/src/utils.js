@@ -27,6 +27,7 @@ function parsePageNumber(str) {
     try {
         let result = str.match(/page=(\d+)/);
         pageNumber = parseInt(result[1], 10);
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
         // continue with default page number
     }
