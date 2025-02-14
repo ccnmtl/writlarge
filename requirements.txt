@@ -34,7 +34,7 @@ idna==3.10  # requests
 certifi==2024.12.14  # requests, sentry-sdk
 requests==2.32.1
 logilab-common==2.0.0
-astroid==3.2.0
+astroid==3.3.8
 pylint==3.2.0
 six==1.17.0
 ipaddress==1.0.23  # faker
