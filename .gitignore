@@ -14,7 +14,6 @@ start_server.sh
 lettuce.db
 chromedriver.log
 ghostdriver.log
-.coverage
 media/CACHE
 libpeerconnection.log
 reports/
