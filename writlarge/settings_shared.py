@@ -70,6 +70,7 @@ INSTALLED_APPS += [  # noqa
     'edtf',
     'contactus',
     'markdownify.apps.MarkdownifyConfig',
+    'debug_toolbar',
 ]
 
 LOGIN_REDIRECT_URL = "/"
@@ -89,7 +90,8 @@ MIDDLEWARE = [
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'writlarge.main.middleware.WhodidMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 
