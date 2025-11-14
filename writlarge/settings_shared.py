@@ -132,7 +132,7 @@ CAS_AFFILIATIONS_HANDLERS = [
     'writlarge.main.auth.EditorMapper',
 ]
 
-CONTACT_US_EMAIL = 'ctl-dev@columbia.edu'
+CONTACT_US_EMAIL = 'ctl-writlarge@columbia.edu'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
