@@ -74,7 +74,7 @@ tinycss2==1.5.0 # django-markdownify
 bleach==6.3.0 # django-markdownify
 django-markdownify==0.9.5
 
-gunicorn==25.0.0
+gunicorn==25.1.0
 django-storages==1.14.3
 djangorestframework==3.16.0
 
