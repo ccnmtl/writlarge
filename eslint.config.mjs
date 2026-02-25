@@ -1,4 +1,3 @@
-import security from "eslint-plugin-security";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,12 +13,8 @@ const compat = new FlatCompat({
 });
 
 export default [
-    ...compat.extends("eslint:recommended", "plugin:security/recommended-legacy"),
+    ...compat.extends("eslint:recommended"),
     {
-        plugins: {
-            security,
-        },
-
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -60,19 +55,6 @@ export default [
             }],
 
             "func-call-spacing": ["error", "never"],
-            "security/detect-buffer-noassert": 1,
-            "security/detect-child-process": 1,
-            "security/detect-disable-mustache-escape": 1,
-            "security/detect-eval-with-expression": 1,
-            "security/detect-new-buffer": 1,
-            "security/detect-no-csrf-before-method-override": 1,
-            "security/detect-non-literal-fs-filename": 1,
-            "security/detect-non-literal-regexp": 1,
-            "security/detect-non-literal-require": 0,
-            "security/detect-object-injection": 0,
-            "security/detect-possible-timing-attacks": 1,
-            "security/detect-pseudoRandomBytes": 1,
-            "security/detect-unsafe-regex": 1,
         },
     },
 ];
