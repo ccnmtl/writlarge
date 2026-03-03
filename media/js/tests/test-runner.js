@@ -1,6 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-env node */
-
 // eslint-disable-next-line no-redeclare
 var requirejs = require('requirejs');
 requirejs.config({
