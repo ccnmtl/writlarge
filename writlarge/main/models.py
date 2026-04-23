@@ -28,18 +28,19 @@ class ExtendedDateManager(models.Manager):
         elif year is not None:
             dt = '{}{}{}{}'.format(millenium, century, decade, year)
         elif decade is not None:
-            dt = '{}{}{}u'.format(millenium, century, decade)
+            dt = '{}{}{}X'.format(millenium, century, decade)
         elif century is not None:
-            dt = '{}{}uu'.format(millenium, century)
+            dt = '{}{}XX'.format(millenium, century)
         elif millenium is not None:
-            dt = '{}uuu'.format(millenium)
+            dt = '{}XXX'.format(millenium)
         else:
-            return 'unknown'
+            return '..'
 
-        if uncertain:
+        if uncertain and approximate:
+            dt += '%'
+        elif uncertain:
             dt += '?'
-
-        if approximate:
+        elif approximate:
             dt += '~'
 
         return dt
@@ -101,7 +102,7 @@ class ExtendedDate(models.Model):
             return lower.format()
 
     def is_unknown(self):
-        return self.edtf_format == 'unknown'
+        return self.edtf_format in ('unknown', '..')
 
     def match_string(self, date_str):
         return self.edtf_format == str(text_to_edtf(date_str))
