@@ -13,20 +13,20 @@ class ExtendedDateTest(TestCase):
 
     use_cases = {
         '999': 'invalid',
-        '1uuu': '2nd millenium',
-        '2uuu': '3rd millenium',
-        '14uu': '1400s',  # PRECISION_CENTURY
-        '192u': '1920s',  # PRECISION_DECADE
+        '1XXX': '2nd millenium',
+        '2XXX': '3rd millenium',
+        '14XX': '1400s',  # PRECISION_CENTURY
+        '192X': '1920s',  # PRECISION_DECADE
         '1613': '1613',  # PRECISION_YEAR
         '1944-11': 'November 1944',  # PRECISION_MONTH
         '1659-06-30': 'June 30, 1659',  # PRECISION_DAY
         '1659~': 'c. 1659',  # uncertain
         '1659?': '1659?',  # approximate
-        '1659?~': 'c. 1659?',  # approximate & uncertain
-        '16uu/1871': '1600s - 1871',
+        '1659%': 'c. 1659?',  # approximate & uncertain
+        '16XX/1871': '1600s - 1871',
         '1557-09/1952-01-31': 'September 1557 - January 31, 1952',
-        '1829/open': '1829 - present',
-        'unknown/1736': '? - 1736',
+        '1829/..': '1829 - present',
+        '../1736': '? - 1736',
     }
 
     def test_use_cases(self):
@@ -42,7 +42,7 @@ class ExtendedDateTest(TestCase):
             'approximate1': False, 'uncertain1': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEqual(dt.edtf_format, 'unknown')
+        self.assertEqual(dt.edtf_format, '..')
         self.assertEqual(dt.__str__(), '?')
 
     def test_create_from_dict(self):
@@ -56,7 +56,7 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEqual(dt.edtf_format, '2001-01-01?~/20uu')
+        self.assertEqual(dt.edtf_format, '2001-01-01%/20XX')
 
     def test_create_from_dict_missing_elements(self):
         values = {
@@ -69,15 +69,15 @@ class ExtendedDateTest(TestCase):
             'approximate2': False, 'uncertain2': False}
 
         dt = ExtendedDate.objects.from_dict(values)
-        self.assertEqual(dt.edtf_format, '2001-01?~/20uu')
+        self.assertEqual(dt.edtf_format, '2001-01%/20XX')
 
     def test_to_edtf(self):
         mgr = ExtendedDate.objects
         dt = mgr.to_edtf(2, None, None, None, None, None, True, True)
-        self.assertEqual(dt, '2uuu?~')
+        self.assertEqual(dt, '2XXX%')
 
         dt = mgr.to_edtf(2, 0, None, None, None, None, True, True)
-        self.assertEqual(dt, '20uu?~')
+        self.assertEqual(dt, '20XX%')
 
         dt = mgr.to_edtf(2, 0, 1, 5, None, None, False, False)
         self.assertEqual(dt, '2015')
@@ -98,10 +98,10 @@ class ExtendedDateTest(TestCase):
         self.assertEqual(dt.edtf_format, '1983~')
 
         dt = ExtendedDate.objects.create_from_string('before 1984')
-        self.assertEqual(dt.edtf_format, 'unknown/1984')
+        self.assertEqual(dt.edtf_format, '/1984')
 
     def test_invalid_month(self):
-        dt = ExtendedDate.objects.create(edtf_format='1980-uu-17/1997-uu-18')
+        dt = ExtendedDate.objects.create(edtf_format='1980-XX-17/1997-XX-18')
         self.assertEqual(dt.__str__(),
                          'unknown month 17, 1980 - unknown month 18, 1997')
 
@@ -111,7 +111,7 @@ class ExtendedDateTest(TestCase):
         self.assertEqual(len(d), 0)
 
     def test_to_dict_partial(self):
-        dt = ExtendedDate.objects.create(edtf_format='1uuu')
+        dt = ExtendedDate.objects.create(edtf_format='1XXX')
         d = dt.to_dict()
         self.assertFalse(d['approximate1'])
         self.assertFalse(d['uncertain1'])
@@ -123,7 +123,7 @@ class ExtendedDateTest(TestCase):
         self.assertIsNone(d['day1'])
 
     def test_to_dict_full(self):
-        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30%')
         d = dt.to_dict()
         self.assertTrue(d['approximate1'])
         self.assertTrue(d['uncertain1'])
@@ -135,26 +135,26 @@ class ExtendedDateTest(TestCase):
         self.assertEqual(d['day1'], '30')
 
     def test_get_year(self):
-        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30%')
         self.assertEqual(dt.get_year(), 1659)
 
-        dt = ExtendedDate.objects.create(edtf_format='2uuu')
+        dt = ExtendedDate.objects.create(edtf_format='2XXX')
         self.assertEqual(dt.get_year(), 2000)
 
-        dt = ExtendedDate.objects.create(edtf_format='14uu')
+        dt = ExtendedDate.objects.create(edtf_format='14XX')
         self.assertEqual(dt.get_year(), 1400)
 
-        dt = ExtendedDate.objects.create(edtf_format='192u')
+        dt = ExtendedDate.objects.create(edtf_format='192X')
         self.assertEqual(dt.get_year(), 1920)
 
         dt = ExtendedDate.objects.create(edtf_format='unknown')
         self.assertIsNone(dt.get_year())
 
     def test_internal_dates(self):
-        dt = ExtendedDate.objects.create(edtf_format='1659-06-30?~')
+        dt = ExtendedDate.objects.create(edtf_format='1659-06-30%')
         self.assertEqual(dt.lower, date(1659, 6, 30))
 
-        dt = ExtendedDate.objects.create(edtf_format='192u')
+        dt = ExtendedDate.objects.create(edtf_format='192X')
         self.assertEqual(dt.lower, date(1920, 1, 1))
 
 
