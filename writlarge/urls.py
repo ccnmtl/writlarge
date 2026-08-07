@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from django.views.static import serve
 from rest_framework import routers
 from django_cas_ng import views as cas_views
+from ctlsettings import views as ctl_views
 
 from writlarge.main import views
 
@@ -21,6 +22,7 @@ urlpatterns = [
     path('', views.CoverView.as_view()),
     path('api/', include(router.urls)),
 
+    path('accounts/login', ctl_views.LoginAPIView.as_view()),
     path('accounts/', include('django.contrib.auth.urls')),
 
     path('cas/login', cas_views.LoginView.as_view(),
