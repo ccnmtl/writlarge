@@ -63,7 +63,7 @@ class ExtendedDateFormTest(TestCase):
 
         dt = form.save()
         self.assertEqual(ExtendedDate.objects.count(), 1)
-        self.assertEqual(dt.edtf_format, '2010-02-28?~/2012-02-29')
+        self.assertEqual(dt.edtf_format, '2010-02-28%/2012-02-29')
 
     def test_clean_invalid_date(self):
         data = {
@@ -149,10 +149,8 @@ class ExtendedDateFormTest(TestCase):
             'year1': None, 'year2': None
         }
         form = ExtendedDateForm(data=data)
-        self.assertFalse(form.is_valid())
-
-        self.assertEqual(form.get_error_messages(),
-                         u'Please specify a valid date<br />')
+        # edtf 5.x accepts millenium-level precision (1XXX%) as valid
+        self.assertTrue(form.is_valid())
 
     def test_create_or_update(self):
         site = LearningSiteFactory(established=None)
@@ -173,7 +171,7 @@ class ExtendedDateFormTest(TestCase):
         form.create_or_update(site, 'established')
         site.refresh_from_db()
         established = site.established
-        self.assertEqual(established.edtf_format, '2010-02-28?~')
+        self.assertEqual(established.edtf_format, '2010-02-28%')
 
         # update established date
         data['year1'] = 1
@@ -182,7 +180,7 @@ class ExtendedDateFormTest(TestCase):
         form.create_or_update(site, 'established')
         site.refresh_from_db()
         self.assertEqual(established.id, site.established.id)
-        self.assertEqual(established.edtf_format, '2011-02-28?~')
+        self.assertEqual(established.edtf_format, '2011-02-28%')
 
         # remove established date
         data = {
@@ -250,7 +248,7 @@ class LearningSiteFormTest(TestCase):
         form.save()
 
         # make sure this was all saved
-        self.assertEqual(site.established.edtf_format, '2008?~')
+        self.assertEqual(site.established.edtf_format, '2008%')
         self.assertEqual(site.defunct.edtf_format, '2011')
 
 
@@ -327,7 +325,7 @@ class TestPlaceForm(TestCase):
         form.save()
 
         # make sure this was all saved
-        self.assertEqual(place.start_date.edtf_format, '2008?~')
+        self.assertEqual(place.start_date.edtf_format, '2008%')
         self.assertEqual(place.end_date.edtf_format, '2011')
 
 
