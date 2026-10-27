@@ -64,8 +64,9 @@ class ExtendedDateWrapper(object):
         10: 'October', 11: 'November', 12: 'December'}
 
     modifiers = [
-        'unknown',  # empty date
-        'open'  # range modifier, no beginning date or no end date specified
+        'unknown',  # empty date (legacy)
+        '..',  # empty date (EDTF 2019)
+        'open'  # range modifier (legacy), '..' is used in EDTF 2019
     ]
 
     @classmethod
@@ -81,6 +82,7 @@ class ExtendedDateWrapper(object):
 
         if hasattr(edtf_object, 'upper'):
             upper = ExtendedDateWrapper(edtf_object.upper)
+            upper._is_upper = True
         else:
             upper = None
 
@@ -95,14 +97,26 @@ class ExtendedDateWrapper(object):
 
     def __init__(self, edtf_object):
 
+        self._is_upper = False
+
+        # edtf 5.x uses UnspecifiedIntervalSection objects for '..'
+        # in intervals; convert to string for compatibility
+        if hasattr(edtf_object, '__class__') and \
+                type(edtf_object).__name__ == 'UnspecifiedIntervalSection':
+            edtf_object = str(edtf_object)
+
         if hasattr(edtf_object, 'date'):
             self.edtf_date = edtf_object.date
         else:
             self.edtf_date = edtf_object
 
         if hasattr(edtf_object, 'ua') and edtf_object.ua:
-            self.is_uncertain = edtf_object.ua.is_uncertain
-            self.is_approximate = edtf_object.ua.is_approximate
+            self.is_uncertain = (
+                edtf_object.ua.is_uncertain
+                or edtf_object.ua.is_uncertain_and_approximate)
+            self.is_approximate = (
+                edtf_object.ua.is_approximate
+                or edtf_object.ua.is_uncertain_and_approximate)
         else:
             self.is_uncertain = False
             self.is_approximate = False
@@ -111,6 +125,11 @@ class ExtendedDateWrapper(object):
         # the python-edtf library returns "date.max" on a ValueError
         # and, if approximate or uncertain are set, the day/month are adjusted
         # just compare the year 9999 to the returned year
+        # edtf 5.x returns time.struct_time; convert to datetime.date
+        if hasattr(dt, 'tm_year'):
+            if dt.tm_year == date.max.year:
+                return None
+            return date(dt.tm_year, dt.tm_mon, dt.tm_mday)
         return None if dt.year == date.max.year else dt
 
     def start_date(self):
@@ -144,7 +163,7 @@ class ExtendedDateWrapper(object):
         return self.edtf_date._precise_year(EARLIEST)
 
     def is_empty(self):
-        return self.edtf_date == 'unknown'
+        return self.edtf_date in ('unknown', '..')
 
     def is_invalid(self):
         return self.edtf_date is None
@@ -156,9 +175,11 @@ class ExtendedDateWrapper(object):
             n, "tsnrhtdd"[(n / 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
     def fmt_modifier(self):
-        if self.edtf_date == 'open':
-            return 'present'
-        if self.edtf_date == 'unknown':
+        if self.edtf_date in ('open', '..'):
+            if self._is_upper:
+                return 'present'
+            return '?'
+        if self.edtf_date in ('unknown', '..'):
             return '?'
 
     def fmt_century(self, century):
@@ -178,7 +199,10 @@ class ExtendedDateWrapper(object):
     def fmt_precision(self):
         precision = self.get_precision()
 
-        if precision not in (PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY):
+        valid_precisions = (
+            PRECISION_YEAR, PRECISION_MONTH, PRECISION_DAY,
+            'millenium', 'century', 'decade')
+        if precision not in valid_precisions:
             return 'invalid'
 
         if precision == PRECISION_DAY:
@@ -190,15 +214,15 @@ class ExtendedDateWrapper(object):
                 self.fmt_month(), self.get_year())
 
         year = self.get_year()
-        m = re.match('([1-2])uuu', year)
+        m = re.match(r'([1-2])XXX', year)
         if m:
             return self.fmt_millenium(m.group(1))
 
-        m = re.match('([1-2][0-9])uu', year)
+        m = re.match(r'([1-2][0-9])XX', year)
         if m:
             return self.fmt_century(self.get_precise_year())
 
-        m = re.match('([1-2][0-9][0-9])u', year)
+        m = re.match(r'([1-2][0-9][0-9])X', year)
         if m:
             return '{}s'.format(self.get_precise_year())
 
@@ -230,9 +254,9 @@ class ExtendedDateWrapper(object):
             'approximate{}'.format(ordinal): self.is_approximate,
             'uncertain{}'.format(ordinal): self.is_uncertain,
             'millenium{}'.format(ordinal): year[0],
-            'century{}'.format(ordinal): None if year[1] == 'u' else year[1],
-            'decade{}'.format(ordinal): None if year[2] == 'u' else year[2],
-            'year{}'.format(ordinal): None if year[3] == 'u' else year[3],
+            'century{}'.format(ordinal): None if year[1] == 'X' else year[1],
+            'decade{}'.format(ordinal): None if year[2] == 'X' else year[2],
+            'year{}'.format(ordinal): None if year[3] == 'X' else year[3],
             'month{}'.format(ordinal): self.get_month(),
             'day{}'.format(ordinal): self.get_day()
         }
